@@ -1,0 +1,13 @@
+# Internal development/design artifacts — not part of the published product.
+# Kept locally and in git history; excluded from the public repository.
+docs/plans/
+docs/specs/
+
+# Internal working/strategy drafts (licensing analysis, branding) — keep local.
+docs/*-DRAFT.md
+
+# IDE / editor config — local only.
+.idea/
+
+# Claude Code local settings (machine-specific paths, personal allowlist).
+.claude/settings.local.json

@@ -1,0 +1,42 @@
+# Mobile-application-plugin external AI delegation config.
+# Copied to consumer project's .tl-telar/external-tools.yaml by /tl-telar:setup-orchestration.
+# Adapters disabled by default — user opts in by setting enabled: true and ensuring auth env vars are set.
+
+adapters:
+  codex:
+    enabled: false                  # set true after installing codex CLI + setting OPENAI_API_KEY
+    model: ""                       # BLANK = use your ~/.codex/config.toml default (e.g. your top model). Set e.g. "gpt-5.3-codex" to override via codex -m.
+    reasoning_effort: ""            # BLANK = use codex config default. Set minimal|low|medium|high to override via -c model_reasoning_effort (e.g. "high").
+    timeout_seconds: 300
+    auth_env_var: "OPENAI_API_KEY"
+    sandbox: "none"
+  gemini:
+    enabled: false                  # set true after installing gemini CLI + setting GEMINI_API_KEY
+    model: "pro"
+    timeout_seconds: 300
+    auth_env_var: "GEMINI_API_KEY"
+    sandbox: "none"
+
+routing:
+  default_implementer: "cheapest-available"  # or "round-robin" or "claude" or specific tool name
+  escalation_order: ["codex", "gemini", "claude"]
+  health_recheck_every_n_tasks: 10           # re-run health check periodically
+
+budget:
+  per_task_usd: 1.00                # conservative default (mobile feature WUs are smaller)
+  per_session_usd: 10.00            # conservative session cap
+  ledger_file: ".tl-telar/context/external-tools-budget.jsonl"
+  circuit_breaker_message: "Per-task budget exceeded — switching to Claude (free in this context)."
+
+cross_model_review:
+  # Cross-model review is an ADDITIVE second review: Review 1 (main-model Claude roster) ALWAYS runs;
+  # when enabled, Review 2 (a model distinct from the writer AND from Claude) runs ON TOP. Both must PASS.
+  enabled: false                    # Phase γ (sub-spec 8) flips this. true => the second (cross-model) review is REQUIRED.
+  on_unavailable: "block"           # when enabled and no distinct second-review model is ready (disabled/unhealthy/over-budget):
+                                    #   "block"            = STOP at startup preflight / review time + escalate; never silently pass on Review-1-only (default)
+                                    #   "warn_and_proceed" = skip Review 2, proceed on Review 1 (Claude) alone, logged LOUDLY (never silent)
+  matrix:
+    # When this implementer is used, these are the reviewers (the writer is excluded):
+    codex: ["gemini", "claude"]
+    gemini: ["codex", "claude"]
+    claude: ["codex", "gemini"]

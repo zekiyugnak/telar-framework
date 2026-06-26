@@ -1,0 +1,38 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "description": "Quality-gate contract for /tl-telar:orchestrate. Phase 2 VALIDATE reads enforcement.* commands and runs each. Strict flags determine whether a non-zero exit blocks COMMIT.",
+  "coverage": {
+    "lines": 80,
+    "branches": 75,
+    "functions": 80,
+    "statements": 80
+  },
+  "performance": {
+    "min_fps": 60,
+    "max_cold_start_ms": 3000
+  },
+  "size": {
+    "max_apk_mb": 50,
+    "max_ipa_mb": 60
+  },
+  "accessibility": {
+    "required_audit_pass": false
+  },
+  "autonomy": {
+    "cycle": "interactive",
+    "description": "interactive (default) = the orchestrator may pause mid-cycle at checkpoint:true WUs and at self-reflect. unattended = exactly ONE human gate at plan-ready (Step 5): scope + approved UI ASCII drafts + all secrets/inputs are collected up front, then the WU cycle (Step 6) runs to PR-ready with ZERO pauses. UI/visual sign-off is hoisted into plan-readiness, never mid-cycle. Unattended never skips a decision — it makes it earlier. See agents/mobile-orchestrator.md -> 'Autonomy model'."
+  },
+  "enforcement": {
+    "coverage_command": "echo 'coverage not configured - run /tl-telar:setup-orchestration for framework-aware defaults' && exit 0",
+    "coverage_strict": false,
+    "perf_command": "bash scripts/perf-smoke.sh",
+    "perf_strict": false,
+    "size_command": "bash scripts/size-check.sh",
+    "size_strict": false,
+    "a11y_command": "echo 'a11y audit not configured' && exit 0",
+    "a11y_strict": false,
+    "blockPRCreation": true,
+    "blockTaskCompletion": true,
+    "description": "Mechanical gates (coverage, file-scope) are always blocking. Mobile-extended gates (perf, size, a11y) are advisory by default; set *_strict: true to make them blocking. See rules/quality-gates.md for the tier doctrine."
+  }
+}

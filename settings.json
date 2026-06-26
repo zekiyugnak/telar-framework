@@ -1,0 +1,58 @@
+{
+  "$schema": "https://claude.ai/schemas/settings.json",
+  "hooks": {
+    "UserPromptSubmit": [
+      {
+        "command": "./hooks/security-reminder.sh",
+        "description": "Security awareness reminder"
+      },
+      {
+        "command": "./hooks/explore-before-generate.sh",
+        "description": "Remind to explore codebase before generating code"
+      }
+    ],
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "./hooks/pre-build-check.sh",
+            "description": "Validate before mobile build commands (xcodebuild, gradlew, flutter build, eas build, fastlane, pod install)"
+          }
+        ]
+      }
+    ],
+    "SessionStart": [
+      {
+        "matcher": "startup|resume|clear|compact",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash ${CLAUDE_PLUGIN_ROOT}/hooks/orchestration-session-start.sh",
+            "description": "Orchestration boot probe: opt-in sentinel detect, prime KB, recovery prompt on in-progress sentinel. The `compact` matcher value covers post-compaction re-prime — PreCompact is NOT registered here because per the Claude Code Hooks reference (https://code.claude.com/docs/en/hooks#precompact) PreCompact is for blocking/controlling compaction, not injecting context."
+          }
+        ]
+      }
+    ]
+  },
+  "rules": {
+    "always_apply": [
+      "./rules/mobile-security.md",
+      "./rules/quality-gates.md",
+      "./rules/performance-standards.md",
+      "./rules/codebase-first.md",
+      "./rules/platform-conventions.md",
+      "./rules/requirements-first.md",
+      "./rules/simplicity-first.md"
+    ]
+  },
+  "scripts": {
+    "build": "node ./scripts/build-helper.js",
+    "store-assets": "node ./scripts/store-assets-generator.js",
+    "validate": "node ./scripts/validate-skills.js && node ./scripts/validate-agents.js && node ./scripts/validate-blueprints.js && node ./scripts/validate-rubrics.js && bash ./scripts/check-sidecar-routing.sh && bash ./tests/prime/smoke.sh",
+    "compile": "node ./scripts/compile-agents-md.js",
+    "project-detect": "bash ./scripts/project-detect.sh",
+    "sim-control": "bash ./scripts/sim-control.sh"
+  }
+}
