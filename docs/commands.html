@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Commands — Telar</title>
+<meta name="description" content="The 23 slash-command workflows in Telar.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;650;800;850&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/telar.css">
+</head>
+<body>
+
+<header class="nav"><div class="wrap nav-inner">
+  <a class="brand" href="index.html"><span class="dot"></span> Telar</a>
+  <button class="nav-toggle" aria-label="Menu">☰</button>
+  <nav class="nav-links">
+    <a href="getting-started.html">Getting Started</a>
+    <a href="agents.html">Agents</a>
+    <a href="commands.html">Commands</a>
+    <a href="skills.html">Skills</a>
+    <a href="rules.html">Rules</a>
+    <a href="orchestration.html">Orchestration</a>
+    <a href="examples.html">Examples</a>
+    <a class="nav-gh" href="https://github.com/zekiyugnak/telar-framework">GitHub ↗</a>
+  </nav>
+</div></header>
+
+<main class="wrap">
+  <div class="page-title">
+    <span class="eyebrow">Reference</span>
+    <h1>Commands</h1>
+    <p>23 slash-command workflows, all namespaced under <code>/tl-telar:</code>. Expand a card for an example and a link to its source.</p>
+  </div>
+
+  <div class="filter-bar">
+    <input id="filter" type="search" placeholder="Filter commands…" autocomplete="off">
+    <div class="filter-meta" id="filter-meta"></div>
+  </div>
+
+  <nav class="subnav">
+    <a href="#build">Build &amp; Features</a>
+    <a href="#review">Review &amp; Quality</a>
+    <a href="#audit">Audits</a>
+    <a href="#test">Testing</a>
+    <a href="#release">Release &amp; Deploy</a>
+    <a href="#orch">Orchestration</a>
+    <a href="#knowledge">Knowledge &amp; Tools</a>
+  </nav>
+
+  <!-- BUILD & FEATURES -->
+  <section class="group">
+    <h2 id="build">Build &amp; Features <span class="gc">5</span></h2>
+    <div class="cards">
+
+      <article class="card" data-search="create-app create mobile app new requirements brainstorming architecture">
+        <div class="card-head"><h3>/tl-telar:create-app</h3><span class="tag">command</span></div>
+        <p class="desc">Create a new cross-platform mobile application with requirements gathering, brainstorming, architecture, navigation, state management, and CI/CD setup.</p>
+        <div class="usage">/tl-telar:create-app [app description]</div>
+        <button class="card-toggle" aria-expanded="false">Details</button>
+        <div class="card-detail" hidden>
+          <h4>Example</h4><div class="usage">/tl-telar:create-app social fitness app with Supabase backend</div>
+          <p></p><a class="src" href="https://github.com/zekiyugnak/telar-framework/blob/main/commands/create-app.md">Source ↗</a>
+        </div>
+      </article>
+
+      <article class="card" data-search="add-feature add feature exploration brainstorming planning review">
+        <div class="card-head"><h3>/tl-telar:add-feature</h3><span class="tag">command</span></div>
+        <p class="desc">Add a new feature to an existing mobile application with requirements check, codebase exploration, brainstorming, planning, implementation, and review.</p>
+        <div class="usage">/tl-telar:add-feature [feature description]</div>
+        <button class="card-toggle" aria-expanded="false">Details</button>
+        <div class="card-detail" hidden>
+          <h4>Example</h4><div class="usage">/tl-telar:add-feature push notifications with deep linking</div>
+          <a class="src" href="https://github.com/zekiyugnak/telar-framework/blob/main/commands/add-feature.md">Source ↗</a>
+        </div>
+      </article>
+
+      <article class="card" data-search="migrate-app migrate native ios android cross-platform react-native flutter">
+        <div class="card-head"><h3>/tl-telar:migrate-app</h3><span class="tag">command</span></div>
+        <p class="desc">Migrate a native iOS/Android app to cross-platform React Native or Flutter.</p>
+        <div class="usage">/tl-telar:migrate-app [migration details]</div>
+        <button class="card-toggle" aria-expanded="false">Details</button>
+        <div class="card-detail" hidden>
+          <h4>Example</h4><div class="usage">/tl-telar:migrate-app iOS Swift app to React Native</div>
+          <a class="src" href="https://github.com/zekiyugnak/telar-framework/blob/main/commands/migrate-app.md">Source ↗</a>
+        </div>
+      </article>
+
+      <article class="card" data-search="upgrade-deps upgrade dependencies compatibility testing">
+        <div class="card-head"><h3>/tl-telar:upgrade-deps</h3><span class="tag">command</span></div>
+        <p class="desc">Safely upgrade mobile app dependencies with compatibility checks and testing.</p>
+        <div class="usage">/tl-telar:upgrade-deps [options]</div>
+        <button class="card-toggle" aria-expanded="false">Details</button>
+        <div class="card-detail" hidden>
+          <h4>Example</h4><div class="usage">/tl-telar:upgrade-deps major versions</div>
+          <a class="src" href="https://github.com/zekiyugnak/telar-framework/blob/main/commands/upgrade-deps.md">Source ↗</a>
+        </div>
+      </article>
+
+      <article class="card" data-search="design-system design system tokens DESIGN.md theme accessibility">
+        <div class="card-head"><h3>/tl-telar:design-system</h3><span class="tag">command</span></div>
+        <p class="desc">Create a complete mobile design system with tokens, DESIGN.md, theme providers, and accessibility validation.</p>
+        <div class="usage">/tl-telar:design-system [source]</div>
+        <button class="card-toggle" aria-expanded="false">Details</button>
+        <div class="card-detail" hidden>
+          <h4>Example</h4><div class="usage">/tl-telar:design-system from existing app code</div>
+          <a class="src" href="https://github.com/zekiyugnak/telar-framework/blob/main/commands/design-system.md">Source ↗</a>
+        </div>
+      </article>
+
+    </div>
+  </section>
+
+  <!-- REVIEW & QUALITY -->
+  <section class="group">
+    <h2 id="review">Review &amp; Quality <span class="gc">3</span></h2>
+    <div class="cards">
+
+      <article class="card" data-search="review-code review code two-stage spec compliance quality">
+        <div class="card-head"><h3>/tl-telar:review-code</h3><span class="tag">command</span></div>
+        <p class="desc">Mobile-specific code review with two-stage review gates, platform conventions, and priority-ranked findings.</p>
+        <div class="usage">/tl-telar:review-code [file or directory]</div>
+        <button class="card-toggle" aria-expanded="false">Details</button>
+        <div class="card-detail" hidden>
+          <h4>Example</h4><div class="usage">/tl-telar:review-code src/features/auth</div>
+          <a class="src" href="https://github.com/zekiyugnak/telar-framework/blob/main/commands/review-code.md">Source ↗</a>
+        </div>
+      </article>
+
+      <article class="card" data-search="review-plan plan review adversarial 3 reviewers gate pass fail">
+        <div class="card-head"><h3>/tl-telar:review-plan</h3><span class="tag">command</span></div>
+        <p class="desc">Adversarial review of an implementation plan with 3 fresh-instance reviewers. PASS means fit to execute; FAIL means blocking defects. Max 3 iterations then human escalation.</p>
+        <div class="usage">/tl-telar:review-plan [--latest | --plan-file &lt;path&gt;] [--iteration N]</div>
+        <button class="card-toggle" aria-expanded="false">Details</button>
+        <div class="card-detail" hidden>
+          <h4>Example</h4><div class="usage">/tl-telar:review-plan --plan-file docs/plans/login-flow.md</div>
+          <a class="src" href="https://github.com/zekiyugnak/telar-framework/blob/main/commands/review-plan.md">Source ↗</a>
+        </div>
+      </article>
+
+      <article class="card" data-search="review-design design review collaborative 6 reviewers gate approved">
+        <div class="card-head"><h3>/tl-telar:review-design</h3><span class="tag">command</span></div>
+        <p class="desc">6-reviewer collaborative gate on a design doc. APPROVED iff all 6 (PM/Architect/Designer/Security-Design/CTO/Mobile-Platform) approve. Max 3 iterations then escalation.</p>
+        <div class="usage">/tl-telar:review-design [--latest | --design-file &lt;path&gt;]</div>
+        <button class="card-toggle" aria-expanded="false">Details</button>
+        <div class="card-detail" hidden>
+          <h4>Example</h4><div class="usage">/tl-telar:review-design --design-file docs/plans/login-flow-design.md</div>
+          <a class="src" href="https://github.com/zekiyugnak/telar-framework/blob/main/commands/review-design.md">Source ↗</a>
+        </div>
+      </article>
+
+    </div>
+  </section>
+
+  <!-- AUDITS -->
+  <section class="group">
+    <h2 id="audit">Audits <span class="gc">3</span></h2>
+    <div class="cards">
+
+      <article class="card" data-search="audit-security security audit owasp mobile top 10 priority ranking">
+        <div class="card-head"><h3>/tl-telar:audit-security</h3><span class="tag">command</span></div>
+        <p class="desc">Comprehensive security audit covering OWASP mobile top 10 with P1/P2/P3 priority ranking and evidence-based findings.</p>
+        <div class="usage">/tl-telar:audit-security [scope] [--quick]</div>
+        <button class="card-toggle" aria-expanded="false">Details</button>
+        <div class="card-detail" hidden>
+          <h4>Example</h4><div class="usage">/tl-telar:audit-security full</div>
+          <a class="src" href="https://github.com/zekiyugnak/telar-framework/blob/main/commands/audit-security.md">Source ↗</a>
+        </div>
+      </article>
+
+      <article class="card" data-search="audit-accessibility accessibility audit automated scan semantic priority">
+        <div class="card-head"><h3>/tl-telar:audit-accessibility</h3><span class="tag">command</span></div>
+        <p class="desc">Comprehensive accessibility audit with automated scanning, semantic analysis, and priority-ranked findings.</p>
+        <div class="usage">/tl-telar:audit-accessibility [scope]</div>
+        <button class="card-toggle" aria-expanded="false">Details</button>
+        <div class="card-detail" hidden>
+          <h4>Example</h4><div class="usage">/tl-telar:audit-accessibility src/screens</div>
+          <a class="src" href="https://github.com/zekiyugnak/telar-framework/blob/main/commands/audit-accessibility.md">Source ↗</a>
+        </div>
+      </article>
+
+      <article class="card" data-search="optimize-perf performance optimization profiling quick wins">
+        <div class="card-head"><h3>/tl-telar:optimize-perf</h3><span class="tag">command</span></div>
+        <p class="desc">Performance optimization workflow with profiling, quick wins, and deep optimization.</p>
+        <div class="usage">/tl-telar:optimize-perf [area]</div>
+        <button class="card-toggle" aria-expanded="false">Details</button>
+        <div class="card-detail" hidden>
+          <h4>Example</h4><div class="usage">/tl-telar:optimize-perf slow list rendering</div>
+          <a class="src" href="https://github.com/zekiyugnak/telar-framework/blob/main/commands/optimize-perf.md">Source ↗</a>
+        </div>
+      </article>
+
+    </div>
+  </section>
+
+  <!-- TESTING -->
+  <section class="group">
+    <h2 id="test">Testing <span class="gc">2</span></h2>
+    <div class="cards">
+
+      <article class="card" data-search="test-app test comprehensive unit integration e2e device">
+        <div class="card-head"><h3>/tl-telar:test-app</h3><span class="tag">command</span></div>
+        <p class="desc">Comprehensive testing workflow including unit, integration, E2E, and device testing.</p>
+        <div class="usage">/tl-telar:test-app [scope]</div>
+        <button class="card-toggle" aria-expanded="false">Details</button>
+        <div class="card-detail" hidden>
+          <h4>Example</h4><div class="usage">/tl-telar:test-app full suite</div>
+          <a class="src" href="https://github.com/zekiyugnak/telar-framework/blob/main/commands/test-app.md">Source ↗</a>
+        </div>
+      </article>
+
+      <article class="card" data-search="setup-e2e e2e testing framework ci integration detox maestro">
+        <div class="card-head"><h3>/tl-telar:setup-e2e</h3><span class="tag">command</span></div>
+        <p class="desc">Set up an end-to-end testing framework with CI integration.</p>
+        <div class="usage">/tl-telar:setup-e2e [framework]</div>
+        <button class="card-toggle" aria-expanded="false">Details</button>
+        <div class="card-detail" hidden>
+          <h4>Example</h4><div class="usage">/tl-telar:setup-e2e detox</div>
+          <a class="src" href="https://github.com/zekiyugnak/telar-framework/blob/main/commands/setup-e2e.md">Source ↗</a>
+        </div>
+      </article>
+
+    </div>
+  </section>
+
+  <!-- RELEASE & DEPLOY -->
+  <section class="group">
+    <h2 id="release">Release &amp; Deploy <span class="gc">3</span></h2>
+    <div class="cards">
+
+      <article class="card" data-search="release-app release workflow pre-release builds store submission monitoring">
+        <div class="card-head"><h3>/tl-telar:release-app</h3><span class="tag">command</span></div>
+        <p class="desc">Full release workflow with pre-release checks, builds, store submission, and monitoring.</p>
+        <div class="usage">/tl-telar:release-app [platform]</div>
+        <button class="card-toggle" aria-expanded="false">Details</button>
+        <div class="card-detail" hidden>
+          <h4>Example</h4><div class="usage">/tl-telar:release-app to App Store and Play Store</div>
+          <a class="src" href="https://github.com/zekiyugnak/telar-framework/blob/main/commands/release-app.md">Source ↗</a>
+        </div>
+      </article>
+
+      <article class="card" data-search="setup-cicd ci cd pipeline build test deploy automation">
+        <div class="card-head"><h3>/tl-telar:setup-cicd</h3><span class="tag">command</span></div>
+        <p class="desc">Configure a CI/CD pipeline for a mobile app with build, test, and deploy automation.</p>
+        <div class="usage">/tl-telar:setup-cicd [platform]</div>
+        <button class="card-toggle" aria-expanded="false">Details</button>
+        <div class="card-detail" hidden>
+          <h4>Example</h4><div class="usage">/tl-telar:setup-cicd with GitHub Actions</div>
+          <a class="src" href="https://github.com/zekiyugnak/telar-framework/blob/main/commands/setup-cicd.md">Source ↗</a>
+        </div>
+      </article>
+
+      <article class="card" data-search="setup-ota ota updates codepush expo-updates shorebird">
+        <div class="card-head"><h3>/tl-telar:setup-ota</h3><span class="tag">command</span></div>
+        <p class="desc">Configure over-the-air updates with CodePush, Expo Updates, or Shorebird.</p>
+        <div class="usage">/tl-telar:setup-ota [provider]</div>
+        <button class="card-toggle" aria-expanded="false">Details</button>
+        <div class="card-detail" hidden>
+          <h4>Example</h4><div class="usage">/tl-telar:setup-ota with Expo Updates</div>
+          <a class="src" href="https://github.com/zekiyugnak/telar-framework/blob/main/commands/setup-ota.md">Source ↗</a>
+        </div>
+      </article>
+
+    </div>
+  </section>
+
+  <!-- ORCHESTRATION -->
+  <section class="group">
+    <h2 id="orch">Orchestration <span class="gc">3</span></h2>
+    <div class="cards">
+
+      <article class="card" data-search="orchestrate orchestrator full pipeline plan review work-unit 4-phase">
+        <div class="card-head"><h3>/tl-telar:orchestrate</h3><span class="tag">command</span></div>
+        <p class="desc">End-to-end orchestrated execution: plan, plan review (3 reviewers), WU decomposition, 4-phase execution loop per WU, final review, COMMIT-READY emit. Honors your git policy (no auto-commit).</p>
+        <div class="usage">/tl-telar:orchestrate &lt;task&gt; | --epic &lt;path&gt; | --plan-file &lt;path&gt;</div>
+        <button class="card-toggle" aria-expanded="false">Details</button>
+        <div class="card-detail" hidden>
+          <h4>Example</h4><div class="usage">/tl-telar:orchestrate Add a login screen with email + password</div>
+          <a class="src" href="https://github.com/zekiyugnak/telar-framework/blob/main/commands/orchestrate.md">Source ↗</a>
+        </div>
+      </article>
+
+      <article class="card" data-search="resume resume orchestrated plan recovery state files">
+        <div class="card-head"><h3>/tl-telar:resume</h3><span class="tag">command</span></div>
+        <p class="desc">Explicit recovery from an in-progress orchestrated plan. Loads the 3 state files, primes the KB, and asks you to confirm the resume position.</p>
+        <div class="usage">/tl-telar:resume</div>
+        <button class="card-toggle" aria-expanded="false">Details</button>
+        <div class="card-detail" hidden>
+          <h4>Example</h4><div class="usage">/tl-telar:resume</div>
+          <a class="src" href="https://github.com/zekiyugnak/telar-framework/blob/main/commands/resume.md">Source ↗</a>
+        </div>
+      </article>
+
+      <article class="card" data-search="setup-orchestration setup orchestration framework detection skeleton gitignore">
+        <div class="card-head"><h3>/tl-telar:setup-orchestration</h3><span class="tag">command</span></div>
+        <p class="desc">Interactive setup that detects the framework (RN/Expo/Flutter), writes a framework-aware thresholds file, creates the .tl-telar/ skeleton, and idempotently appends a hygiene block to .gitignore.</p>
+        <div class="usage">/tl-telar:setup-orchestration</div>
+        <button class="card-toggle" aria-expanded="false">Details</button>
+        <div class="card-detail" hidden>
+          <h4>Example</h4><div class="usage">/tl-telar:setup-orchestration</div>
+          <a class="src" href="https://github.com/zekiyugnak/telar-framework/blob/main/commands/setup-orchestration.md">Source ↗</a>
+        </div>
+      </article>
+
+    </div>
+  </section>
+
+  <!-- KNOWLEDGE & TOOLS -->
+  <section class="group">
+    <h2 id="knowledge">Knowledge &amp; Tools <span class="gc">4</span></h2>
+    <div class="cards">
+
+      <article class="card" data-search="prime prime knowledge base facts context retrieval 5-category">
+        <div class="card-head"><h3>/tl-telar:prime</h3><span class="tag">command</span></div>
+        <p class="desc">Load relevant knowledge-base facts into the current context (5-category retrieval).</p>
+        <div class="usage">/tl-telar:prime [--files &lt;glob&gt;] [--keywords &lt;words&gt;] [--work-type &lt;type&gt;]</div>
+        <button class="card-toggle" aria-expanded="false">Details</button>
+        <div class="card-detail" hidden>
+          <h4>Example</h4><div class="usage">/tl-telar:prime --files "src/lib/auth/**" --work-type implementation</div>
+          <a class="src" href="https://github.com/zekiyugnak/telar-framework/blob/main/commands/prime.md">Source ↗</a>
+        </div>
+      </article>
+
+      <article class="card" data-search="self-reflect self reflect kb capture learnings pr comments approval">
+        <div class="card-head"><h3>/tl-telar:self-reflect</h3><span class="tag">command</span></div>
+        <p class="desc">Capture durable learnings from recent PRs + the current conversation + an optional config audit. User-approval gate on every candidate. Writes to .tl-telar/knowledge/*.jsonl.</p>
+        <div class="usage">/tl-telar:self-reflect [&lt;days&gt;]</div>
+        <button class="card-toggle" aria-expanded="false">Details</button>
+        <div class="card-detail" hidden>
+          <h4>Example</h4><div class="usage">/tl-telar:self-reflect 14</div>
+          <a class="src" href="https://github.com/zekiyugnak/telar-framework/blob/main/commands/self-reflect.md">Source ↗</a>
+        </div>
+      </article>
+
+      <article class="card" data-search="external-tools-health external ai tools health codex gemini adapters">
+        <div class="card-head"><h3>/tl-telar:external-tools-health</h3><span class="tag">command</span></div>
+        <p class="desc">Reports real-time health of the Codex and Gemini adapters (Phase β, opt-in).</p>
+        <div class="usage">/tl-telar:external-tools-health</div>
+        <button class="card-toggle" aria-expanded="false">Details</button>
+        <div class="card-detail" hidden>
+          <h4>Example</h4><div class="usage">/tl-telar:external-tools-health</div>
+          <a class="src" href="https://github.com/zekiyugnak/telar-framework/blob/main/commands/external-tools-health.md">Source ↗</a>
+        </div>
+      </article>
+
+      <article class="card" data-search="update-requirement update requirement impact analysis cascade requirements plan progress">
+        <div class="card-head"><h3>/tl-telar:update-requirement</h3><span class="tag">command</span></div>
+        <p class="desc">Manage requirement changes mid-project with impact analysis and cascade updates across REQUIREMENTS.md, PLAN.md, and PROGRESS.md.</p>
+        <div class="usage">/tl-telar:update-requirement [F-x|UI-x] [change description]</div>
+        <button class="card-toggle" aria-expanded="false">Details</button>
+        <div class="card-detail" hidden>
+          <h4>Example</h4><div class="usage">/tl-telar:update-requirement F-10 add share-link support</div>
+          <a class="src" href="https://github.com/zekiyugnak/telar-framework/blob/main/commands/update-requirement.md">Source ↗</a>
+        </div>
+      </article>
+
+    </div>
+  </section>
+</main>
+
+<footer><div class="wrap fl">
+  <span>Telar v0.1.0 — MIT © 2026 Zeki Yugnak</span>
+  <span><a href="https://github.com/zekiyugnak/telar-framework/tree/main/commands">All commands on GitHub</a> · <a href="index.html">Docs home</a></span>
+</div></footer>
+
+<script src="assets/telar.js"></script>
+</body>
+</html>

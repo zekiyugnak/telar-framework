@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rules — Telar</title>
+<meta name="description" content="The 7 always-on rules Telar applies automatically.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;650;800;850&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/telar.css">
+</head>
+<body>
+
+<header class="nav"><div class="wrap nav-inner">
+  <a class="brand" href="index.html"><span class="dot"></span> Telar</a>
+  <button class="nav-toggle" aria-label="Menu">☰</button>
+  <nav class="nav-links">
+    <a href="getting-started.html">Getting Started</a>
+    <a href="agents.html">Agents</a>
+    <a href="commands.html">Commands</a>
+    <a href="skills.html">Skills</a>
+    <a href="rules.html">Rules</a>
+    <a href="orchestration.html">Orchestration</a>
+    <a href="examples.html">Examples</a>
+    <a class="nav-gh" href="https://github.com/zekiyugnak/telar-framework">GitHub ↗</a>
+  </nav>
+</div></header>
+
+<main class="wrap">
+  <div class="page-title">
+    <span class="eyebrow">Reference</span>
+    <h1>Rules</h1>
+    <p>7 standards applied automatically on every task — no command needed. They are the guardrails behind the workflow.</p>
+  </div>
+
+  <div class="filter-bar">
+    <input id="filter" type="search" placeholder="Filter rules…" autocomplete="off">
+    <div class="filter-meta" id="filter-meta"></div>
+  </div>
+
+  <section class="group">
+    <div class="cards">
+
+      <article class="card" data-search="codebase-first explore existing project before generating code architecture conflicts duplicate">
+        <div class="card-head"><span class="card-icon">🔍</span><h3>codebase-first</h3></div>
+        <p class="desc">Always explore the existing project before generating any code. Prevents architecture conflicts, duplicate implementations, and style inconsistencies.</p>
+        <button class="card-toggle" aria-expanded="false">Details</button>
+        <div class="card-detail" hidden>
+          <h4>What it enforces</h4><ul>
+            <li>Read project structure, conventions, and dependencies first</li>
+            <li>Reuse existing patterns instead of introducing new ones</li>
+            <li>Surface conflicts before writing code</li>
+          </ul>
+          <a class="src" href="https://github.com/zekiyugnak/telar-framework/blob/main/rules/codebase-first.md">Source ↗</a>
+        </div>
+      </article>
+
+      <article class="card" data-search="requirements-first requirements before implementing feature REQUIREMENTS.md single source of truth">
+        <div class="card-head"><span class="card-icon">📋</span><h3>requirements-first</h3></div>
+        <p class="desc">Before implementing any feature, REQUIREMENTS.md must exist and be consulted — the single source of truth for what to build.</p>
+        <button class="card-toggle" aria-expanded="false">Details</button>
+        <div class="card-detail" hidden>
+          <h4>What it enforces</h4><ul>
+            <li>No feature work without documented requirements</li>
+            <li>Every task references an F-x / UI-x requirement</li>
+            <li>Scope changes flow through update-requirement</li>
+          </ul>
+          <a class="src" href="https://github.com/zekiyugnak/telar-framework/blob/main/rules/requirements-first.md">Source ↗</a>
+        </div>
+      </article>
+
+      <article class="card" data-search="simplicity-first minimum code solves problem no speculative abstractions yagni">
+        <div class="card-head"><span class="card-icon">🪶</span><h3>simplicity-first</h3></div>
+        <p class="desc">Write the minimum code that solves the problem. Nothing speculative. If 200 lines could be 50, rewrite it.</p>
+        <button class="card-toggle" aria-expanded="false">Details</button>
+        <div class="card-detail" hidden>
+          <h4>What it enforces</h4><ul>
+            <li>No speculative abstractions or premature generalization</li>
+            <li>Prefer the smallest correct solution</li>
+            <li>Refactor toward less code when possible</li>
+          </ul>
+          <a class="src" href="https://github.com/zekiyugnak/telar-framework/blob/main/rules/simplicity-first.md">Source ↗</a>
+        </div>
+      </article>
+
+      <article class="card" data-search="platform-conventions ios apple hig android material design 3 conventions">
+        <div class="card-head"><span class="card-icon">📐</span><h3>platform-conventions</h3></div>
+        <p class="desc">Always follow platform-specific conventions for iOS (Apple HIG) and Android (Material Design 3). Detect the target platform and apply the right guidelines.</p>
+        <button class="card-toggle" aria-expanded="false">Details</button>
+        <div class="card-detail" hidden>
+          <h4>What it enforces</h4><ul>
+            <li>Apple Human Interface Guidelines on iOS</li>
+            <li>Material Design 3 on Android</li>
+            <li>Platform-adaptive components and navigation</li>
+          </ul>
+          <a class="src" href="https://github.com/zekiyugnak/telar-framework/blob/main/rules/platform-conventions.md">Source ↗</a>
+        </div>
+      </article>
+
+      <article class="card" data-search="mobile-security security best practices data protection secure storage network owasp">
+        <div class="card-head"><span class="card-icon">🔐</span><h3>mobile-security</h3></div>
+        <p class="desc">Security best practices applied throughout: data protection, secure storage, network security, and OWASP mobile alignment.</p>
+        <button class="card-toggle" aria-expanded="false">Details</button>
+        <div class="card-detail" hidden>
+          <h4>What it enforces</h4><ul>
+            <li>Sensitive data in Keychain/Keystore, never plaintext</li>
+            <li>Secure transport and certificate handling</li>
+            <li>OWASP Mobile Top 10 awareness</li>
+          </ul>
+          <a class="src" href="https://github.com/zekiyugnak/telar-framework/blob/main/rules/mobile-security.md">Source ↗</a>
+        </div>
+      </article>
+
+      <article class="card" data-search="performance-standards performance budgets thresholds launch runtime memory">
+        <div class="card-head"><span class="card-icon">🚀</span><h3>performance-standards</h3></div>
+        <p class="desc">Performance budgets and thresholds — launch performance, runtime smoothness, and memory usage.</p>
+        <button class="card-toggle" aria-expanded="false">Details</button>
+        <div class="card-detail" hidden>
+          <h4>What it enforces</h4><ul>
+            <li>Cold-start and launch performance targets</li>
+            <li>60fps rendering and scroll budgets</li>
+            <li>Memory and resource ceilings</li>
+          </ul>
+          <a class="src" href="https://github.com/zekiyugnak/telar-framework/blob/main/rules/performance-standards.md">Source ↗</a>
+        </div>
+      </article>
+
+      <article class="card" data-search="quality-gates pre-commit pre-pr pre-release quality checks blocking gate doctrine">
+        <div class="card-head"><span class="card-icon">✅</span><h3>quality-gates</h3></div>
+        <p class="desc">Pre-commit, pre-PR, and pre-release quality checks. Encodes the blocking-gate doctrine that the orchestrated loop enforces.</p>
+        <button class="card-toggle" aria-expanded="false">Details</button>
+        <div class="card-detail" hidden>
+          <h4>What it enforces</h4><ul>
+            <li>Checks at commit, PR, and release boundaries</li>
+            <li>Blocking-gate doctrine (intent-level, universal)</li>
+            <li>No debug artifacts or unaddressed TODOs in critical paths</li>
+          </ul>
+          <a class="src" href="https://github.com/zekiyugnak/telar-framework/blob/main/rules/quality-gates.md">Source ↗</a>
+        </div>
+      </article>
+
+    </div>
+  </section>
+</main>
+
+<footer><div class="wrap fl">
+  <span>Telar v0.1.0 — MIT © 2026 Zeki Yugnak</span>
+  <span><a href="https://github.com/zekiyugnak/telar-framework/tree/main/rules">All rules on GitHub</a> · <a href="index.html">Docs home</a></span>
+</div></footer>
+
+<script src="assets/telar.js"></script>
+</body>
+</html>

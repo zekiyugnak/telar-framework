@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Telar — the agentic engineering framework</title>
+<meta name="description" content="Telar is a multi-agent engineering framework for Claude Code: plan, build, review, and ship, with agents. Cross-platform mobile (React Native & Flutter).">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;650;800;850&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/telar.css">
+</head>
+<body>
+
+<header class="nav"><div class="wrap nav-inner">
+  <a class="brand" href="index.html"><span class="dot"></span> Telar</a>
+  <button class="nav-toggle" aria-label="Menu">☰</button>
+  <nav class="nav-links">
+    <a href="getting-started.html">Getting Started</a>
+    <a href="agents.html">Agents</a>
+    <a href="commands.html">Commands</a>
+    <a href="skills.html">Skills</a>
+    <a href="rules.html">Rules</a>
+    <a href="orchestration.html">Orchestration</a>
+    <a href="examples.html">Examples</a>
+    <a class="nav-gh" href="https://github.com/zekiyugnak/telar-framework">GitHub ↗</a>
+  </nav>
+</div></header>
+
+<main>
+  <section class="wrap hero">
+    <span class="eyebrow">v0.1.0 · plugin for Claude Code</span>
+    <h1>Telar</h1>
+    <p class="tagline">plan · build · review · ship — with agents</p>
+    <p class="lead">A multi-agent engineering framework that takes a feature from idea to production: orchestrated planning, adversarial review gates, a persistent knowledge base, and cross-model verification. Its first edition targets <strong>cross-platform mobile</strong> — React Native &amp; Flutter — with deep native integration.</p>
+    <div class="cta">
+      <a class="btn primary" href="getting-started.html">Get started →</a>
+      <a class="btn ghost" href="https://github.com/zekiyugnak/telar-framework">View on GitHub</a>
+    </div>
+  </section>
+
+  <section class="wrap block">
+    <div class="stats">
+      <div class="stat"><div class="n">37</div><div class="l">Agents</div></div>
+      <div class="stat"><div class="n">95</div><div class="l">Skills</div></div>
+      <div class="stat"><div class="n">23</div><div class="l">Commands</div></div>
+      <div class="stat"><div class="n">4</div><div class="l">Hooks</div></div>
+      <div class="stat"><div class="n">7</div><div class="l">Rules</div></div>
+      <div class="stat"><div class="n">19</div><div class="l">Scripts</div></div>
+    </div>
+  </section>
+
+  <section class="wrap block">
+    <div class="section-head">
+      <h2>Explore the framework</h2>
+      <p>Every component is documented with what it does, when to use it, and a link to its source.</p>
+    </div>
+    <div class="cat-grid">
+      <a class="cat-card" href="agents.html">
+        <div class="ico">🤖</div><h3>Agents</h3><span class="count">37 specialists</span>
+        <p>Platform experts, native bridges, architects, security, testing, release, and orchestration agents.</p>
+      </a>
+      <a class="cat-card" href="skills.html">
+        <div class="ico">🧩</div><h3>Skills</h3><span class="count">95 modules</span>
+        <p>Reusable reference modules — navigation, state, performance, payments, blueprints, and workflow.</p>
+      </a>
+      <a class="cat-card" href="commands.html">
+        <div class="ico">⌘</div><h3>Commands</h3><span class="count">23 workflows</span>
+        <p>Slash commands that drive end-to-end workflows: create, add-feature, review, orchestrate, release.</p>
+      </a>
+      <a class="cat-card" href="rules.html">
+        <div class="ico">📐</div><h3>Rules</h3><span class="count">7 always-on</span>
+        <p>Standards applied automatically — security, quality gates, performance, simplicity, requirements.</p>
+      </a>
+      <a class="cat-card" href="orchestration.html">
+        <div class="ico">🎼</div><h3>Orchestration</h3><span class="count">opt-in pipeline</span>
+        <p>Plan &amp; design review gates, a 4-phase execution loop, knowledge base, and external AI delegation.</p>
+      </a>
+      <a class="cat-card" href="examples.html">
+        <div class="ico">📘</div><h3>Examples</h3><span class="count">end-to-end</span>
+        <p>Real command flows for building, optimizing, releasing, auditing, and migrating mobile apps.</p>
+      </a>
+    </div>
+  </section>
+
+  <section class="wrap block">
+    <div class="section-head">
+      <h2>The workflow</h2>
+      <p>The recommended path for building a feature with Telar.</p>
+    </div>
+    <ol class="steps prose">
+      <li><strong>Explore</strong> — always read the existing codebase first (<code>codebase-first</code> rule).</li>
+      <li><strong>Requirements</strong> — establish what to build in <code>REQUIREMENTS.md</code>.</li>
+      <li><strong>Research</strong> — decide how to build it in <code>RESEARCH.md</code> (brainstorm first).</li>
+      <li><strong>Plan</strong> — break work into atomic tasks in <code>PLAN.md</code> + <code>PROGRESS.md</code>.</li>
+      <li><strong>Build</strong> — iterate with simulator verification.</li>
+      <li><strong>Debug</strong> — find the root cause before fixing.</li>
+      <li><strong>Verify</strong> — require fresh evidence before claiming done.</li>
+      <li><strong>Review</strong> — two-stage gates: requirement compliance + code quality.</li>
+    </ol>
+  </section>
+
+  <section class="wrap block">
+    <div class="section-head"><h2>Install</h2></div>
+    <pre class="prose"><code># Add the marketplace
+claude plugin marketplace add zekiyugnak/telar-framework
+
+# Install the plugin
+claude plugin install tl-telar@telar</code></pre>
+    <p class="prose">Then restart Claude Code. See <a href="getting-started.html">Getting Started</a> for the full guide.</p>
+  </section>
+</main>
+
+<footer><div class="wrap fl">
+  <span>Telar v0.1.0 — MIT © 2026 Zeki Yugnak</span>
+  <span><a href="https://github.com/zekiyugnak/telar-framework">GitHub</a> · <a href="getting-started.html">Getting Started</a></span>
+</div></footer>
+
+<script src="assets/telar.js"></script>
+</body>
+</html>

@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Orchestration — Telar</title>
+<meta name="description" content="Telar's opt-in orchestrated mode: design and plan review gates, a 4-phase execution loop, a knowledge base, and external AI delegation.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;650;800;850&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/telar.css">
+</head>
+<body>
+
+<header class="nav"><div class="wrap nav-inner">
+  <a class="brand" href="index.html"><span class="dot"></span> Telar</a>
+  <button class="nav-toggle" aria-label="Menu">☰</button>
+  <nav class="nav-links">
+    <a href="getting-started.html">Getting Started</a>
+    <a href="agents.html">Agents</a>
+    <a href="commands.html">Commands</a>
+    <a href="skills.html">Skills</a>
+    <a href="rules.html">Rules</a>
+    <a href="orchestration.html">Orchestration</a>
+    <a href="examples.html">Examples</a>
+    <a class="nav-gh" href="https://github.com/zekiyugnak/telar-framework">GitHub ↗</a>
+  </nav>
+</div></header>
+
+<main class="wrap">
+  <div class="page-title">
+    <span class="eyebrow">Deep dive</span>
+    <h1>Orchestrated Mode</h1>
+    <p>Opt-in multi-agent orchestration that takes a feature from idea to commit-ready — with review gates, blocking quality gates, a persistent knowledge base, and cross-model verification. Strictly opt-in: legacy commands work unchanged until you run setup.</p>
+  </div>
+
+  <div class="prose">
+    <div class="callout"><strong>Opt-in &amp; git-safe.</strong> Run <code>/tl-telar:setup-orchestration</code> once to enable it. The orchestrator never auto-commits — it emits a COMMIT-READY signal and leaves the commit to you.</div>
+
+    <h2>The pipeline</h2>
+    <div class="flow">
+      <span class="node">Design gate</span><span class="arrow">→</span>
+      <span class="node">Plan</span><span class="arrow">→</span>
+      <span class="node">Plan gate</span><span class="arrow">→</span>
+      <span class="node">Work Units</span><span class="arrow">→</span>
+      <span class="node">4-phase loop</span><span class="arrow">→</span>
+      <span class="node">Final review</span><span class="arrow">→</span>
+      <span class="node">COMMIT-READY</span>
+    </div>
+
+    <h2>The document chain</h2>
+    <p>Each stage produces an artifact that feeds the next — the correctness guarantee that keeps generated work aligned to intent.</p>
+    <div class="flow">
+      <span class="node">REQUIREMENTS.md</span><span class="arrow">→</span>
+      <span class="node">RESEARCH.md</span><span class="arrow">→</span>
+      <span class="node">PLAN.md</span><span class="arrow">→</span>
+      <span class="node">PROGRESS.md</span>
+    </div>
+
+    <h2>Review gates</h2>
+    <h3>Design review gate — collaborative, 6 reviewers</h3>
+    <p>A pre-implementation review of a design doc. <strong>APPROVED</strong> only if all six reviewers approve: PM, Architect, Designer, Security-Design, CTO, and Mobile-Platform. It catches scope ambiguity, architecture drift, UX inconsistency, threat-model gaps, strategic misfit, and platform-convention violations before any plan is drafted. Max 3 iterations, then structured escalation.</p>
+    <h3>Plan review gate — adversarial, 3 reviewers</h3>
+    <p>Three fresh-instance adversarial reviewers inspect the implementation plan. <strong>PASS</strong> means it's fit to execute; <strong>FAIL</strong> means blocking defects, cited with file:line evidence and rubric rule IDs. Fresh instances each iteration prevent anchoring bias. Max 3 iterations, then human escalation.</p>
+
+    <h2>The 4-phase execution loop</h2>
+    <p>Each Work Unit runs through the same loop. Validation is run by the orchestrator itself (never delegated); reviewers are fresh each pass.</p>
+    <ol class="steps">
+      <li><strong>IMPLEMENT</strong> — make the change for this Work Unit.</li>
+      <li><strong>VALIDATE</strong> — run validation commands directly; output is redirected to logs to keep the terminal quiet.</li>
+      <li><strong>REVIEW</strong> — spawn 2–4 fresh adversarial reviewers (always-on: Adversarial Code + Mobile Security; conditional: UX/A11y, Performance). Any FAIL blocks COMMIT.</li>
+      <li><strong>COMMIT</strong> — on PASS, emit COMMIT-READY. After 3 failed retries, escalate with the full failure history.</li>
+    </ol>
+
+    <h2>Knowledge base</h2>
+    <p>Telar keeps a typed JSONL knowledge base under <code>.tl-telar/knowledge/</code> that compounds over time:</p>
+    <ul>
+      <li><strong>Capture</strong> — <code>/tl-telar:self-reflect</code> harvests learnings from PR comments, the current conversation, and config audits, with a user-approval gate on every candidate.</li>
+      <li><strong>Prime</strong> — <code>/tl-telar:prime</code> re-injects the relevant facts into a new task's context, in five fixed categories: MUST FOLLOW, GOTCHAS, PATTERNS, DECISIONS, API BEHAVIORS.</li>
+      <li><strong>Curate</strong> — the knowledge curator dedups facts, promotes confidence on repeated provenance, and sweeps stale entries.</li>
+    </ul>
+
+    <h2>State persistence &amp; recovery</h2>
+    <p>A 3-file state model under <code>.tl-telar/</code> (plan, project-context, execution-state) lets the orchestrator survive compaction and cross-session restarts. A SessionStart hook re-primes context automatically; <code>/tl-telar:resume</code> restores an in-progress run after confirming the resume position.</p>
+
+    <h2>External AI delegation <span style="color:var(--text-faint);font-weight:400">(Phase β/γ — disabled by default)</span></h2>
+    <p>Optional adapters can delegate implementation or review to external models (Codex, Gemini) with a budget circuit breaker ($1/task, $10/session) and fail-closed behavior. Cross-model review enforces that the model which wrote a diff never reviews it. Enable per-adapter in <code>.tl-telar/external-tools.yaml</code>; check status with <code>/tl-telar:external-tools-health</code>.</p>
+
+    <h2>Authoring inputs for orchestrate</h2>
+    <p><code>/tl-telar:orchestrate</code> accepts three input modes:</p>
+    <table class="t">
+      <thead><tr><th>Mode</th><th>Invocation</th><th>When</th></tr></thead>
+      <tbody>
+        <tr><td>Free-text</td><td><code>/tl-telar:orchestrate &lt;description&gt;</code></td><td>No plan yet — the orchestrator drafts one</td></tr>
+        <tr><td>Epic file</td><td><code>/tl-telar:orchestrate --epic &lt;path&gt;</code></td><td>A prepared single-feature epic</td></tr>
+        <tr><td>Plan file</td><td><code>/tl-telar:orchestrate --plan-file &lt;path&gt;</code></td><td>You already keep a WU-decomposable plan</td></tr>
+      </tbody>
+    </table>
+
+    <h2>Get started with orchestration</h2>
+    <pre><code># 1. One-time opt-in
+/tl-telar:setup-orchestration
+
+# 2. Run the full pipeline
+/tl-telar:orchestrate Add a login screen with email + password
+
+# 3. Resume after an interruption
+/tl-telar:resume
+
+# 4. Capture learnings after a PR
+/tl-telar:self-reflect</code></pre>
+  </div>
+</main>
+
+<footer><div class="wrap fl">
+  <span>Telar v0.1.0 — MIT © 2026 Zeki Yugnak</span>
+  <span><a href="https://github.com/zekiyugnak/telar-framework">GitHub</a> · <a href="index.html">Docs home</a></span>
+</div></footer>
+
+<script src="assets/telar.js"></script>
+</body>
+</html>

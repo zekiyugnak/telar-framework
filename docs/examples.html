@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Examples — Telar</title>
+<meta name="description" content="End-to-end usage examples for building, optimizing, releasing, and migrating mobile apps with Telar.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;650;800;850&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/telar.css">
+</head>
+<body>
+
+<header class="nav"><div class="wrap nav-inner">
+  <a class="brand" href="index.html"><span class="dot"></span> Telar</a>
+  <button class="nav-toggle" aria-label="Menu">☰</button>
+  <nav class="nav-links">
+    <a href="getting-started.html">Getting Started</a>
+    <a href="agents.html">Agents</a>
+    <a href="commands.html">Commands</a>
+    <a href="skills.html">Skills</a>
+    <a href="rules.html">Rules</a>
+    <a href="orchestration.html">Orchestration</a>
+    <a href="examples.html">Examples</a>
+    <a class="nav-gh" href="https://github.com/zekiyugnak/telar-framework">GitHub ↗</a>
+  </nav>
+</div></header>
+
+<main class="wrap">
+  <div class="page-title">
+    <span class="eyebrow">Guide</span>
+    <h1>Examples</h1>
+    <p>Real command flows for common tasks. Each one chains the right agents, skills, and rules behind a single command.</p>
+  </div>
+
+  <div class="prose">
+    <h2>Create a new app</h2>
+    <pre><code>/tl-telar:create-app fitness tracking app with Supabase</code></pre>
+    <p>Gathers requirements, brainstorms architecture, sets up navigation and state management, and scaffolds CI/CD — producing <code>REQUIREMENTS.md</code> and a working project skeleton.</p>
+
+    <h2>Add a feature</h2>
+    <pre><code>/tl-telar:add-feature push notifications with deep linking</code></pre>
+    <p>Explores the existing codebase first, brainstorms the approach, plans atomic tasks, implements with simulator verification, and runs the two-stage review gates before completion.</p>
+
+    <h2>Optimize performance</h2>
+    <pre><code>/tl-telar:optimize-perf slow list rendering</code></pre>
+    <p>Profiles the bottleneck, applies quick wins (FlashList migration, memoization, image caching), then deeper optimizations — measuring before and after.</p>
+
+    <h2>Set up CI/CD</h2>
+    <pre><code>/tl-telar:setup-cicd with GitHub Actions</code></pre>
+    <p>Configures build, test, and deploy automation with Fastlane/EAS, including code-signing handling for both platforms.</p>
+
+    <h2>Release to the stores</h2>
+    <pre><code>/tl-telar:release-app to App Store and Play Store</code></pre>
+    <p>Runs pre-release quality gates, builds signed artifacts, prepares store metadata, submits, and sets up release monitoring.</p>
+
+    <h2>Security audit</h2>
+    <pre><code>/tl-telar:audit-security full</code></pre>
+    <p>Audits against the OWASP Mobile Top 10 and returns P1/P2/P3 priority-ranked, evidence-based findings.</p>
+
+    <h2>Migrate a native app</h2>
+    <pre><code>/tl-telar:migrate-app from native iOS to Flutter</code></pre>
+    <p>Plans and executes a migration from native iOS/Android to cross-platform React Native or Flutter, preserving behavior.</p>
+
+    <h2>Set up OTA updates</h2>
+    <pre><code>/tl-telar:setup-ota with Expo Updates</code></pre>
+    <p>Configures over-the-air updates (CodePush, Expo Updates, or Shorebird) with update policies and rollback strategy.</p>
+
+    <h2>End-to-end orchestrated build</h2>
+    <pre><code># Enable orchestration once
+/tl-telar:setup-orchestration
+
+# Drive the full pipeline
+/tl-telar:orchestrate Add authentication with email + password and biometrics</code></pre>
+    <p>Runs the design gate, drafts and reviews a plan, decomposes it into Work Units, and executes each through the 4-phase loop — ending at COMMIT-READY. See <a href="orchestration.html">Orchestration</a> for details.</p>
+
+    <h2>Using workflow skills individually</h2>
+    <p>You don't have to use full orchestration. The workflow skills compose on their own:</p>
+    <pre><code>/tl-telar:add-feature authentication
+# → requirements-gather → brainstorm-first → plan-and-track
+# → iterative-build-loop → review-gates → verification-before-completion</code></pre>
+  </div>
+</main>
+
+<footer><div class="wrap fl">
+  <span>Telar v0.1.0 — MIT © 2026 Zeki Yugnak</span>
+  <span><a href="https://github.com/zekiyugnak/telar-framework">GitHub</a> · <a href="getting-started.html">Getting Started</a></span>
+</div></footer>
+
+<script src="assets/telar.js"></script>
+</body>
+</html>
