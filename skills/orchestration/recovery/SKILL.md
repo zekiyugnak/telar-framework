@@ -55,9 +55,7 @@ Quote each file's metadata block back to the user so they can verify the recover
 - Gate iterations: {{<!-- gate-iterations: N -->}}
 - Status: {{<!-- status: in-progress -->}}
 - Last execution-state update: {{<!-- updated: ... -->}}
-- Active WU: {{from Current Position}}
-- Current phase: {{from Current Position}}
-- Retry count: {{from Current Position}}
+- Active Work Units: {{list from 'Active Work Units' section — each entry's WU id, phase, and retry count}}
 ```
 
 ### Step 3: KB priming
@@ -83,7 +81,7 @@ Choice [1/2/3]?
 
 ### Step 5a: Resume
 
-Flip back to the mobile-orchestrator agent's main flow (Step 6 — WU execution — continuous-frontier dispatch, but jumping to the recorded WU+phase). Spawn FRESH `Task()` instances for any in-flight implementer/reviewer — never reuse a pre-compaction agent ID.
+Flip back to the mobile-orchestrator agent's main flow (Step 6 — WU execution — continuous-frontier dispatch). Do NOT jump to a single recorded WU+phase — re-run `scripts/tl-telar-wu-scheduler.js` against the current `active-plan.md` + `execution-state.md` to reconstruct the ready frontier and occupied-file set from scratch. Any row still marked IN-PROGRESS whose background task no longer exists is reconciled per Step 6 step 5 (reset to PENDING for retry, or escalated) rather than resumed in place. Spawn FRESH `Task()` instances for whatever the recomputed frontier says to dispatch next — never reuse a pre-compaction/pre-session agent ID for ANY WU, in-flight or not.
 
 > Recovery runs in the **main session** (via `/tl-telar:resume`, or the main-session conductor detecting the sentinel at boot) — that is why these `Task()` spawns work. Never run recovery or the orchestrator as a subagent; a subagent has no `Task` tool and cannot resume the WU cycle. See `agents/mobile-orchestrator.md` → "Execution context".
 
