@@ -178,8 +178,36 @@ run "cap defaults to 3 (no thresholds)" test_cap_default_three
 run "cycle -> exit 1"                  test_cycle_exits_nonzero
 run "missing file -> exit 1"           test_missing_file_exits_nonzero
 run "ambiguous plan -> plan_warnings emitted" test_plan_warnings_emitted
+test_cap_invalid_value_falls_back() {
+  # A thresholds file with an INVALID cap (0) must fall back to default 3, NOT
+  # honor 0. If the `n > 0` guard in readMaxParallel regressed, cap=0 would make
+  # every candidate hit concurrency_cap forever -> total orchestrator deadlock.
+  # This pins that load-bearing guard.
+  cat > "$1/.tl-telar-thresholds.json" <<'EOF'
+{ "execution": { "max_parallel_wus": 0 } }
+EOF
+  cat > "$1/active-plan.md" <<'EOF'
+## Work Units
+### WU-001: A
+- file_scope:
+  - src/a.ts
+- deps: []
+EOF
+  cat > "$1/execution-state.md" <<'EOF'
+## Work Unit Status
+| WU | Status | Phase | Retries | Writer Model |
+|----|--------|-------|---------|--------------|
+EOF
+  out=$(node "$SCHED" "$1/active-plan.md" "$1/execution-state.md"); rc=$?
+  [[ $rc -eq 0 ]] || { echo "    exit $rc"; return 1; }
+  # WU-001 must be READY (fallback cap 3), not deadlocked on concurrency_cap
+  echo "$out" | grep -q '"ready":\[[^]]*"WU-001"' || { echo "    WU-001 not ready (cap=0 not falling back?): $out"; return 1; }
+  return 0
+}
+
 run "no args -> exit 2 usage"          test_usage_exit_two
 run "cap read from thresholds file"    test_cap_read_from_thresholds
+run "invalid cap (0) -> falls back to 3" test_cap_invalid_value_falls_back
 
 echo ""
 echo "Workflow CLI smoke: ${pass} passed, ${fail} failed"
