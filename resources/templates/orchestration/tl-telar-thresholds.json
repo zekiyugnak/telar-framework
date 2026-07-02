@@ -22,6 +22,10 @@
     "cycle": "interactive",
     "description": "interactive (default) = the orchestrator may pause mid-cycle at checkpoint:true WUs and at self-reflect. unattended = exactly ONE human gate at plan-ready (Step 5): scope + approved UI ASCII drafts + all secrets/inputs are collected up front, then the WU cycle (Step 6) runs to PR-ready with ZERO pauses. UI/visual sign-off is hoisted into plan-readiness, never mid-cycle. Unattended never skips a decision — it makes it earlier. See agents/mobile-orchestrator.md -> 'Autonomy model'."
   },
+  "execution": {
+    "max_parallel_wus": 3,
+    "description": "Maximum Work Units the orchestrator runs concurrently (background subagents). A WU is dispatched only when its deps are COMPLETE and its file_scope is disjoint from every running WU. Default 3 (matches Anthropic 3-5 subagent guidance); raise only for many small, disjoint WUs — parallel agent runs cost ~15x chat tokens. See scripts/tl-telar-wu-scheduler.js."
+  },
   "enforcement": {
     "coverage_command": "echo 'coverage not configured - run /tl-telar:setup-orchestration for framework-aware defaults' && exit 0",
     "coverage_strict": false,

@@ -39,3 +39,15 @@ Phase 2 VALIDATE uses `file_scope` to bound the file-scope check. **The check is
 Phase 3 ADVERSARIAL REVIEW uses `file_scope` to determine which conditional reviewers fire (UI dirs → a11y, perf-heavy code → perf).
 
 For the state-sentinel lifecycle (`<!-- status: in-progress -->` → `completed`), see `./state-files.md`: sub-spec 2 leaves the sentinel `in-progress`; the completed-flip + recovery lifecycle is owned by sub-spec 4.
+
+### Parallel dispatch (the disjointness rule, enforced)
+
+The "Non-overlapping file scopes for parallel WUs" constraint above is enforced
+mechanically by `scripts/tl-telar-wu-scheduler.js`. Given `active-plan.md` +
+`execution-state.md`, it returns the set of WUs whose `deps` are COMPLETE AND
+whose `file_scope` is disjoint from every running WU (and internally disjoint
+from each other), bounded by `execution.max_parallel_wus`. The scheduler is pure
+(fs-read only); the orchestrator does the dispatch. It also flags, at plan time,
+any two dependency-unordered WUs that declare the same path — an ambiguous plan
+the plan-review-gate must resolve. No schema field changes: `deps` + `file_scope`
+already carry everything the scheduler needs.

@@ -45,10 +45,15 @@ Written after EVERY phase transition. Atomic — the orchestrator writes a compl
 # Execution State
 <!-- updated: 2026-05-17T13:00:00Z -->
 
-## Current Position
-- Active work unit: WU-002
-- Current phase: VALIDATE
-- Retry count: 0
+## Active Work Units
+- WU-002 (phase VALIDATE, retry 0)
+- WU-004 (phase IMPLEMENT, retry 0)
+
+> The orchestrator may run up to `execution.max_parallel_wus` WUs concurrently
+> (default 3). Each active WU is a background subagent with its own phase and
+> retry count; the 4-phase loop is per-WU, not global. A WU is dispatched only
+> when its `deps` are all COMPLETE and its `file_scope` is disjoint from every
+> currently-running WU — computed by `scripts/tl-telar-wu-scheduler.js`.
 
 ## Work Unit Status
 
@@ -59,6 +64,14 @@ Written after EVERY phase transition. Atomic — the orchestrator writes a compl
 | WU-003 | PENDING     | —         | 0       | —            |
 
 > The `Writer Model` column records which model implemented each WU. Required for cross-model review (sub-spec 8) to exclude the writer from the reviewer pool. Values: `claude | codex | gemini`.
+
+> Multiple rows MAY be `IN-PROGRESS` simultaneously (bounded by
+> `execution.max_parallel_wus`). Each carries its own `Phase`/`Retries`. The
+> snapshot remains atomic — the orchestrator writes the whole file on every
+> transition, so the file doubles as the resume journal: on recovery the
+> orchestrator re-runs the scheduler against this table to reconstruct the ready
+> frontier and the occupied-file set. COMPLETE WUs are skipped (content-aware
+> baseline attribution prevents re-attribution).
 
 ## Blocked / Escalated
 (empty when no escalations)
