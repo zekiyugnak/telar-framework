@@ -165,7 +165,7 @@ skills:
 ### Integration
 - Update PROGRESS.md to "Complete"
 - Commit using mobile-commit-convention
-- Archive PLAN.md and PROGRESS.md
+- Archive: run `node scripts/tl-telar-spec-archive.js <change-id>` — it moves the entire `tl-telar-spec/changes/<id>/` folder (PLAN.md, PROGRESS.md, REQUIREMENTS.md, RESEARCH.md, and any TRACEABILITY.md together) to `tl-telar-spec/changes/archive/<date>-<id>/` in one step, and merges any `REQUIREMENTS.delta.md` into `tl-telar-spec/truth/`. There is no separate `.claude/archive/` location.
 
 ---
 

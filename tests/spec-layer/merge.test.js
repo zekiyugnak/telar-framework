@@ -123,4 +123,10 @@ const TRUTH = `# Requirements: Auth Domain
   assert.equal(mergedContent.startsWith('### F-1: First Ever Requirement'), true);
 }
 
+// parseDeltaHeader rejects an unsafe domain (path traversal / fat-finger guard)
+{
+  const delta = '<!-- tl-telar-spec-delta: domain=../../etc baseline-hash=none -->\n# Delta\n';
+  assert.throws(() => parseDeltaHeader(delta), /unsafe domain/);
+}
+
 console.log('tl-telar-spec-merge: all tests passed');

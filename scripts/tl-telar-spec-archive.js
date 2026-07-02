@@ -130,13 +130,17 @@ function main() {
     process.exit(1);
   }
 
+  const dateStamp = new Date().toISOString().slice(0, 10);
+  const archiveDir = path.join(PROJECT_ROOT, 'tl-telar-spec', 'changes', 'archive', `${dateStamp}-${changeId}`);
+  if (fs.existsSync(archiveDir)) {
+    fail(`archive destination already exists: tl-telar-spec/changes/archive/${dateStamp}-${changeId}/ — resolve manually before re-running.`);
+  }
+
   for (const { truthPath, mergedContent } of plannedWrites) {
     fs.mkdirSync(path.dirname(truthPath), { recursive: true });
     fs.writeFileSync(truthPath, mergedContent, 'utf8');
   }
 
-  const dateStamp = new Date().toISOString().slice(0, 10);
-  const archiveDir = path.join(PROJECT_ROOT, 'tl-telar-spec', 'changes', 'archive', `${dateStamp}-${changeId}`);
   fs.mkdirSync(path.dirname(archiveDir), { recursive: true });
   fs.renameSync(changeDir, archiveDir);
 

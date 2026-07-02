@@ -4,6 +4,7 @@
 const FX_HEADING_RE = /^###\s+(F-\d+):\s*(.*)$/;
 const DELTA_HEADER_RE = /^<!--\s*tl-telar-spec-delta:\s*domain=(\S+)\s+baseline-hash=(\S+)\s*-->\s*$/m;
 const SECTION_RE = /^##\s+(ADDED|MODIFIED|REMOVED)\s+Requirements\s*$/;
+const SAFE_DOMAIN_RE = /^[a-z0-9][a-z0-9_-]*$/i;
 
 function parseDeltaHeader(deltaContent) {
   const m = deltaContent.match(DELTA_HEADER_RE);
@@ -12,7 +13,11 @@ function parseDeltaHeader(deltaContent) {
       'Delta file missing required header comment: <!-- tl-telar-spec-delta: domain=<domain> baseline-hash=<hash> -->'
     );
   }
-  return { domain: m[1], baselineHash: m[2] };
+  const domain = m[1];
+  if (!SAFE_DOMAIN_RE.test(domain)) {
+    throw new Error(`Delta header has an unsafe domain value: "${domain}" (must match ${SAFE_DOMAIN_RE})`);
+  }
+  return { domain, baselineHash: m[2] };
 }
 
 // Splits a truth REQUIREMENTS.md into: everything before the first F-x

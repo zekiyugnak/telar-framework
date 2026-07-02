@@ -29,4 +29,8 @@ assert.equal(inferDomain([]), null);
 // All segments are known layer roots → null (no domain candidate found)
 assert.equal(inferDomain(['src/lib/app']), null);
 
+// Path-traversal segments are never returned as a domain candidate
+assert.equal(inferDomain(['../..']), null);
+assert.equal(inferDomain(['../../evil']), 'evil');
+
 console.log('tl-telar-spec-domain: all tests passed');

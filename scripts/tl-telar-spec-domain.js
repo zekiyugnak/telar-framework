@@ -20,7 +20,9 @@ function candidateFor(filePath) {
   for (const segment of segments) {
     const lower = segment.toLowerCase();
     if (SKIP_SEGMENTS.has(lower)) continue;
-    return stripExtension(lower);
+    const stripped = stripExtension(lower);
+    if (!/^[a-z0-9][a-z0-9_-]*$/.test(stripped)) continue;
+    return stripped;
   }
   return null;
 }

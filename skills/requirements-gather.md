@@ -33,17 +33,40 @@ Supports two modes:
 Before gathering requirements, resolve where REQUIREMENTS.md will be written:
 
 1. **Read the active change pointer**: `.tl-telar/context/active-change.txt` (one line, the current change-id). If it exists and its change dir under `tl-telar-spec/changes/<id>/` exists, reuse it.
-2. **If absent**, this is a new change:
+2. **If absent, or if it points at a change whose directory under `tl-telar-spec/changes/<id>/` no longer exists** (e.g. it was already archived), this is a new change:
    - Generate a change-id: `<YYYY-MM-DD>-<kebab-case-slug-from-feature-description>` (e.g. `2026-07-add-dark-mode`).
    - If `tl-telar-spec/` doesn't exist yet, run `node scripts/tl-telar-spec-bootstrap.js` first — this creates the skeleton and migrates any pre-existing root-level REQUIREMENTS.md/RESEARCH.md/PLAN.md into `tl-telar-spec/truth/`.
    - Create `tl-telar-spec/changes/<id>/`.
    - Write the change-id to `.tl-telar/context/active-change.txt` (git-ignored — matches the existing `.tl-telar/context/` convention; this pointer is ephemeral session state, not a durable artifact).
-3. **Determine domain**: if candidate file paths are already known (e.g. from a prior RESEARCH.md or an epic file), run `node -e "console.log(require('./scripts/tl-telar-spec-domain.js').inferDomain(process.argv.slice(1)))" -- <path1> <path2> ...`. Otherwise ask the user directly: "Which part of the app does this belong to — auth, navigation, checkout, ...?" Always show the inferred/asked domain to the user for confirmation before writing any file.
+3. **Determine domain**: if candidate file paths are already known (e.g. from a prior RESEARCH.md or an epic file), run `node -e "console.log(require('./scripts/tl-telar-spec-domain.js').inferDomain(process.argv.slice(1)))" -- <path1> <path2> ...`. Otherwise ask the user directly: "Which part of the app does this belong to — auth, navigation, checkout, ...?" Always show the inferred/asked domain to the user for confirmation before writing any file. This skill authors exactly one domain per change today; the `deltas/<domain>.REQUIREMENTS.delta.md` multi-file convention that `scripts/tl-telar-spec-archive.js` and `scripts/validate-spec-layer.js` already support is not yet produced by any skill — a change touching multiple domains currently needs to be split into one change per domain.
 4. **Check for an existing truth doc**: does `tl-telar-spec/truth/<domain>/REQUIREMENTS.md` exist?
    - **Yes** → this run operates in **Delta Mode** (below).
-   - **No** → proceed with the ordinary **From Scratch** / **Document-Driven** mode below; the resulting REQUIREMENTS.md becomes the seed for `truth/<domain>/REQUIREMENTS.md` the first time `scripts/tl-telar-spec-archive.js` runs for this change.
+   - **No** → proceed with the ordinary **From Scratch** / **Document-Driven** mode below to write the full `REQUIREMENTS.md`, then follow "Seeding a Brand-New Domain" (below) to also produce a delta file — `scripts/tl-telar-spec-archive.js` only ever reads delta files, so a change with no delta file cannot be archived; this step is what lets the very first change in a domain actually reach `truth/`.
 
 All REQUIREMENTS.md output from this skill is written to `tl-telar-spec/changes/<id>/REQUIREMENTS.md` — never to the project root.
+
+---
+
+## Seeding a Brand-New Domain
+
+Triggered when Step 0 found NO existing `tl-telar-spec/truth/<domain>/REQUIREMENTS.md` (the greenfield case). After writing the full `REQUIREMENTS.md` via From Scratch or Document-Driven mode:
+
+1. Extract every F-x id and its full block from the just-written `REQUIREMENTS.md`.
+2. Write `tl-telar-spec/changes/<id>/REQUIREMENTS.delta.md`:
+
+   ```markdown
+   <!-- tl-telar-spec-delta: domain=<domain> baseline-hash=none -->
+   # Delta: <change-id> / <domain> (initial seed)
+
+   ## ADDED Requirements
+   ### F-1: <Title>
+   [full block, copied verbatim from REQUIREMENTS.md]
+
+   ### F-2: <Title>
+   [full block, copied verbatim from REQUIREMENTS.md]
+   ```
+
+3. This is what `node scripts/tl-telar-spec-archive.js <change-id>` merges into a brand-new `truth/<domain>/REQUIREMENTS.md`. `scripts/tl-telar-spec-merge.js`'s `mergeDelta` already handles merging ADDED entries into empty truth content correctly (see `tests/spec-layer/merge.test.js` and `tests/spec-layer/archive-smoke.sh`'s `test_happy_path_first_delta`) — no code changes are needed for this, only this authoring step.
 
 ---
 
