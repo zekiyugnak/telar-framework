@@ -1,6 +1,6 @@
-# Telar v0.1.0
+# Telar v0.2.0
 
-Cross-platform mobile development plugin for Claude Code — React Native, Flutter, and native platform integration.
+Cross-platform mobile development plugin for Claude Code — React Native, Flutter, and native platform integration. Also covers a companion web stack (Astro, Next.js/Tailwind/shadcn, Vite/TanStack admin panels) and a Rust service layer.
 
 ## Quick Start
 
@@ -46,9 +46,11 @@ The recommended workflow for building features:
 
 ## Agent Discovery
 
-**37 agents** organized by domain:
+**41 agents** organized by domain:
 
 - **Platform experts**: `react-native-expert`, `flutter-expert`
+- **Web platform experts**: `astro-web-expert` (SEO/OG marketing sites), `nextjs-web-expert` (authenticated Next.js/Tailwind/shadcn consoles), `admin-panel-architect` (Vite + TanStack Router/Query/Table admin panels)
+- **Service layer**: `rust-service-architect` (axum/tokio/sqlx backend services)
 - **Native bridges**: `ios-native-bridge`, `android-native-bridge`
 - **Architecture**: `mobile-navigation-architect`, `mobile-state-management`, `mobile-backend-architect`, `mobile-architect-adversarial`
 - **UI/UX**: `mobile-ui-ux-specialist`, `mobile-accessibility-expert`, `mobile-animations-specialist`, `mobile-design-system-architect`, `mobile-screen-builder`
@@ -65,9 +67,13 @@ The recommended workflow for building features:
 
 ## Skill Discovery
 
-**95 skills** including:
+**113 skills** including:
 
 - **Blueprints** (`skills/blueprints/`): auth-flow, crud-list, chat-feature, settings-screen, onboarding-flow
+- **Astro**: astro-seo-og, astro-content-performance
+- **Next.js/Tailwind/shadcn**: shadcn-component-patterns, tailwind-v4-design-tokens, nextjs-auth-app-router
+- **Admin panel (Vite + TanStack)**: tanstack-router-patterns, tanstack-query-patterns, tanstack-table-patterns, supabase-rls-client-patterns, supabase-tus-resumable-upload, command-palette-cmdk, tremor-dashboard-charts, i18n-rtl-formatjs-lingui
+- **Rust service**: rust-axum-routing, rust-sqlx-patterns, rust-service-architecture, rust-testing-pyramid, rust-deployment
 - **Workflow**: requirements-gather, brainstorm-first, plan-and-track, review-gates, iterative-build-loop, mobile-commit-convention, systematic-debugging, verification-before-completion
   - `plan-review-gate` — adversarial 3-reviewer gate on PLAN.md (orchestration namespace, sub-spec 1)
   - `orchestrated-execution` — 4-phase IMPLEMENT/VALIDATE/REVIEW/COMMIT loop (orchestration namespace, sub-spec 2)

@@ -53,6 +53,10 @@
     <a href="#workflow">Workflow</a>
     <a href="#blueprints">Blueprints</a>
     <a href="#orch">Orchestration</a>
+    <a href="#astro">Astro</a>
+    <a href="#nextweb">Next.js Web</a>
+    <a href="#adminpanel">Admin Panel</a>
+    <a href="#rustsvc">Rust Service</a>
   </nav>
 
   <!-- REACT NATIVE -->
@@ -1018,9 +1022,18 @@
 
   <!-- BLUEPRINTS -->
   <section class="group">
-    <h2 id="blueprints">Blueprints <span class="gc">5</span></h2>
+    <h2 id="blueprints">Blueprints <span class="gc">6</span></h2>
     <p class="gdesc">Complete, ready-to-use feature implementations for both React Native and Flutter.</p>
     <div class="cards">
+      <article class="card" data-search="blueprints-index blueprint index discovery scaffolding feature">
+        <div class="card-head"><h3>blueprints/README</h3></div>
+        <p class="desc">Index of all available feature blueprints and how to use them.</p>
+        <div class="chips"><span class="chip">index</span><span class="chip">scaffolding</span></div>
+        <button class="card-toggle" aria-expanded="false">Details</button>
+        <div class="card-detail" hidden><h4>Capabilities</h4><ul>
+          <li>Blueprint discovery and selection</li>
+        </ul><a class="src" href="https://github.com/zekiyugnak/telar-framework/blob/main/skills/blueprints/README.md">Source ↗</a></div>
+      </article>
       <article class="card" data-search="blueprint-auth-flow auth login signup social-auth forgot-password authentication">
         <div class="card-head"><h3>blueprints/auth-flow</h3></div>
         <p class="desc">Complete auth flow — login, signup, forgot password, and social auth.</p>
@@ -1196,11 +1209,259 @@
     </div>
   </section>
 
+  <!-- ASTRO -->
+  <section class="group">
+    <h2 id="astro">Astro <span class="gc">2</span></h2>
+    <p class="gdesc">SEO/OG correctness and hydration performance for public marketing and careers sites.</p>
+    <div class="cards">
+      <article class="card" data-search="astro-seo-og astro seo open-graph meta-tags sitemap structured-data jsonld">
+        <div class="card-head"><h3>astro-seo-og</h3></div>
+        <p class="desc">Missing/inconsistent SEO/OG tags silently kill organic visibility and break social link previews.</p>
+        <div class="chips"><span class="chip">seo</span><span class="chip">open-graph</span><span class="chip">json-ld</span></div>
+        <button class="card-toggle" aria-expanded="false">Details</button>
+        <div class="card-detail" hidden><h4>Capabilities</h4><ul>
+          <li>Reusable SEO/Layout component: title, description, canonical tags</li>
+          <li>Open Graph and Twitter Card metadata from a single source of truth</li>
+          <li>JSON-LD structured data for Organization and JobPosting schema</li>
+          <li>Dynamic/static OG image generation; sitemap and robots.txt setup</li>
+        </ul><a class="src" href="https://github.com/zekiyugnak/telar-framework/blob/main/skills/astro-seo-og.md">Source ↗</a></div>
+      </article>
+      <article class="card" data-search="astro-content-performance astro islands performance hydration core-web-vitals image-optimization">
+        <div class="card-head"><h3>astro-content-performance</h3></div>
+        <p class="desc">Unnecessary hydration and unoptimized hero images are the top cause of poor LCP/CLS on marketing sites.</p>
+        <div class="chips"><span class="chip">islands</span><span class="chip">core-web-vitals</span><span class="chip">hydration</span></div>
+        <button class="card-toggle" aria-expanded="false">Details</button>
+        <div class="card-detail" hidden><h4>Capabilities</h4><ul>
+          <li>Choosing the correct client: hydration directive per component</li>
+          <li>Responsive, format-aware image optimization with astro:assets</li>
+          <li>Type-safe structured content via Content Collections and Zod</li>
+          <li>Diagnosing Core Web Vitals regressions (LCP, CLS) on Astro sites</li>
+        </ul><a class="src" href="https://github.com/zekiyugnak/telar-framework/blob/main/skills/astro-content-performance.md">Source ↗</a></div>
+      </article>
+    </div>
+  </section>
+
+  <!-- NEXT.JS WEB -->
+  <section class="group">
+    <h2 id="nextweb">Next.js Web <span class="gc">3</span></h2>
+    <p class="gdesc">Tailwind/shadcn design systems and cookie-session auth for an authenticated Next.js console.</p>
+    <div class="cards">
+      <article class="card" data-search="shadcn-component-patterns shadcn ui radix tailwind components design-system">
+        <div class="card-head"><h3>shadcn-component-patterns</h3></div>
+        <p class="desc">Cuts custom interactive-component build time and eliminates a class of keyboard/focus/ARIA bugs.</p>
+        <div class="chips"><span class="chip">shadcn</span><span class="chip">radix</span><span class="chip">cva</span></div>
+        <button class="card-toggle" aria-expanded="false">Details</button>
+        <div class="card-detail" hidden><h4>Capabilities</h4><ul>
+          <li>Adding/owning shadcn/ui components via the CLI, not an installed library</li>
+          <li>Composing Radix-based primitives into compound components</li>
+          <li>cn() and class-variance-authority (cva) for variant styling</li>
+          <li>Theming via CSS variables shared with Tailwind's token system</li>
+        </ul><a class="src" href="https://github.com/zekiyugnak/telar-framework/blob/main/skills/shadcn-component-patterns.md">Source ↗</a></div>
+      </article>
+      <article class="card" data-search="tailwind-v4-design-tokens tailwind tailwind-v4 css design-tokens theming oklch">
+        <div class="card-head"><h3>tailwind-v4-design-tokens</h3></div>
+        <p class="desc">Removes the duplicate theme-definition problem and prevents silent v3→v4 build breakage.</p>
+        <div class="chips"><span class="chip">tailwind-v4</span><span class="chip">theme</span><span class="chip">oklch</span></div>
+        <button class="card-toggle" aria-expanded="false">Details</button>
+        <div class="card-detail" hidden><h4>Capabilities</h4><ul>
+          <li>Design tokens via Tailwind v4's CSS-first @theme directive</li>
+          <li>Migrating from v3 @tailwind directives to the v4 @import entry point</li>
+          <li>Native oklch colors and container queries introduced in v4</li>
+          <li>Aligning tokens with shadcn/ui's CSS-variable-based theming</li>
+        </ul><a class="src" href="https://github.com/zekiyugnak/telar-framework/blob/main/skills/tailwind-v4-design-tokens.md">Source ↗</a></div>
+      </article>
+      <article class="card" data-search="nextjs-auth-app-router nextjs app-router authentication session middleware supabase ssr">
+        <div class="card-head"><h3>nextjs-auth-app-router</h3></div>
+        <p class="desc">Prevents unauthorized data access from stale-cookie/session-desync bugs a middleware-only check can't catch.</p>
+        <div class="chips"><span class="chip">app-router</span><span class="chip">middleware</span><span class="chip">supabase-ssr</span></div>
+        <button class="card-toggle" aria-expanded="false">Details</button>
+        <div class="card-detail" hidden><h4>Capabilities</h4><ul>
+          <li>Fast, edge-level session check in middleware.ts</li>
+          <li>Re-verifying sessions as the true authz boundary in Server Components</li>
+          <li>Passing authenticated user context down without client-side Context</li>
+          <li>@supabase/ssr cookie-based session helpers for browser/server/middleware</li>
+        </ul><a class="src" href="https://github.com/zekiyugnak/telar-framework/blob/main/skills/nextjs-auth-app-router.md">Source ↗</a></div>
+      </article>
+    </div>
+  </section>
+
+  <!-- ADMIN PANEL -->
+  <section class="group">
+    <h2 id="adminpanel">Admin Panel (Vite + TanStack) <span class="gc">8</span></h2>
+    <p class="gdesc">Vite + React 19 + TanStack + Supabase (anon key + RLS only) stack for internal operator panels.</p>
+    <div class="cards">
+      <article class="card" data-search="tanstack-router-patterns tanstack-router react routing type-safety code-splitting admin-panel">
+        <div class="card-head"><h3>tanstack-router-patterns</h3></div>
+        <p class="desc">Eliminates a class of route/query waterfalls and unguarded-route bugs via end-to-end type safety.</p>
+        <div class="chips"><span class="chip">tanstack-router</span><span class="chip">type-safety</span></div>
+        <button class="card-toggle" aria-expanded="false">Details</button>
+        <div class="card-detail" hidden><h4>Capabilities</h4><ul>
+          <li>File-based routes with generated, fully type-safe route trees</li>
+          <li>Type-safe search params with runtime validation</li>
+          <li>Route loaders combined with pending/error boundary components</li>
+          <li>Protected-route guards via beforeLoad that run before any UI renders</li>
+        </ul><a class="src" href="https://github.com/zekiyugnak/telar-framework/blob/main/skills/tanstack-router-patterns.md">Source ↗</a></div>
+      </article>
+      <article class="card" data-search="tanstack-query-patterns tanstack-query react-query supabase caching realtime admin-panel">
+        <div class="card-head"><h3>tanstack-query-patterns</h3></div>
+        <p class="desc">Removes duplicate/stale-data bugs from ad hoc cache keys; closes the loader-to-component gap.</p>
+        <div class="chips"><span class="chip">react-query</span><span class="chip">caching</span></div>
+        <button class="card-toggle" aria-expanded="false">Details</button>
+        <div class="card-detail" hidden><h4>Capabilities</h4><ul>
+          <li>Query key factories for addressable, precise cache invalidation</li>
+          <li>Wiring TanStack Query into router loaders via ensureQueryData</li>
+          <li>Optimistic updates with correct rollback on mutation failure</li>
+          <li>Supabase Realtime subscriptions to invalidate/patch the cache</li>
+        </ul><a class="src" href="https://github.com/zekiyugnak/telar-framework/blob/main/skills/tanstack-query-patterns.md">Source ↗</a></div>
+      </article>
+      <article class="card" data-search="tanstack-table-patterns tanstack-table react-table supabase pagination virtualization admin-panel">
+        <div class="card-head"><h3>tanstack-table-patterns</h3></div>
+        <p class="desc">Keeps operator tables responsive from 100 to 500k+ rows by moving work to Postgres, not the browser.</p>
+        <div class="chips"><span class="chip">tanstack-table</span><span class="chip">pagination</span></div>
+        <button class="card-toggle" aria-expanded="false">Details</button>
+        <div class="card-detail" hidden><h4>Capabilities</h4><ul>
+          <li>Headless table setup with column definitions and a typed row model</li>
+          <li>Server-side sorting, filtering, pagination against Supabase range queries</li>
+          <li>Row virtualization for large in-memory datasets without jank</li>
+          <li>Row selection state and bulk-action patterns</li>
+        </ul><a class="src" href="https://github.com/zekiyugnak/telar-framework/blob/main/skills/tanstack-table-patterns.md">Source ↗</a></div>
+      </article>
+      <article class="card" data-search="supabase-rls-client-patterns supabase rls postgres security anon-key admin-panel">
+        <div class="card-head"><h3>supabase-rls-client-patterns</h3></div>
+        <p class="desc">Prevents full-database exposure through the anon key — the top failure mode of a service-role-free client.</p>
+        <div class="chips"><span class="chip">rls</span><span class="chip">security</span><span class="chip">anon-key</span></div>
+        <button class="card-toggle" aria-expanded="false">Details</button>
+        <div class="card-detail" hidden><h4>Capabilities</h4><ul>
+          <li>RLS policies as the sole authorization boundary for an anon-key-only client</li>
+          <li>Structuring SELECT/INSERT/UPDATE/DELETE as separate, minimal grants</li>
+          <li>Testing RLS policies against roles other than the table owner</li>
+          <li>security_invoker views to avoid accidental RLS bypass</li>
+        </ul><a class="src" href="https://github.com/zekiyugnak/telar-framework/blob/main/skills/supabase-rls-client-patterns.md">Source ↗</a></div>
+      </article>
+      <article class="card" data-search="supabase-tus-resumable-upload supabase storage tus resumable-upload tus-js-client uppy admin-panel">
+        <div class="card-head"><h3>supabase-tus-resumable-upload</h3></div>
+        <p class="desc">Turns large-file uploads from a single point of failure on flaky networks into a resumable operation.</p>
+        <div class="chips"><span class="chip">tus</span><span class="chip">uppy</span><span class="chip">storage</span></div>
+        <button class="card-toggle" aria-expanded="false">Details</button>
+        <div class="card-detail" hidden><h4>Capabilities</h4><ul>
+          <li>Resumable large-file uploads to Supabase Storage via the TUS protocol</li>
+          <li>Configuring tus-js-client or Uppy's Tus plugin with the required chunk size</li>
+          <li>Authenticating TUS uploads with the operator's session access token</li>
+          <li>Resuming an interrupted upload after a network drop or tab reload</li>
+        </ul><a class="src" href="https://github.com/zekiyugnak/telar-framework/blob/main/skills/supabase-tus-resumable-upload.md">Source ↗</a></div>
+      </article>
+      <article class="card" data-search="command-palette-cmdk cmdk command-palette keyboard-navigation accessibility admin-panel">
+        <div class="card-head"><h3>command-palette-cmdk</h3></div>
+        <p class="desc">Cuts navigation and repeat-action time for power-user operators who default to keyboard over mouse.</p>
+        <div class="chips"><span class="chip">cmdk</span><span class="chip">keyboard</span></div>
+        <button class="card-toggle" aria-expanded="false">Details</button>
+        <div class="card-detail" hidden><h4>Capabilities</h4><ul>
+          <li>Building a cmd-k style command palette with global keyboard activation</li>
+          <li>Guarding the global shortcut so it doesn't fire while typing in a field</li>
+          <li>Fuzzy search and grouped results (navigation vs actions)</li>
+          <li>Wiring palette navigation commands into TanStack Router</li>
+        </ul><a class="src" href="https://github.com/zekiyugnak/telar-framework/blob/main/skills/command-palette-cmdk.md">Source ↗</a></div>
+      </article>
+      <article class="card" data-search="tremor-dashboard-charts tremor charts dashboard kpi data-visualization admin-panel">
+        <div class="card-head"><h3>tremor-dashboard-charts</h3></div>
+        <p class="desc">Cuts dashboard build time by reusing pre-built, accessible chart primitives instead of hand-rolling SVG.</p>
+        <div class="chips"><span class="chip">tremor</span><span class="chip">charts</span></div>
+        <button class="card-toggle" aria-expanded="false">Details</button>
+        <div class="card-detail" hidden><h4>Capabilities</h4><ul>
+          <li>Choosing Tremor for standard admin-dashboard chart/KPI-card needs</li>
+          <li>Recognizing when a custom charting approach is actually warranted</li>
+          <li>Aligning Tremor's visual output with shadcn/ui design tokens</li>
+          <li>Shaping Supabase query results into Tremor's expected data formats</li>
+        </ul><a class="src" href="https://github.com/zekiyugnak/telar-framework/blob/main/skills/tremor-dashboard-charts.md">Source ↗</a></div>
+      </article>
+      <article class="card" data-search="i18n-rtl-formatjs-lingui i18n formatjs react-intl lingui rtl tailwind icu admin-panel">
+        <div class="card-head"><h3>i18n-rtl-formatjs-lingui</h3></div>
+        <p class="desc">Prevents a costly full-UI re-audit later by building bilingual + RTL-ready layout discipline in from day one.</p>
+        <div class="chips"><span class="chip">i18n</span><span class="chip">rtl</span><span class="chip">icu</span></div>
+        <button class="card-toggle" aria-expanded="false">Details</button>
+        <div class="card-detail" hidden><h4>Capabilities</h4><ul>
+          <li>Choosing between FormatJS (react-intl) and Lingui for a TR/EN panel</li>
+          <li>Message extraction workflow and ICU pluralization/formatting</li>
+          <li>RTL-readiness via CSS logical properties instead of physical left/right</li>
+          <li>Icon mirroring rules — which icons must flip for RTL and which must not</li>
+        </ul><a class="src" href="https://github.com/zekiyugnak/telar-framework/blob/main/skills/i18n-rtl-formatjs-lingui.md">Source ↗</a></div>
+      </article>
+    </div>
+  </section>
+
+  <!-- RUST SERVICE -->
+  <section class="group">
+    <h2 id="rustsvc">Rust Service <span class="gc">5</span></h2>
+    <p class="gdesc">A narrow-topic breakdown for axum/tokio/sqlx backend services, mirroring the depth of the mobile skill set.</p>
+    <div class="cards">
+      <article class="card" data-search="rust-axum-routing rust axum routing extractors middleware tower error-handling">
+        <div class="card-head"><h3>rust-axum-routing</h3></div>
+        <p class="desc">Eliminates duplicated auth/validation code across handlers and prevents silent CORS misconfiguration.</p>
+        <div class="chips"><span class="chip">axum</span><span class="chip">extractors</span><span class="chip">tower</span></div>
+        <button class="card-toggle" aria-expanded="false">Details</button>
+        <div class="card-detail" hidden><h4>Capabilities</h4><ul>
+          <li>Composing axum routers with nested routes and .merge()</li>
+          <li>Built-in extractors (Path, Query, Json, State) in the right order</li>
+          <li>Custom extractors via FromRequestParts for auth</li>
+          <li>tower::Layer middleware for logging, CORS, rate limiting; a single AppError</li>
+        </ul><a class="src" href="https://github.com/zekiyugnak/telar-framework/blob/main/skills/rust-axum-routing.md">Source ↗</a></div>
+      </article>
+      <article class="card" data-search="rust-sqlx-patterns rust sqlx postgres connection-pool migrations transactions multi-tenant">
+        <div class="card-head"><h3>rust-sqlx-patterns</h3></div>
+        <p class="desc">Prevents connection-pool exhaustion outages and N+1 storms; catches SQL drift at compile time.</p>
+        <div class="chips"><span class="chip">sqlx</span><span class="chip">postgres</span><span class="chip">migrations</span></div>
+        <button class="card-toggle" aria-expanded="false">Details</button>
+        <div class="card-detail" hidden><h4>Capabilities</h4><ul>
+          <li>Compile-time verified queries with query!/query_as!</li>
+          <li>Sizing and configuring a PgPool for production load</li>
+          <li>Schema changes with sqlx migrate; correct transaction usage</li>
+          <li>Avoiding N+1 patterns; CI without a live DB via .sqlx offline mode</li>
+        </ul><a class="src" href="https://github.com/zekiyugnak/telar-framework/blob/main/skills/rust-sqlx-patterns.md">Source ↗</a></div>
+      </article>
+      <article class="card" data-search="rust-service-architecture rust architecture layering dependency-injection config error-handling workspace">
+        <div class="card-head"><h3>rust-service-architecture</h3></div>
+        <p class="desc">Keeps services testable and mergeable as they grow; prevents config/secrets sprawl and breaking API changes.</p>
+        <div class="chips"><span class="chip">layering</span><span class="chip">appstate</span></div>
+        <button class="card-toggle" aria-expanded="false">Details</button>
+        <div class="card-detail" hidden><h4>Capabilities</h4><ul>
+          <li>Layering into handler, service, and repository responsibilities</li>
+          <li>Sharing dependencies via AppState and Arc&lt;T&gt; without over-engineering DI</li>
+          <li>Configuration via config/envy crates plus .env for local dev</li>
+          <li>Structured error hierarchy with thiserror; API versioning strategy</li>
+        </ul><a class="src" href="https://github.com/zekiyugnak/telar-framework/blob/main/skills/rust-service-architecture.md">Source ↗</a></div>
+      </article>
+      <article class="card" data-search="rust-testing-pyramid rust testing axum sqlx tower mocking property-testing ci">
+        <div class="card-head"><h3>rust-testing-pyramid</h3></div>
+        <p class="desc">Catches routing/auth/query regressions before deploy without a full staging environment per PR.</p>
+        <div class="chips"><span class="chip">testing</span><span class="chip">sqlx-test</span></div>
+        <button class="card-toggle" aria-expanded="false">Details</button>
+        <div class="card-detail" hidden><h4>Capabilities</h4><ul>
+          <li>Fast unit tests for pure business logic with no I/O</li>
+          <li>Testing an axum Router in-process with tower::ServiceExt::oneshot</li>
+          <li>#[sqlx::test] for isolated, auto-provisioned integration tests</li>
+          <li>Mocking outbound HTTP calls; when property-based testing pays off</li>
+        </ul><a class="src" href="https://github.com/zekiyugnak/telar-framework/blob/main/skills/rust-testing-pyramid.md">Source ↗</a></div>
+      </article>
+      <article class="card" data-search="rust-deployment rust docker deployment graceful-shutdown health-check tracing cargo-chef">
+        <div class="card-head"><h3>rust-deployment</h3></div>
+        <p class="desc">Cuts Docker image size dramatically and CI build times via layer caching; no dropped in-flight requests.</p>
+        <div class="chips"><span class="chip">docker</span><span class="chip">cargo-chef</span></div>
+        <button class="card-toggle" aria-expanded="false">Details</button>
+        <div class="card-detail" hidden><h4>Capabilities</h4><ul>
+          <li>Multi-stage Dockerfile producing a small release binary</li>
+          <li>Caching dependency compilation with cargo-chef</li>
+          <li>Liveness/readiness health check endpoints for orchestrators</li>
+          <li>SIGTERM handling and draining in-flight requests before exit</li>
+        </ul><a class="src" href="https://github.com/zekiyugnak/telar-framework/blob/main/skills/rust-deployment.md">Source ↗</a></div>
+      </article>
+    </div>
+  </section>
+
   <p class="empty" id="empty" hidden>No skills match your filter.</p>
 </main>
 
 <footer><div class="wrap fl">
-  <span>Telar v0.1.0 — MIT © 2026 Zeki Yugnak</span>
+  <span>Telar v0.2.0 — MIT © 2026 Zeki Yugnak</span>
   <span><a href="https://github.com/zekiyugnak/telar-framework/tree/main/skills">All skills on GitHub</a> · <a href="index.html">Docs home</a></span>
 </div></footer>
 
