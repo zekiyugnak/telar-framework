@@ -72,7 +72,7 @@
 
 # Drive the full pipeline
 /tl-telar:orchestrate Add authentication with email + password and biometrics</code></pre>
-    <p>Runs the design gate, drafts and reviews a plan, decomposes it into Work Units, and executes each through the 4-phase loop — ending at COMMIT-READY. See <a href="orchestration.html">Orchestration</a> for details.</p>
+    <p>Runs the design gate, drafts and reviews a plan, decomposes it into Work Units, and executes them through the 4-phase loop — with independent Work Units running <strong>in parallel</strong> (deps satisfied + non-overlapping <code>file_scope</code>, bounded by <code>execution.max_parallel_wus</code>) — ending at COMMIT-READY. See <a href="orchestration.html#parallel">Orchestration → Parallel dispatch</a> for details.</p>
 
     <h2>Using workflow skills individually</h2>
     <p>You don't have to use full orchestration. The workflow skills compose on their own:</p>
