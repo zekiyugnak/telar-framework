@@ -4,7 +4,7 @@
 const fs = require('fs');
 const path = require('path');
 const crypto = require('crypto');
-const { mergeDelta, parseDeltaHeader } = require('./tl-telar-spec-merge');
+const { mergeDelta, parseDeltaHeader, parseDeltaSections } = require('./tl-telar-spec-merge');
 
 const PLUGIN_ROOT = path.join(__dirname, '..');
 const PROJECT_ROOT = process.env.CLAUDE_PROJECT_DIR || process.cwd();
@@ -30,19 +30,29 @@ function readIfExists(filePath) {
 // Single-domain changes use tl-telar-spec/changes/<id>/REQUIREMENTS.delta.md.
 // Multi-domain changes use a deltas/ subfolder, one *.REQUIREMENTS.delta.md
 // file per touched domain (see the design doc's "Çoklu-domain change'ler").
+// The two layouts are mutually exclusive: a change with BOTH a single delta
+// file AND a deltas/ folder is ambiguous, so the caller refuses it rather than
+// silently ignoring one (which would drop requirements without warning).
 function findDeltaFiles(changeDir) {
   const singleDelta = path.join(changeDir, 'REQUIREMENTS.delta.md');
-  if (fs.existsSync(singleDelta)) {
-    return [singleDelta];
-  }
   const deltasDir = path.join(changeDir, 'deltas');
-  if (fs.existsSync(deltasDir)) {
-    return fs
+  const hasSingle = fs.existsSync(singleDelta);
+  const hasDeltasDir = fs.existsSync(deltasDir);
+
+  if (hasSingle && hasDeltasDir) {
+    return { files: [], ambiguous: true };
+  }
+  if (hasSingle) {
+    return { files: [singleDelta], ambiguous: false };
+  }
+  if (hasDeltasDir) {
+    const files = fs
       .readdirSync(deltasDir)
       .filter((name) => name.endsWith('.REQUIREMENTS.delta.md'))
       .map((name) => path.join(deltasDir, name));
+    return { files, ambiguous: false };
   }
-  return [];
+  return { files: [], ambiguous: false };
 }
 
 function main() {
@@ -58,7 +68,13 @@ function main() {
     fail(`change directory not found: tl-telar-spec/changes/${changeId}/`);
   }
 
-  const deltaFiles = findDeltaFiles(changeDir);
+  const { files: deltaFiles, ambiguous } = findDeltaFiles(changeDir);
+  if (ambiguous) {
+    fail(
+      `tl-telar-spec/changes/${changeId}/ has BOTH a REQUIREMENTS.delta.md and a deltas/ folder ` +
+        '— these layouts are mutually exclusive. Use one or the other so no delta is silently dropped.'
+    );
+  }
   if (deltaFiles.length === 0) {
     fail(`no delta files found under tl-telar-spec/changes/${changeId}/ (expected REQUIREMENTS.delta.md or deltas/*.REQUIREMENTS.delta.md)`);
   }
@@ -103,6 +119,21 @@ function main() {
   for (const { deltaFile, deltaContent, header } of parsed) {
     if (duplicateDomains.has(header.domain)) continue;
 
+    // Guard against a delta that parses to zero requirements (an off-format or
+    // empty section, an F-x heading with no recognized section, etc.). Without
+    // this, mergeDelta returns a conflict-free no-op, and the archive would
+    // "succeed" — writing an empty/unchanged truth file and irreversibly
+    // consuming the change folder while losing the requirement content.
+    const sections = parseDeltaSections(deltaContent);
+    const contributed = sections.ADDED.length + sections.MODIFIED.length + sections.REMOVED.length;
+    if (contributed === 0) {
+      allConflicts.push(
+        `${path.relative(PROJECT_ROOT, deltaFile)}: delta contributes no ADDED/MODIFIED/REMOVED requirements ` +
+          '— check the section headers (expected `## ADDED Requirements` etc.) and that each has at least one `### F-x` entry.'
+      );
+      continue;
+    }
+
     const truthPath = path.join(PROJECT_ROOT, 'tl-telar-spec', 'truth', header.domain, 'REQUIREMENTS.md');
     const truthContent = readIfExists(truthPath);
     const currentState = truthContent === null ? 'none' : sha256(truthContent);
@@ -136,9 +167,19 @@ function main() {
     fail(`archive destination already exists: tl-telar-spec/changes/archive/${dateStamp}-${changeId}/ — resolve manually before re-running.`);
   }
 
+  // Two-phase write for atomicity across multiple domains: write every truth
+  // file to a temp path FIRST, then rename them into place. If any write fails
+  // partway (permissions, disk full), no final truth file has been touched, so
+  // a retry sees unchanged baselines instead of a false baseline-hash conflict.
+  const stagedWrites = [];
   for (const { truthPath, mergedContent } of plannedWrites) {
     fs.mkdirSync(path.dirname(truthPath), { recursive: true });
-    fs.writeFileSync(truthPath, mergedContent, 'utf8');
+    const tmpPath = `${truthPath}.tmp-${process.pid}`;
+    fs.writeFileSync(tmpPath, mergedContent, 'utf8');
+    stagedWrites.push({ tmpPath, truthPath });
+  }
+  for (const { tmpPath, truthPath } of stagedWrites) {
+    fs.renameSync(tmpPath, truthPath);
   }
 
   fs.mkdirSync(path.dirname(archiveDir), { recursive: true });

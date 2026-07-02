@@ -130,12 +130,58 @@ EOF
   return 0
 }
 
+# A delta whose section has no recognized F-x entry contributes nothing. It
+# must NOT silently "succeed" writing an empty truth file and consuming the
+# change — it must abort with no writes and leave the change dir in place.
+test_empty_contribution() {
+  local dir="$1/tl-telar-spec/changes/2026-07-empty-delta"
+  mkdir -p "$dir"
+  cat > "$dir/REQUIREMENTS.delta.md" <<EOF
+<!-- tl-telar-spec-delta: domain=auth baseline-hash=none -->
+## ADDED Requirements
+EOF
+  out=$(node "$ARCHIVE" "2026-07-empty-delta" 2>&1); exit_code=$?
+  [[ "$exit_code" -eq 1 ]] || { echo "    exit $exit_code, expected 1"; return 1; }
+  assert "no-contribution message" "$out" 'contributes no ADDED/MODIFIED/REMOVED' || return 1
+  [[ ! -f "$1/tl-telar-spec/truth/auth/REQUIREMENTS.md" ]] || { echo "    empty truth file was written"; return 1; }
+  [[ -d "$1/tl-telar-spec/changes/2026-07-empty-delta" ]] || { echo "    change dir was consumed despite abort"; return 1; }
+  return 0
+}
+
+# A change with BOTH a single REQUIREMENTS.delta.md and a deltas/ folder is
+# ambiguous — archive must refuse rather than silently ignore the deltas/ folder.
+test_both_layouts_ambiguous() {
+  local dir="$1/tl-telar-spec/changes/2026-07-both"
+  mkdir -p "$dir/deltas"
+  cat > "$dir/REQUIREMENTS.delta.md" <<EOF
+<!-- tl-telar-spec-delta: domain=auth baseline-hash=none -->
+## ADDED Requirements
+### F-1: Login
+**Description:** auth req
+EOF
+  cat > "$dir/deltas/navigation.REQUIREMENTS.delta.md" <<EOF
+<!-- tl-telar-spec-delta: domain=navigation baseline-hash=none -->
+## ADDED Requirements
+### F-1: Tab bar
+**Description:** nav req
+EOF
+  out=$(node "$ARCHIVE" "2026-07-both" 2>&1); exit_code=$?
+  [[ "$exit_code" -eq 1 ]] || { echo "    exit $exit_code, expected 1"; return 1; }
+  assert "ambiguous-layout message" "$out" 'mutually exclusive' || return 1
+  [[ ! -f "$1/tl-telar-spec/truth/auth/REQUIREMENTS.md" ]] || { echo "    auth truth written despite abort"; return 1; }
+  [[ ! -f "$1/tl-telar-spec/truth/navigation/REQUIREMENTS.md" ]] || { echo "    navigation truth written despite abort"; return 1; }
+  [[ -d "$1/tl-telar-spec/changes/2026-07-both" ]] || { echo "    change dir consumed despite abort"; return 1; }
+  return 0
+}
+
 run_test "happy path — first delta for a domain"       test_happy_path_first_delta
 run_test "conflict — stale baseline-hash"                test_conflict_stale_baseline
 run_test "missing change directory → exit 1"             test_missing_change_dir
 run_test "no delta files → exit 1"                        test_no_delta_files
 run_test "PROJECT_ROOT == PLUGIN_ROOT -> exit 1"          test_plugin_root_guard
 run_test "duplicate domain across delta files -> exit 1, no writes"  test_duplicate_domain_conflict
+run_test "empty-contribution delta → exit 1, no writes"  test_empty_contribution
+run_test "both single + deltas/ layouts → exit 1, ambiguous"  test_both_layouts_ambiguous
 
 echo ""
 echo "─────────────────────────────────────────"

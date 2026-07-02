@@ -13,7 +13,7 @@ examples:
 
 # Update Requirement
 
-> Mid-project requirement changes are a Spec Layer change like any other: this command resolves (or creates) the active change via `skills/requirements-gather.md` → "Step 0", then follows that skill's **Delta Mode** to express the change as ADDED/MODIFIED/REMOVED F-x entries against `tl-telar-spec/truth/<domain>/REQUIREMENTS.md`, rather than editing a root-level REQUIREMENTS.md directly.
+> Mid-project requirement changes are a Spec Layer change like any other: this command first resolves (or creates) the active change via `skills/requirements-gather.md` → "Step 0", edits that change's `tl-telar-spec/changes/<id>/REQUIREMENTS.md` (Steps 3–4 below), and — crucially — also records the same change as a `REQUIREMENTS.delta.md` (Step 3b) so `scripts/tl-telar-spec-archive.js` can later merge it into `tl-telar-spec/truth/<domain>/REQUIREMENTS.md`. A change with no delta file cannot be archived, so Step 3b is not optional.
 
 Manages requirement changes during development with structured impact analysis and cascade updates.
 
@@ -95,6 +95,18 @@ Based on change type:
   | v[N+1] | [date] | [F-x] | [CHANGE_TYPE] | [Description] |
   ```
 - Increment the version in the Source header
+
+## Step 3b: Record the delta (required for archiving)
+
+Editing `REQUIREMENTS.md` alone is not enough — `scripts/tl-telar-spec-archive.js` reads only `REQUIREMENTS.delta.md`. Write (or append to) `tl-telar-spec/changes/<id>/REQUIREMENTS.delta.md` following `skills/requirements-gather.md` → "Delta Mode" (same header format and `baseline-hash` computation), mapping this change's type to a delta section:
+
+| Change type | Delta section |
+|-------------|---------------|
+| New scope added (a brand-new F-x) | `## ADDED Requirements` |
+| UPDATE / MOVE / TIER (existing F-x changes) | `## MODIFIED Requirements` (full replacement block for that F-x) |
+| REMOVE | `## REMOVED Requirements` (F-x heading + one-line reason) |
+
+DESIGN-only changes (Figma link/status) touch no F-x and need no delta entry; if a change produces no ADDED/MODIFIED/REMOVED F-x entry at all, there is nothing to archive into `truth/` and the archive step is skipped for it.
 
 ## Step 4: Cascade Updates
 

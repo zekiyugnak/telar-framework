@@ -3,7 +3,10 @@
 
 const FX_HEADING_RE = /^###\s+(F-\d+):\s*(.*)$/;
 const DELTA_HEADER_RE = /^<!--\s*tl-telar-spec-delta:\s*domain=(\S+)\s+baseline-hash=(\S+)\s*-->\s*$/m;
-const SECTION_RE = /^##\s+(ADDED|MODIFIED|REMOVED)\s+Requirements\s*$/;
+// Case-insensitive so a slightly off-format section header (e.g. `## Added
+// Requirements`) is still recognized rather than silently dropping every F-x
+// under it. The captured verb is upper-cased by the caller for keying.
+const SECTION_RE = /^##\s+(ADDED|MODIFIED|REMOVED)\s+Requirements\s*$/i;
 const SAFE_DOMAIN_RE = /^[a-z0-9][a-z0-9_-]*$/i;
 
 function parseDeltaHeader(deltaContent) {
@@ -13,11 +16,13 @@ function parseDeltaHeader(deltaContent) {
       'Delta file missing required header comment: <!-- tl-telar-spec-delta: domain=<domain> baseline-hash=<hash> -->'
     );
   }
-  const domain = m[1];
-  if (!SAFE_DOMAIN_RE.test(domain)) {
-    throw new Error(`Delta header has an unsafe domain value: "${domain}" (must match ${SAFE_DOMAIN_RE})`);
+  const rawDomain = m[1];
+  if (!SAFE_DOMAIN_RE.test(rawDomain)) {
+    throw new Error(`Delta header has an unsafe domain value: "${rawDomain}" (must match ${SAFE_DOMAIN_RE})`);
   }
-  return { domain, baselineHash: m[2] };
+  // Normalize to lowercase so `Auth`/`auth` resolve to the same truth
+  // directory on case-sensitive filesystems (inferDomain also lowercases).
+  return { domain: rawDomain.toLowerCase(), baselineHash: m[2] };
 }
 
 // Splits a truth REQUIREMENTS.md into: everything before the first F-x
@@ -66,7 +71,7 @@ function parseDeltaSections(deltaContent) {
     const sectionMatch = line.match(SECTION_RE);
     if (sectionMatch) {
       flush();
-      currentSection = sectionMatch[1];
+      currentSection = sectionMatch[1].toUpperCase();
       currentId = null;
       currentLines = null;
       continue;

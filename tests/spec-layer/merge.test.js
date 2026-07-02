@@ -2,7 +2,7 @@
 'use strict';
 
 const assert = require('node:assert/strict');
-const { mergeDelta, parseDeltaHeader } = require('../../scripts/tl-telar-spec-merge');
+const { mergeDelta, parseDeltaHeader, parseDeltaSections } = require('../../scripts/tl-telar-spec-merge');
 
 const TRUTH = `# Requirements: Auth Domain
 
@@ -127,6 +127,28 @@ const TRUTH = `# Requirements: Auth Domain
 {
   const delta = '<!-- tl-telar-spec-delta: domain=../../etc baseline-hash=none -->\n# Delta\n';
   assert.throws(() => parseDeltaHeader(delta), /unsafe domain/);
+}
+
+// parseDeltaHeader lowercases the domain so Auth/auth resolve to one truth dir
+{
+  const delta = '<!-- tl-telar-spec-delta: domain=Auth baseline-hash=none -->\n# Delta\n';
+  assert.equal(parseDeltaHeader(delta).domain, 'auth');
+}
+
+// Section header is matched case-insensitively: a slightly off-format header
+// (`## Added Requirements`) must still be recognized, not silently dropped.
+{
+  const delta = `<!-- tl-telar-spec-delta: domain=auth baseline-hash=none -->
+## Added Requirements
+### F-1: Login
+**Description:** users can log in
+`;
+  const sections = parseDeltaSections(delta);
+  assert.equal(sections.ADDED.length, 1);
+  assert.equal(sections.ADDED[0].id, 'F-1');
+  const { mergedContent, conflicts } = mergeDelta({ truthContent: '', deltaContent: delta });
+  assert.deepEqual(conflicts, []);
+  assert.equal(mergedContent.includes('### F-1: Login'), true);
 }
 
 console.log('tl-telar-spec-merge: all tests passed');
