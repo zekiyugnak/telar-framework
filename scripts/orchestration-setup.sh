@@ -208,6 +208,7 @@ REQUIRED_IGNORES=(
   ".tl-telar/context/external-tools-budget.jsonl"
   ".tl-telar/context/wu-*-baseline.tsv"
   ".tl-telar/context/wu-*-changes.txt"
+  ".tl-telar/context/active-change.txt"
   ".tl-telar/temp/"
 )
 

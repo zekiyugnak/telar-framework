@@ -39,6 +39,7 @@ The orchestrator is a **conductor**: its job is to spawn fresh `Task()` subagent
    - Drive each WU through `skills/orchestration/orchestrated-execution` (4-phase loop) — spawning implementer/reviewer `Task()`s from this session.
    - Emit a COMMIT-READY signal for each WU (DOES NOT commit on user's behalf).
    - Final review and "Ready for PR" summary.
+   - Run `node scripts/tl-telar-spec-archive.js <change-id>` (Spec Layer archive step) to merge this change's delta(s) into `tl-telar-spec/truth/` and move `tl-telar-spec/changes/<id>/` to `tl-telar-spec/changes/archive/<date>-<id>/`.
 
 ## Input modes
 
@@ -76,7 +77,7 @@ The orchestrator accepts the work to do in one of three forms. All three converg
 - Does NOT git add or git commit. User policy is "ben yapacagim" (user handles git manually). The orchestrator emits COMMIT-READY signals with suggested messages.
 - Does NOT skip plan review even if the user says "this plan is obviously fine." The 3-reviewer gate is mandatory.
 - Does NOT loop past 3 retries on any gate. Escalates to user with structured options.
-- Does NOT modify existing legacy command behavior. `/tl-telar:add-feature`, `/tl-telar:create-app`, etc. continue to work exactly as before — they don't route through this orchestrator.
+- Does NOT change legacy commands' *review/build* behavior — `/tl-telar:add-feature`, `/tl-telar:create-app`, etc. still don't route through this orchestrator's plan/design gates. They DO now share the same Spec Layer artifact location (`tl-telar-spec/changes/<id>/`, `tl-telar-spec/truth/<domain>/`) as this command — see `docs/superpowers/specs/2026-07-02-telar-spec-layer-design.md`.
 
 ## Comparison with legacy commands
 

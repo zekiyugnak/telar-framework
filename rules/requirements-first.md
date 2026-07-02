@@ -13,7 +13,7 @@ Before implementing any feature, REQUIREMENTS.md must exist and be consulted.
 
 When starting a new feature or significant change:
 
-1. **Check for REQUIREMENTS.md** in the project root
+1. **Check for REQUIREMENTS.md** at `tl-telar-spec/changes/<active-change-id>/REQUIREMENTS.md` (resolve `<active-change-id>` via `.tl-telar/context/active-change.txt` — see `skills/requirements-gather.md` → "Step 0")
    - Exists and covers this feature → reference the relevant F-x / UI-x identifiers
    - Exists but does not cover this feature → add the feature to REQUIREMENTS.md first using `requirements-gather` skill, then proceed
    - Does not exist → create it using `requirements-gather` skill before any implementation

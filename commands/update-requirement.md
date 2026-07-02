@@ -13,6 +13,8 @@ examples:
 
 # Update Requirement
 
+> Mid-project requirement changes are a Spec Layer change like any other: this command resolves (or creates) the active change via `skills/requirements-gather.md` → "Step 0", then follows that skill's **Delta Mode** to express the change as ADDED/MODIFIED/REMOVED F-x entries against `tl-telar-spec/truth/<domain>/REQUIREMENTS.md`, rather than editing a root-level REQUIREMENTS.md directly.
+
 Manages requirement changes during development with structured impact analysis and cascade updates.
 
 ## When to Use
