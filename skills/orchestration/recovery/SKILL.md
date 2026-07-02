@@ -83,7 +83,7 @@ Choice [1/2/3]?
 
 ### Step 5a: Resume
 
-Flip back to the mobile-orchestrator agent's main flow (Step 6 — Execute the WU DAG, but jumping to the recorded WU+phase). Spawn FRESH `Task()` instances for any in-flight implementer/reviewer — never reuse a pre-compaction agent ID.
+Flip back to the mobile-orchestrator agent's main flow (Step 6 — WU execution — continuous-frontier dispatch, but jumping to the recorded WU+phase). Spawn FRESH `Task()` instances for any in-flight implementer/reviewer — never reuse a pre-compaction agent ID.
 
 > Recovery runs in the **main session** (via `/tl-telar:resume`, or the main-session conductor detecting the sentinel at boot) — that is why these `Task()` spawns work. Never run recovery or the orchestrator as a subagent; a subagent has no `Task` tool and cannot resume the WU cycle. See `agents/mobile-orchestrator.md` → "Execution context".
 
