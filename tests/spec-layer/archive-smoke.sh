@@ -94,10 +94,48 @@ test_no_delta_files() {
   assert "no-delta message" "$out" 'no delta files found' || return 1
 }
 
+test_plugin_root_guard() {
+  # Override CLAUDE_PROJECT_DIR to point to the plugin root (not the sandbox).
+  # This tests the guard that prevents archive from running against itself.
+  CLAUDE_PROJECT_DIR="$PLUGIN_ROOT"
+  out=$(node "$ARCHIVE" some-change-id 2>&1); exit_code=$?
+
+  [[ "$exit_code" -eq 1 ]] || { echo "    exit $exit_code, expected 1"; return 1; }
+  assert "plugin-install-directory error" "$out" 'plugin install directory' || return 1
+  return 0
+}
+
+test_duplicate_domain_conflict() {
+  local dir="$1/tl-telar-spec/changes/2026-07-dup-domain/deltas"
+  mkdir -p "$dir"
+  cat > "$dir/a.REQUIREMENTS.delta.md" <<EOF
+<!-- tl-telar-spec-delta: domain=auth baseline-hash=none -->
+## ADDED Requirements
+### F-3: Two-Factor Authentication
+**Description:** Users can enable TOTP-based 2FA.
+**Phase:** 2
+EOF
+  cat > "$dir/b.REQUIREMENTS.delta.md" <<EOF
+<!-- tl-telar-spec-delta: domain=auth baseline-hash=none -->
+## ADDED Requirements
+### F-4: Biometric Login
+**Description:** Users can enable biometric login.
+**Phase:** 2
+EOF
+  out=$(node "$ARCHIVE" "2026-07-dup-domain" 2>&1); exit_code=$?
+  [[ "$exit_code" -eq 1 ]] || { echo "    exit $exit_code, expected 1"; return 1; }
+  assert "duplicate-domain message" "$out" 'targeted by 2 delta files' || return 1
+  [[ ! -f "$1/tl-telar-spec/truth/auth/REQUIREMENTS.md" ]] || { echo "    truth file was created despite conflict"; return 1; }
+  [[ -d "$1/tl-telar-spec/changes/2026-07-dup-domain" ]] || { echo "    change dir was moved despite conflict"; return 1; }
+  return 0
+}
+
 run_test "happy path — first delta for a domain"       test_happy_path_first_delta
 run_test "conflict — stale baseline-hash"                test_conflict_stale_baseline
 run_test "missing change directory → exit 1"             test_missing_change_dir
 run_test "no delta files → exit 1"                        test_no_delta_files
+run_test "PROJECT_ROOT == PLUGIN_ROOT -> exit 1"          test_plugin_root_guard
+run_test "duplicate domain across delta files -> exit 1, no writes"  test_duplicate_domain_conflict
 
 echo ""
 echo "─────────────────────────────────────────"

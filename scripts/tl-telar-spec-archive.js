@@ -66,6 +66,10 @@ function main() {
   const plannedWrites = [];
   const allConflicts = [];
 
+  // First pass: parse every delta's header, track how many files claim each domain.
+  const parsed = [];
+  const filesByDomain = new Map();
+
   for (const deltaFile of deltaFiles) {
     const deltaContent = fs.readFileSync(deltaFile, 'utf8');
     let header;
@@ -75,6 +79,29 @@ function main() {
       allConflicts.push(`${path.relative(PROJECT_ROOT, deltaFile)}: ${err.message}`);
       continue;
     }
+    parsed.push({ deltaFile, deltaContent, header });
+    if (!filesByDomain.has(header.domain)) filesByDomain.set(header.domain, []);
+    filesByDomain.get(header.domain).push(deltaFile);
+  }
+
+  // A domain claimed by more than one delta file in this change cannot be
+  // merged safely: each delta is computed independently against the same
+  // on-disk truth, so merging both would silently drop whichever is written
+  // first. Refuse rather than picking a winner.
+  const duplicateDomains = new Set();
+  for (const [domain, files] of filesByDomain) {
+    if (files.length > 1) {
+      duplicateDomains.add(domain);
+      allConflicts.push(
+        `${domain}: targeted by ${files.length} delta files in this change (${files
+          .map((f) => path.relative(PROJECT_ROOT, f))
+          .join(', ')}) — merge them into a single delta file before archiving.`
+      );
+    }
+  }
+
+  for (const { deltaFile, deltaContent, header } of parsed) {
+    if (duplicateDomains.has(header.domain)) continue;
 
     const truthPath = path.join(PROJECT_ROOT, 'tl-telar-spec', 'truth', header.domain, 'REQUIREMENTS.md');
     const truthContent = readIfExists(truthPath);
