@@ -105,10 +105,42 @@ test_missing_file_exits_nonzero() {
   return 0
 }
 
+test_plan_warnings_emitted() {
+  # Ambiguous plan: two independent WUs with same file_scope, no dep edge
+  cat > "$1/active-plan.md" <<'EOF'
+## Work Units
+### WU-001: A
+- file_scope:
+  - src/shared.ts
+- deps: []
+### WU-002: B
+- file_scope:
+  - src/shared.ts
+- deps: []
+EOF
+  cat > "$1/execution-state.md" <<'EOF'
+## Work Unit Status
+| WU | Status | Phase | Retries | Writer Model |
+|----|--------|-------|---------|--------------|
+EOF
+  out=$(node "$SCHED" "$1/active-plan.md" "$1/execution-state.md"); rc=$?
+  [[ $rc -eq 0 ]] || { echo "    exit $rc"; return 1; }
+  echo "$out" | grep -q '"plan_warnings":\[[^]]' || { echo "    no plan_warnings: $out"; return 1; }
+  return 0
+}
+
+test_usage_exit_two() {
+  out=$(node "$SCHED" 2>&1); rc=$?
+  [[ $rc -eq 2 ]] || { echo "    expected exit 2, got $rc"; return 1; }
+  return 0
+}
+
 run "ready after dep COMPLETE"        test_ready_after_complete
 run "cap defaults to 3 (no thresholds)" test_cap_default_three
 run "cycle -> exit 1"                  test_cycle_exits_nonzero
 run "missing file -> exit 1"           test_missing_file_exits_nonzero
+run "ambiguous plan -> plan_warnings emitted" test_plan_warnings_emitted
+run "no args -> exit 2 usage"          test_usage_exit_two
 
 echo ""
 echo "Workflow CLI smoke: ${pass} passed, ${fail} failed"

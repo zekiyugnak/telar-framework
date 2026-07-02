@@ -208,7 +208,7 @@ Loop until every WU is COMPLETE:
    Parse its JSON `{ ready, blocked, running, occupied_files, plan_warnings }`.
    - If `plan_warnings` is non-empty, STOP — an ambiguous plan slipped past the
      gate; surface it and have the plan revised (add a dep or split the file).
-   - If `ready` is empty AND `running` is empty AND PENDING WUs remain, STOP and
+   - If `ready` is empty AND `running` is empty AND not all WUs are COMPLETE, STOP and
      surface (only reachable via an unresolved escalation; a cycle already exits
      non-zero at the scheduler).
 2. **Dispatch the batch.** For each WU id in `ready`:
