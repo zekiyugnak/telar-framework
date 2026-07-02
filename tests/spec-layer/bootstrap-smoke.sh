@@ -93,9 +93,22 @@ EOF
   grep -q "existing truth" "$1/tl-telar-spec/truth/auth/REQUIREMENTS.md" || { echo "    existing truth file was clobbered"; return 1; }
 }
 
+test_plugin_root_guard() {
+  # Override CLAUDE_PROJECT_DIR to point to the plugin root (not the sandbox).
+  # This tests the guard that prevents bootstrap from running against itself.
+  CLAUDE_PROJECT_DIR="$PLUGIN_ROOT"
+  out=$(node "$BOOTSTRAP" 2>&1); exit_code=$?
+
+  [[ "$exit_code" -eq 1 ]] || { echo "    exit $exit_code, expected 1"; return 1; }
+  assert "plugin-install-directory error" "$out" 'plugin install directory' || return 1
+  [[ ! -d "$PLUGIN_ROOT/tl-telar-spec" ]] || { echo "    side effect: tl-telar-spec/ was created in plugin root"; return 1; }
+  return 0
+}
+
 run_test "no root file → skeleton only"                   test_skeleton_only
 run_test "root REQUIREMENTS.md + PLAN.md → migrated"       test_migration
 run_test "existing truth destination → abort, no clobber"  test_migration_conflict
+run_test "PROJECT_ROOT == PLUGIN_ROOT -> exit 1, no side effects" test_plugin_root_guard
 
 echo ""
 echo "─────────────────────────────────────────"
