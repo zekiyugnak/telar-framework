@@ -106,6 +106,34 @@ Ship auth.
   assert.deepEqual(warnings, []);
 }
 
+// parsePlan reads deps written as a multiline list (not just inline `deps: [x]`).
+// state-files.md documents both forms, so both must parse identically.
+{
+  const plan = `## Work Units
+
+### WU-001: base
+- file_scope:
+  - a.ts
+- deps: []
+
+### WU-002: multi-dep
+- file_scope:
+  - b.ts
+- deps:
+  - WU-001
+  - WU-003
+
+### WU-003: base2
+- file_scope:
+  - c.ts
+- deps: []
+`;
+  const { wus } = parsePlan(plan);
+  const byId = Object.fromEntries(wus.map((w) => [w.id, w]));
+  assert.deepEqual(byId['WU-002'].deps, ['WU-001', 'WU-003']);
+  assert.deepEqual(byId['WU-002'].fileScope, ['b.ts']);
+}
+
 // parseState maps ids to statuses; absent WU is not in the map
 {
   const state = `# Execution State
