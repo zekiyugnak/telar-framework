@@ -195,38 +195,42 @@ Recovery's contract (sub-spec 4) is that all three state files exist for any in-
 
 Then present a single **plan-ready** summary — WU decomposition + approved UI drafts + collected inputs — and WAIT for ONE explicit approval ("go / ready to execute?"). When `autonomy.cycle = unattended`, this is the ONLY human gate; everything after runs to PR-ready without pausing. When `interactive`, this is the start gate and later `checkpoint: true` WUs may still pause.
 
-## Step 6: Execute the WU DAG
+## Step 6: WU execution — continuous-frontier dispatch
 
-For each WU in dependency order (parallel where deps are disjoint AND file scopes don't overlap):
+WUs run concurrently up to `execution.max_parallel_wus` (default 3). Because only
+this top-level session can spawn `Task()`s, the orchestrator owns all fan-out;
+each WU subagent is a leaf (it never spawns subagents).
 
-Throughout this step, surface progress as the compact **in-session progress tree** defined in `skills/orchestration/orchestrated-execution` → "Progress rendering": a one-line phase line on every transition and the full WU tree at WU boundaries. Keep the terminal a glance view — detail lives in `execution-state.md`.
+Loop until every WU is COMPLETE:
 
-1. Update `.tl-telar/context/execution-state.md` marking the WU as ACTIVE, phase IMPLEMENT.
-2. Load `skills/orchestration/orchestrated-execution` and drive the 4-phase loop. The loop captures a **content-aware** per-WU baseline (path + state, where state = content hash or `__DELETED__`) once at Phase 1, and at Phase 2/Phase 4 attributes a dirty path to this WU when its path is new OR its state differs from baseline. This correctly handles edits to already-dirty files AND deletions — do NOT simplify it to path-only subtraction.
+1. **Compute the frontier.** Run
+   `node scripts/tl-telar-wu-scheduler.js .tl-telar/plans/active-plan.md .tl-telar/context/execution-state.md`.
+   Parse its JSON `{ ready, blocked, running, occupied_files, plan_warnings }`.
+   - If `plan_warnings` is non-empty, STOP — an ambiguous plan slipped past the
+     gate; surface it and have the plan revised (add a dep or split the file).
+   - If `ready` is empty AND `running` is empty AND not all WUs are COMPLETE, STOP and
+     surface (only reachable via an unresolved escalation; a cycle already exits
+     non-zero at the scheduler).
+2. **Dispatch the batch.** For each WU id in `ready`:
+   - Mark it `IN-PROGRESS` in `execution-state.md` (atomic full-file snapshot write).
+   - Spawn `Task(run_in_background: true)` running the 4-phase loop for that WU,
+     scoped to its `file_scope`. Put ALL of the batch's spawns in ONE message so
+     they run concurrently.
+   - Never dispatch a `checkpoint: true` WU ahead of its human gate — in
+     `interactive` mode it pauses after Phase 4; in `unattended` its validation
+     was hoisted to plan-readiness (Step 5a).
+3. **Wait for a completion notification.** Do not poll — the platform re-invokes
+   this session when a background WU finishes.
+4. **Settle the finished WU.** On its COMMIT-READY, mark it `COMPLETE` in
+   `execution-state.md` (snapshot write). Its `file_scope` leaves the occupied
+   set; its dependents may now be ready. Go to step 1 (recompute the frontier).
+5. **Crash reconciliation.** Before each frontier recompute, reconcile
+   `IN-PROGRESS` rows against live background-task state. A WU whose task is gone
+   with no COMMIT is reset to `PENDING` (retry) or escalated — this frees its
+   files so one crashed WU cannot wedge the scheduler by leaving its scope
+   permanently occupied.
 
-   **Phase 1 writer-model recording (sub-spec 8).** Before dispatching the implementer, decide on the implementation model:
-
-   1. Read `.tl-telar/external-tools.yaml` → `routing.default_implementer`.
-   2. If `default_implementer == "claude"` OR no adapters are healthy: spawn Task() implementer (model = `claude`). Record `Writer Model: claude` in `.tl-telar/context/execution-state.md` for this WU.
-   3. If `default_implementer == "cheapest-available"`:
-      - Health-check Codex and Gemini via `scripts/tl-telar-external-tools.sh health`.
-      - Pick the cheapest healthy adapter (Gemini preferred — free tier).
-      - Budget preflight: estimate $0.10/WU; check against per_task cap.
-      - On budget OK: dispatch via `scripts/tl-telar-external-tools.sh dispatch --task implement --tool <model> --worktree <isolated-worktree> --prompt-file <generated-prompt>`. Record `Writer Model: <model>`.
-      - On budget exceeded or all adapters unhealthy: fall back to Claude Task(). Record `Writer Model: claude`.
-   4. If `default_implementer == "claude"` (explicit): same as step 2.
-   5. If `default_implementer == "<tool>"` (e.g., `codex`): try that adapter first; on health/budget failure, fall back per `escalation_order`.
-
-   The Writer Model field is read by Phase 3 to enforce the writer-cannot-be-reviewer rule.
-
-3. On COMMIT-READY signal: per user's git policy ("ben yapacagim"), DO NOT git-add or git-commit. Emit the suggested commit message and file list to the user, then **move to the next WU immediately — do NOT wait for the user to commit**. This is safe because the next WU's Phase 1 captures a fresh baseline that includes this WU's still-uncommitted files, so they are never mis-attributed as out-of-scope for the next WU. (Without the baseline mechanism this would self-lock; see orchestrated-execution Phase 2 step 4.)
-4. After each COMMIT-READY signal (project-context.md write — sub-spec 4 wiring):
-   - Read or create `.tl-telar/context/project-context.md` from `resources/templates/orchestration/project-context.md`.
-   - Append a row to the **Completed Work Units** table: `| WU-<id> | <title> | <comma-separated key files> | <new services/modules from this WU> |`.
-   - If new patterns emerged during this WU (e.g., new state-mgmt approach adopted, new API contract introduced), append a bullet under **Established Patterns**.
-   - Write atomically. This file is git-ignored per §2.7a — it's the orchestrator's working scratchpad, not a durable artifact, but recovery (sub-spec 4) and every subsequent WU's implementer reads it so the orchestrator builds a coherent picture across the plan.
-5. If the WU has `checkpoint: true`: behavior depends on `autonomy.cycle`. **`interactive`** → present a checkpoint report and WAIT. **`unattended`** → do NOT pause; proceed using the artifact approved in Step 5a's pre-flight (e.g., the signed-off UI draft). If the checkpoint's decision was somehow not collected pre-flight, STOP and report it as a pre-flight defect — never guess to keep the cycle moving.
-6. On escalation: surface the Override/Revise/Simplify/Cancel choice to the user.
+Single-WU plans are just the degenerate case: `ready` holds one WU per round.
 
 ## Step 7: Final cross-cutting review
 

@@ -1,4 +1,4 @@
-# Telar v0.2.0
+# Telar v0.3.0
 
 Cross-platform mobile development plugin for Claude Code — React Native, Flutter, and native platform integration. Also covers a companion web stack (Astro, Next.js/Tailwind/shadcn, Vite/TanStack admin panels) and a Rust service layer.
 
@@ -117,6 +117,7 @@ The recommended workflow for building features:
 | `scripts/tl-telar-prime.sh` | KB retrieval primer. Reads `.tl-telar/knowledge/*.jsonl`, applies file/keyword/work-type filters via jq, emits 5-category facts (MUST FOLLOW / GOTCHAS / PATTERNS / DECISIONS / API BEHAVIORS). `--json` mode for SessionStart hook injection. |
 | `scripts/tl-telar-fetch-pr-comments.ts` | Pure data fetcher for PR comments (CodeRabbit / Bugbot / Greptile / Copilot / human). Writes `.tl-telar/temp/pr-comments.json`. Phase A of `/tl-telar:self-reflect`. Graceful degrade when no `gh auth`. |
 | `scripts/tl-telar-self-reflect.sh` | Phase A/B/C driver for `/tl-telar:self-reflect`. Phase A: harvest PR comments via the fetcher above; Phase B/C handed off to the LLM via the skill prompt. |
+| `scripts/tl-telar-wu-scheduler.js` | Pure WU readiness scheduler for `/tl-telar:orchestrate`. Reads `.tl-telar/plans/active-plan.md` + `.tl-telar/context/execution-state.md`, returns JSON `{ready, blocked, running, occupied_files, plan_warnings}` — the WUs whose `deps` are COMPLETE and whose `file_scope` is disjoint from every running WU, bounded by `execution.max_parallel_wus` (default 3). Deadlock-free (atomic all-or-nothing file-set acquisition); flags ambiguous plans (two dep-unordered WUs writing the same path). |
 | `scripts/tl-telar-external-tools.sh` | Layer B dispatcher: dispatch/health/budget-status/parse-verdict subcommands; real YAML parsing (yq or python3+PyYAML), cheapest-available routing + escalation, budget ledger (`.tl-telar/context/external-tools-budget.jsonl`) with fail-closed circuit breakers. |
 | `scripts/estimate-cost.sh` | USD estimator for external adapter invocations. |
 

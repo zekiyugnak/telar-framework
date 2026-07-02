@@ -267,11 +267,12 @@
   <!-- ORCHESTRATION -->
   <section class="group">
     <h2 id="orch">Orchestration <span class="gc">3</span></h2>
+    <p><code>orchestrate</code> is the entry point — it drives the whole pipeline (gates → parallel Work Unit execution → final review) from one command. <code>setup-orchestration</code> enables it once per project; <code>resume</code> recovers an interrupted run. The plan/design gates (<a href="#review">Review &amp; Quality</a>) and the knowledge loop (<a href="#knowledge">Knowledge &amp; Tools</a>) plug into the same workflow. See <a href="orchestration.html#commands">Orchestration → how the commands wire together</a>.</p>
     <div class="cards">
 
-      <article class="card" data-search="orchestrate orchestrator full pipeline plan review work-unit 4-phase">
+      <article class="card" data-search="orchestrate orchestrator full pipeline plan review work-unit 4-phase parallel workflow scheduler concurrent">
         <div class="card-head"><h3>/tl-telar:orchestrate</h3><span class="tag">command</span></div>
-        <p class="desc">End-to-end orchestrated execution: plan, plan review (3 reviewers), WU decomposition, 4-phase execution loop per WU, final review, COMMIT-READY emit. Honors your git policy (no auto-commit).</p>
+        <p class="desc">End-to-end orchestrated execution: plan, plan review (3 reviewers), WU decomposition, then a continuous-frontier loop that runs independent Work Units in parallel (bounded by <code>execution.max_parallel_wus</code>), final review, COMMIT-READY emit. Honors your git policy (no auto-commit).</p>
         <div class="usage">/tl-telar:orchestrate &lt;task&gt; | --epic &lt;path&gt; | --plan-file &lt;path&gt;</div>
         <button class="card-toggle" aria-expanded="false">Details</button>
         <div class="card-detail" hidden>
@@ -359,7 +360,7 @@
 </main>
 
 <footer><div class="wrap fl">
-  <span>Telar v0.2.0 — MIT © 2026 Zeki Yugnak</span>
+  <span>Telar v0.3.0 — MIT © 2026 Zeki Yugnak</span>
   <span><a href="https://github.com/zekiyugnak/telar-framework/tree/main/commands">All commands on GitHub</a> · <a href="index.html">Docs home</a></span>
 </div></footer>
 

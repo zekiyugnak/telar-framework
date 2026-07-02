@@ -28,6 +28,83 @@ Supports two modes:
 
 ---
 
+## Step 0: Resolve Spec Layer location (change-id + domain)
+
+Before gathering requirements, resolve where REQUIREMENTS.md will be written:
+
+1. **Read the active change pointer**: `.tl-telar/context/active-change.txt` (one line, the current change-id). If it exists and its change dir under `tl-telar-spec/changes/<id>/` exists, reuse it.
+2. **If absent, or if it points at a change whose directory under `tl-telar-spec/changes/<id>/` no longer exists** (e.g. it was already archived), this is a new change:
+   - Generate a change-id: `<YYYY-MM-DD>-<kebab-case-slug-from-feature-description>` (e.g. `2026-07-add-dark-mode`).
+   - If `tl-telar-spec/` doesn't exist yet, run `node scripts/tl-telar-spec-bootstrap.js` first — this creates the skeleton and migrates any pre-existing root-level REQUIREMENTS.md/RESEARCH.md/PLAN.md into `tl-telar-spec/truth/`.
+   - Create `tl-telar-spec/changes/<id>/`.
+   - Write the change-id to `.tl-telar/context/active-change.txt` (git-ignored — matches the existing `.tl-telar/context/` convention; this pointer is ephemeral session state, not a durable artifact).
+3. **Determine domain**: if candidate file paths are already known (e.g. from a prior RESEARCH.md or an epic file), run `node -e "console.log(require('./scripts/tl-telar-spec-domain.js').inferDomain(process.argv.slice(1)))" -- <path1> <path2> ...`. Otherwise ask the user directly: "Which part of the app does this belong to — auth, navigation, checkout, ...?" Always show the inferred/asked domain to the user for confirmation before writing any file. This skill authors exactly one domain per change today; the `deltas/<domain>.REQUIREMENTS.delta.md` multi-file convention that `scripts/tl-telar-spec-archive.js` and `scripts/validate-spec-layer.js` already support is not yet produced by any skill — a change touching multiple domains currently needs to be split into one change per domain.
+4. **Check for an existing truth doc**: does `tl-telar-spec/truth/<domain>/REQUIREMENTS.md` exist?
+   - **Yes** → this run operates in **Delta Mode** (below).
+   - **No** → proceed with the ordinary **From Scratch** / **Document-Driven** mode below to write the full `REQUIREMENTS.md`, then follow "Seeding a Brand-New Domain" (below) to also produce a delta file — `scripts/tl-telar-spec-archive.js` only ever reads delta files, so a change with no delta file cannot be archived; this step is what lets the very first change in a domain actually reach `truth/`.
+
+All REQUIREMENTS.md output from this skill is written to `tl-telar-spec/changes/<id>/REQUIREMENTS.md` — never to the project root.
+
+---
+
+## Seeding a Brand-New Domain
+
+Triggered when Step 0 found NO existing `tl-telar-spec/truth/<domain>/REQUIREMENTS.md` (the greenfield case). After writing the full `REQUIREMENTS.md` via From Scratch or Document-Driven mode:
+
+1. Extract every F-x id and its full block from the just-written `REQUIREMENTS.md`.
+2. Write `tl-telar-spec/changes/<id>/REQUIREMENTS.delta.md`:
+
+   ```markdown
+   <!-- tl-telar-spec-delta: domain=<domain> baseline-hash=none -->
+   # Delta: <change-id> / <domain> (initial seed)
+
+   ## ADDED Requirements
+   ### F-1: <Title>
+   [full block, copied verbatim from REQUIREMENTS.md]
+
+   ### F-2: <Title>
+   [full block, copied verbatim from REQUIREMENTS.md]
+   ```
+
+3. This is what `node scripts/tl-telar-spec-archive.js <change-id>` merges into a brand-new `truth/<domain>/REQUIREMENTS.md`. `scripts/tl-telar-spec-merge.js`'s `mergeDelta` already handles merging ADDED entries into empty truth content correctly (see `tests/spec-layer/merge.test.js` and `tests/spec-layer/archive-smoke.sh`'s `test_happy_path_first_delta`) — no code changes are needed for this, only this authoring step.
+
+---
+
+## Delta Mode
+
+Triggered when Step 0 found an existing `tl-telar-spec/truth/<domain>/REQUIREMENTS.md`. Instead of writing a full REQUIREMENTS.md from a blank slate:
+
+1. Read the existing F-x list from `tl-telar-spec/truth/<domain>/REQUIREMENTS.md`.
+2. Ask the user which F-x are: **new** (ADDED), **changing** (MODIFIED — reference the existing F-x id), or **being retired** (REMOVED — reference the existing F-x id, ask for a one-line reason).
+3. Compute the `baseline-hash`: `node -e "console.log(require('crypto').createHash('sha256').update(require('fs').readFileSync('tl-telar-spec/truth/<domain>/REQUIREMENTS.md','utf8')).digest('hex'))"` — or the literal string `none` if that truth file does not exist yet.
+4. Write `tl-telar-spec/changes/<id>/REQUIREMENTS.delta.md`:
+
+   ```markdown
+   <!-- tl-telar-spec-delta: domain=<domain> baseline-hash=<hash-or-none> -->
+   # Delta: <change-id> / <domain>
+
+   ## ADDED Requirements
+   ### F-<n>: <Title>
+   **Description:** ...
+   **Business rules:** ...
+   **User story:** ...
+   **Phase:** ...
+   **Tier:** ...
+
+   ## MODIFIED Requirements
+   ### F-<existing-id>: <Title>
+   [full replacement block, same shape as the REQUIREMENTS.md Template below]
+
+   ## REMOVED Requirements
+   ### F-<existing-id>: <Title>
+   **Reason:** [one line]
+   ```
+
+5. Also write the FULL, current-state `REQUIREMENTS.md` (existing F-x list plus the new/changed ones) to `tl-telar-spec/changes/<id>/REQUIREMENTS.md` — downstream skills (`brainstorm-first`, `plan-and-track`) read this file, never the delta.
+6. The delta is merged into `truth/<domain>/REQUIREMENTS.md` later, via `node scripts/tl-telar-spec-archive.js <change-id>` — run by the orchestrator/command after the final review step (see `commands/orchestrate.md`), not by this skill.
+
+---
+
 ## Mode Selection
 
 Before starting, determine which mode to use:
@@ -297,6 +374,8 @@ For each gap:
 5. Open Items section lists any unresolved questions
 6. In Document-Driven Mode: no user decisions from the source document have been overridden
 7. In Document-Driven Mode: Gap Analysis section is present with source annotations
+8. `tl-telar-spec/changes/<id>/REQUIREMENTS.md` exists (never a root-level `REQUIREMENTS.md`)
+9. If Delta Mode was used: `tl-telar-spec/changes/<id>/REQUIREMENTS.delta.md` exists with a valid `<!-- tl-telar-spec-delta: domain=... baseline-hash=... -->` header
 
 ## References
 
@@ -304,3 +383,5 @@ For each gap:
 - Used by: `commands/create-app.md`, `commands/add-feature.md`
 - Change management: `commands/update-requirement.md`
 - Traceability: `skills/requirements-traceability.md`
+- Spec Layer archive: `scripts/tl-telar-spec-archive.js` (merges deltas into `tl-telar-spec/truth/`, run after final review — see `commands/orchestrate.md`)
+- Spec Layer bootstrap: `scripts/tl-telar-spec-bootstrap.js` (creates the `tl-telar-spec/` skeleton, migrates pre-existing root artifacts)

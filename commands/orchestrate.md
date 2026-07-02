@@ -36,9 +36,10 @@ The orchestrator is a **conductor**: its job is to spawn fresh `Task()` subagent
    - Wait for / produce an implementation plan — UNLESS `--epic`/`--plan-file` was given, in which case that file IS the plan (drafting is skipped).
    - Invoke `skills/orchestration/plan-review-gate` (sub-spec 1 deliverable) — spawning 3 fresh reviewer `Task()`s from this session.
    - On PASS: decompose into WUs, write `.tl-telar/plans/active-plan.md`, wait for user approval.
-   - Drive each WU through `skills/orchestration/orchestrated-execution` (4-phase loop) — spawning implementer/reviewer `Task()`s from this session.
+   - Drive WUs through `skills/orchestration/orchestrated-execution` (4-phase loop) using the **continuous-frontier dispatch loop** (see `agents/mobile-orchestrator.md` → "WU execution — continuous-frontier dispatch"): `scripts/tl-telar-wu-scheduler.js` computes which WUs are ready (deps COMPLETE + `file_scope` disjoint from running WUs), bounded by `execution.max_parallel_wus` (default 3). Up to that many WUs run as concurrent background `Task()`s from this session; the frontier is recomputed on each WU completion.
    - Emit a COMMIT-READY signal for each WU (DOES NOT commit on user's behalf).
    - Final review and "Ready for PR" summary.
+   - **Spec Layer archive (conditional).** Run `node scripts/tl-telar-spec-archive.js <change-id>` ONLY if this run actually produced a Spec Layer change — i.e. a `tl-telar-spec/changes/<change-id>/` with a `REQUIREMENTS.delta.md` exists (created when requirements were gathered via `skills/requirements-gather.md` → "Step 0"). It merges the delta(s) into `tl-telar-spec/truth/` and moves the change folder to `tl-telar-spec/changes/archive/<date>-<id>/`. If no such change dir exists, SKIP this step — do not run the archive with an unbound/nonexistent `<change-id>` (it would abort with "change directory not found"). **Note:** the orchestrator's own working artifacts live under `.tl-telar/plans/active-plan.md`, which is NOT a Spec Layer change; automatic creation of a `tl-telar-spec/changes/<id>/` from within the orchestrator playbook is not yet wired (deferred — see `docs/superpowers/specs/2026-07-02-telar-spec-layer-design.md`). Today the Spec Layer is exercised through the legacy `/tl-telar:add-feature` / `/tl-telar:create-app` / `/tl-telar:update-requirement` commands, which invoke Step 0.
 
 ## Input modes
 
@@ -76,7 +77,7 @@ The orchestrator accepts the work to do in one of three forms. All three converg
 - Does NOT git add or git commit. User policy is "ben yapacagim" (user handles git manually). The orchestrator emits COMMIT-READY signals with suggested messages.
 - Does NOT skip plan review even if the user says "this plan is obviously fine." The 3-reviewer gate is mandatory.
 - Does NOT loop past 3 retries on any gate. Escalates to user with structured options.
-- Does NOT modify existing legacy command behavior. `/tl-telar:add-feature`, `/tl-telar:create-app`, etc. continue to work exactly as before — they don't route through this orchestrator.
+- Does NOT change legacy commands' *review/build* behavior — `/tl-telar:add-feature`, `/tl-telar:create-app`, and `/tl-telar:update-requirement` still don't route through this orchestrator's plan/design gates. They DO now share the same Spec Layer artifact location (`tl-telar-spec/changes/<id>/`, `tl-telar-spec/truth/<domain>/`) as this command — see `docs/superpowers/specs/2026-07-02-telar-spec-layer-design.md`. (`/tl-telar:migrate-app` is intentionally NOT included — it doesn't invoke `requirements-gather` or produce a REQUIREMENTS.md.)
 
 ## Comparison with legacy commands
 

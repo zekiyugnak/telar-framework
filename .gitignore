@@ -14,6 +14,7 @@ docs/superpowers/
 
 # IDE / editor config — local only.
 .idea/
+*.iml
 
 # Claude Code local settings (machine-specific paths, personal allowlist).
 .claude/settings.local.json

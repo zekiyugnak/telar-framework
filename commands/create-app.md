@@ -22,6 +22,8 @@ phases:
 
 # Create Mobile App
 
+> Artifacts (REQUIREMENTS.md, RESEARCH.md, PLAN.md, PROGRESS.md) are written under `tl-telar-spec/changes/<id>/` — see `skills/requirements-gather.md` → "Step 0" for change-id/domain resolution. Once the feature is complete, run `node scripts/tl-telar-spec-archive.js <change-id>` to merge into `tl-telar-spec/truth/` and archive the change folder.
+
 Create a new cross-platform mobile application. Begins with requirements gathering before any technical decisions.
 
 ## Phase 1: Requirements (0-15%)

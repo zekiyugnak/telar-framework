@@ -22,6 +22,8 @@ phases:
 
 # Add Feature
 
+> Artifacts (REQUIREMENTS.md, RESEARCH.md, PLAN.md, PROGRESS.md) are written under `tl-telar-spec/changes/<id>/` — see `skills/requirements-gather.md` → "Step 0" for change-id/domain resolution. Once the feature is complete, run `node scripts/tl-telar-spec-archive.js <change-id>` to merge into `tl-telar-spec/truth/` and archive the change folder.
+
 Add a new feature to an existing mobile application with structured exploration, requirements check, brainstorming, planning, and review.
 
 ## Phase 0: Codebase Exploration (0-10%)
@@ -163,7 +165,7 @@ skills:
 ### Integration
 - Update PROGRESS.md to "Complete"
 - Commit using mobile-commit-convention
-- Archive PLAN.md and PROGRESS.md
+- Archive: run `node scripts/tl-telar-spec-archive.js <change-id>` — it moves the entire `tl-telar-spec/changes/<id>/` folder (PLAN.md, PROGRESS.md, REQUIREMENTS.md, RESEARCH.md, and any TRACEABILITY.md together) to `tl-telar-spec/changes/archive/<date>-<id>/` in one step, and merges any `REQUIREMENTS.delta.md` into `tl-telar-spec/truth/`. There is no separate `.claude/archive/` location.
 
 ---
 

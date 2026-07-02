@@ -172,6 +172,10 @@ if [[ "$REPLACE" == "true" ]]; then
         cycle: "interactive",
         description: "interactive (default) = orchestrator may pause mid-cycle at checkpoint:true WUs and at self-reflect. unattended = one human gate at plan-ready (Step 5): scope + approved UI ASCII drafts + all secrets/inputs collected up front, then the WU cycle runs to PR-ready with ZERO pauses. UI sign-off is hoisted into plan-readiness, never mid-cycle, and unattended never skips a decision, it makes it earlier. See agents/mobile-orchestrator.md Autonomy model section."
       },
+      execution: {
+        max_parallel_wus: 3,
+        description: "Maximum Work Units the orchestrator runs concurrently. A WU is dispatched only when deps are COMPLETE and file_scope is disjoint from every running WU. Default 3. See scripts/tl-telar-wu-scheduler.js."
+      },
       enforcement: {
         coverage_command: coverageCmd,
         coverage_strict: coverageStrict,
@@ -208,6 +212,7 @@ REQUIRED_IGNORES=(
   ".tl-telar/context/external-tools-budget.jsonl"
   ".tl-telar/context/wu-*-baseline.tsv"
   ".tl-telar/context/wu-*-changes.txt"
+  ".tl-telar/context/active-change.txt"
   ".tl-telar/temp/"
 )
 

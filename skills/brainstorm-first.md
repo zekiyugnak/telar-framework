@@ -38,6 +38,10 @@ Before invoking this skill, `REQUIREMENTS.md` must exist. If it does not:
 
 ---
 
+## Step 0: Resolve Spec Layer location
+
+Read `.tl-telar/context/active-change.txt` for the active change-id (written by `requirements-gather`'s Step 0). All reads/writes in this skill happen inside `tl-telar-spec/changes/<id>/` — `REQUIREMENTS.md` is read from, and `RESEARCH.md` is written to, that folder, never the project root.
+
 ## Step 1: Read REQUIREMENTS.md
 
 Load and parse REQUIREMENTS.md:

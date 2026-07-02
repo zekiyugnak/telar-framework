@@ -28,6 +28,8 @@ Converts `RESEARCH.md` decisions into actionable implementation plans with requi
 - `REQUIREMENTS.md` must exist (produced by `requirements-gather`)
 - `RESEARCH.md` must exist (produced by `brainstorm-first`)
 
+**Spec Layer location:** read `.tl-telar/context/active-change.txt` for the active change-id. `REQUIREMENTS.md`/`RESEARCH.md` are read from, and `PLAN.md`/`PROGRESS.md` are written to, `tl-telar-spec/changes/<id>/` — never the project root.
+
 ---
 
 ## Solution
@@ -176,7 +178,7 @@ PLAN.md tasks feed directly into the `iterative-build-loop` baton system:
 
 When all tasks are done:
 1. Update PROGRESS.md status to "Complete"
-2. Archive: move PLAN.md, PROGRESS.md, TRACEABILITY.md to `.claude/archive/[feature-name]/`
+2. Archive: run `node scripts/tl-telar-spec-archive.js <change-id>` — it moves the entire `tl-telar-spec/changes/<id>/` folder (PLAN.md, PROGRESS.md, REQUIREMENTS.md, RESEARCH.md, and any TRACEABILITY.md together) to `tl-telar-spec/changes/archive/<date>-<id>/` in one step, and merges any `REQUIREMENTS.delta.md` into `tl-telar-spec/truth/`. There is no separate `.claude/archive/` location.
 3. Delete the `next-step.md` baton
 4. Write a summary commit message referencing the plan
 
