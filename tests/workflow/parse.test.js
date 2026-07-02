@@ -67,6 +67,45 @@ Ship auth.
   assert.match(warnings[0], /WU-001.*WU-002.*src\/shared\.ts|src\/shared\.ts/);
 }
 
+// parsePlan does NOT flag two WUs that share a path when a dep edge orders them
+// (buildReachability true-branch): a dep ordering makes the shared write
+// deterministic, so it is a legitimate plan, not an ambiguous one.
+{
+  const plan = `## Work Units
+
+### WU-001: base
+- file_scope:
+  - src/shared.ts
+- deps: []
+
+### WU-002: extends base
+- file_scope:
+  - src/shared.ts
+- deps: [WU-001]
+`;
+  const { warnings } = parsePlan(plan);
+  assert.deepEqual(warnings, []);
+}
+
+// ...and the ordering is direction-agnostic: the reverse dep edge is equally
+// unambiguous (the reachability check walks the transitive dep graph either way).
+{
+  const plan = `## Work Units
+
+### WU-001: extends base
+- file_scope:
+  - src/shared.ts
+- deps: [WU-002]
+
+### WU-002: base
+- file_scope:
+  - src/shared.ts
+- deps: []
+`;
+  const { warnings } = parsePlan(plan);
+  assert.deepEqual(warnings, []);
+}
+
 // parseState maps ids to statuses; absent WU is not in the map
 {
   const state = `# Execution State
