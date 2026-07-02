@@ -36,7 +36,7 @@ The orchestrator is a **conductor**: its job is to spawn fresh `Task()` subagent
    - Wait for / produce an implementation plan — UNLESS `--epic`/`--plan-file` was given, in which case that file IS the plan (drafting is skipped).
    - Invoke `skills/orchestration/plan-review-gate` (sub-spec 1 deliverable) — spawning 3 fresh reviewer `Task()`s from this session.
    - On PASS: decompose into WUs, write `.tl-telar/plans/active-plan.md`, wait for user approval.
-   - Drive each WU through `skills/orchestration/orchestrated-execution` (4-phase loop) — spawning implementer/reviewer `Task()`s from this session.
+   - Drive WUs through `skills/orchestration/orchestrated-execution` (4-phase loop) using the **continuous-frontier dispatch loop** (see `agents/mobile-orchestrator.md` → "WU execution — continuous-frontier dispatch"): `scripts/tl-telar-wu-scheduler.js` computes which WUs are ready (deps COMPLETE + `file_scope` disjoint from running WUs), bounded by `execution.max_parallel_wus` (default 3). Up to that many WUs run as concurrent background `Task()`s from this session; the frontier is recomputed on each WU completion.
    - Emit a COMMIT-READY signal for each WU (DOES NOT commit on user's behalf).
    - Final review and "Ready for PR" summary.
    - Run `node scripts/tl-telar-spec-archive.js <change-id>` (Spec Layer archive step) to merge this change's delta(s) into `tl-telar-spec/truth/` and move `tl-telar-spec/changes/<id>/` to `tl-telar-spec/changes/archive/<date>-<id>/`.
