@@ -2,6 +2,7 @@
 'use strict';
 
 const fs = require('fs');
+const path = require('path');
 
 // Parse the `## Work Units` section of active-plan.md into structured WUs.
 // Each WU is a `### WU-xxx:` block; within it we read the `file_scope:` and
@@ -205,4 +206,55 @@ function computeReadiness({ wus, statusOf, maxParallel }) {
   return { ready, blocked, running, occupied_files: [...occupied] };
 }
 
-module.exports = { parsePlan, parseState, computePlanWarnings, buildReachability, criticalPathDepths, computeReadiness };
+function readMaxParallel() {
+  const root = process.env.CLAUDE_PROJECT_DIR || process.cwd();
+  const thresholdsPath = path.join(root, '.tl-telar-thresholds.json');
+  try {
+    const cfg = JSON.parse(fs.readFileSync(thresholdsPath, 'utf8'));
+    const n = cfg && cfg.execution && cfg.execution.max_parallel_wus;
+    if (Number.isInteger(n) && n > 0) return n;
+  } catch {
+    // absent or malformed thresholds -> default
+  }
+  return 3;
+}
+
+function main(argv) {
+  const [planPath, statePath] = argv.slice(2);
+  if (!planPath || !statePath) {
+    console.error('Usage: node scripts/tl-telar-wu-scheduler.js <active-plan.md> <execution-state.md>');
+    process.exit(2);
+  }
+  let planText, stateText;
+  try {
+    planText = fs.readFileSync(planPath, 'utf8');
+    stateText = fs.readFileSync(statePath, 'utf8');
+  } catch (err) {
+    console.error(`ERROR: cannot read state file: ${err.message}`);
+    process.exit(1);
+  }
+
+  const { wus, warnings } = parsePlan(planText);
+  const statusMap = parseState(stateText);
+  const statusOf = (id) => statusMap.get(id) || 'PENDING';
+  const maxParallel = readMaxParallel();
+
+  let result;
+  try {
+    result = computeReadiness({ wus, statusOf, maxParallel });
+  } catch (err) {
+    console.error(`ERROR: ${err.message}`);
+    process.exit(1);
+  }
+
+  process.stdout.write(JSON.stringify({ ...result, plan_warnings: warnings }) + '\n');
+}
+
+if (require.main === module) {
+  main(process.argv);
+}
+
+module.exports = {
+  parsePlan, parseState, computePlanWarnings, buildReachability,
+  criticalPathDepths, computeReadiness, readMaxParallel, main,
+};
