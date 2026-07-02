@@ -115,10 +115,25 @@ function parseState(stateText) {
   return map;
 }
 
-// Detect a cycle and compute the longest remaining dependency-chain depth for
+// Detect a cycle and compute the longest remaining SUCCESSOR-chain depth for
 // each WU (critical-path length) via DFS with memoization. Throws on a cycle.
+//
+// Depth is measured over the reverse (successor) graph, not the forward
+// (deps) graph: a WU only becomes a readiness candidate once all of its own
+// deps are COMPLETE, so its ancestor-chain depth is a stale signal at
+// ranking time. What matters is how much future/downstream work a WU
+// unlocks, i.e. the depth of the chain of WUs that (transitively) depend on
+// it.
 function criticalPathDepths(wus) {
   const byId = new Map(wus.map((w) => [w.id, w]));
+  // successors[id] = WUs that list `id` in their own deps (i.e. depend on it)
+  const successors = new Map(wus.map((w) => [w.id, []]));
+  for (const w of wus) {
+    for (const d of w.deps) {
+      if (successors.has(d)) successors.get(d).push(w.id);
+    }
+  }
+
   const depth = new Map();
   const VISITING = -1;
 
@@ -129,17 +144,16 @@ function criticalPathDepths(wus) {
       return d;
     }
     depth.set(id, VISITING);
-    const w = byId.get(id);
     let best = 0;
-    for (const d of (w ? w.deps : [])) {
-      if (byId.has(d)) best = Math.max(best, 1 + dfs(d));
+    for (const s of successors.get(id) || []) {
+      best = Math.max(best, 1 + dfs(s));
     }
     depth.set(id, best);
     return best;
   }
 
-  for (const w of wus) dfs(w.id);
-  return depth; // id -> longest chain of dependencies beneath it
+  for (const w of byId.values()) dfs(w.id);
+  return depth; // id -> longest chain of WUs that transitively depend on it
 }
 
 function computeReadiness({ wus, statusOf, maxParallel }) {

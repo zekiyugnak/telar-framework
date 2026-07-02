@@ -79,6 +79,25 @@ const wu = (id, deps, fileScope) => ({ id, deps, fileScope });
   assert.deepEqual(r.ready, ['WU-A']); // longer remaining chain beats the leaf
 }
 
+// critical-path ordering must use the SUCCESSOR chain, not the (already-satisfied)
+// ancestor chain: WU-A has a fully-complete 2-deep ancestor chain but unlocks
+// nothing further; WU-B has no ancestors but is the head of a 3-deep still-PENDING
+// successor chain. Under cap=1, WU-B (the real long pole) must be admitted first.
+{
+  const wus = [
+    wu('WU-Y', [], ['y.ts']),
+    wu('WU-X', ['WU-Y'], ['x.ts']),
+    wu('WU-A', ['WU-X'], ['a.ts']), // leaf: fully-complete ancestors, no successors
+    wu('WU-B', [], ['b.ts']),
+    wu('WU-C', ['WU-B'], ['c.ts']),
+    wu('WU-D', ['WU-C'], ['d.ts']),
+    wu('WU-E', ['WU-D'], ['e.ts']),
+  ];
+  const statusOf = statuses({ 'WU-Y': 'COMPLETE', 'WU-X': 'COMPLETE' });
+  const r = computeReadiness({ wus, statusOf, maxParallel: 1 });
+  assert.deepEqual(r.ready, ['WU-B']); // long pole beats the completed-ancestor leaf
+}
+
 // cycle -> throw
 {
   const wus = [wu('WU-001', ['WU-002'], ['a.ts']), wu('WU-002', ['WU-001'], ['b.ts'])];
