@@ -95,4 +95,32 @@ const TRUTH = `# Requirements: Auth Domain
   assert.match(conflicts[0], /F-9 not found/);
 }
 
+// Blank-line fidelity: preamble/first-block boundary must round-trip exactly
+{
+  const delta = `<!-- tl-telar-spec-delta: domain=auth baseline-hash=none -->
+## ADDED Requirements
+### F-3: Two-Factor Authentication
+**Description:** Users can enable TOTP-based 2FA.
+**Phase:** 2
+`;
+  const { mergedContent, conflicts } = mergeDelta({ truthContent: TRUTH, deltaContent: delta });
+  assert.deepEqual(conflicts, []);
+  // The blank line between "## Functional Requirements" and "### F-1: Login"
+  // in TRUTH must survive the merge unchanged.
+  assert.equal(mergedContent.includes('## Functional Requirements\n\n### F-1: Login'), true);
+}
+
+// Blank-line fidelity: merging into empty truth content must not insert a
+// spurious leading blank line before the first block.
+{
+  const delta = `<!-- tl-telar-spec-delta: domain=auth baseline-hash=none -->
+## ADDED Requirements
+### F-1: First Ever Requirement
+**Description:** First requirement in a brand-new domain.
+`;
+  const { mergedContent, conflicts } = mergeDelta({ truthContent: '', deltaContent: delta });
+  assert.deepEqual(conflicts, []);
+  assert.equal(mergedContent.startsWith('### F-1: First Ever Requirement'), true);
+}
+
 console.log('tl-telar-spec-merge: all tests passed');

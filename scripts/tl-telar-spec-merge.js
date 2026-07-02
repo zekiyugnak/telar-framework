@@ -115,8 +115,9 @@ function mergeDelta({ truthContent, deltaContent }) {
     return { mergedContent: null, conflicts };
   }
 
-  const bodyText = order.map((id) => blocks.get(id).bodyLines.join('\n')).join('\n');
-  const mergedContent = `${preamble}${preamble.endsWith('\n') ? '' : '\n'}${bodyText}\n`;
+  const preambleLines = preamble === '' ? [] : preamble.split('\n');
+  const allLines = [...preambleLines, ...order.flatMap((id) => blocks.get(id).bodyLines)];
+  const mergedContent = allLines.join('\n');
   return { mergedContent, conflicts: [] };
 }
 
