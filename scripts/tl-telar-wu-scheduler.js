@@ -115,4 +115,80 @@ function parseState(stateText) {
   return map;
 }
 
-module.exports = { parsePlan, parseState, computePlanWarnings, buildReachability };
+// Detect a cycle and compute the longest remaining dependency-chain depth for
+// each WU (critical-path length) via DFS with memoization. Throws on a cycle.
+function criticalPathDepths(wus) {
+  const byId = new Map(wus.map((w) => [w.id, w]));
+  const depth = new Map();
+  const VISITING = -1;
+
+  function dfs(id) {
+    if (depth.has(id)) {
+      const d = depth.get(id);
+      if (d === VISITING) throw new Error(`deps cycle detected at ${id}`);
+      return d;
+    }
+    depth.set(id, VISITING);
+    const w = byId.get(id);
+    let best = 0;
+    for (const d of (w ? w.deps : [])) {
+      if (byId.has(d)) best = Math.max(best, 1 + dfs(d));
+    }
+    depth.set(id, best);
+    return best;
+  }
+
+  for (const w of wus) dfs(w.id);
+  return depth; // id -> longest chain of dependencies beneath it
+}
+
+function computeReadiness({ wus, statusOf, maxParallel }) {
+  const status = (id) => statusOf(id) || 'PENDING';
+  const depths = criticalPathDepths(wus); // also throws on cycle
+
+  const running = wus.filter((w) => status(w.id) === 'IN-PROGRESS').map((w) => w.id);
+  const runningWus = wus.filter((w) => running.includes(w.id));
+
+  // occupied = union of every running WU's file_scope
+  const occupied = new Set();
+  for (const w of runningWus) for (const p of w.fileScope) occupied.add(p);
+
+  const blocked = {};
+
+  // Candidates: PENDING WUs whose deps are all COMPLETE.
+  const candidates = wus.filter((w) => {
+    if (status(w.id) !== 'PENDING') return false;
+    const unmet = w.deps.filter((d) => status(d) !== 'COMPLETE');
+    if (unmet.length > 0) {
+      blocked[w.id] = { reason: 'deps', detail: `waiting on ${unmet.join(', ')}` };
+      return false;
+    }
+    return true;
+  });
+
+  // Critical-path order: longest remaining chain first, ties broken by id.
+  candidates.sort((a, b) => (depths.get(b.id) - depths.get(a.id)) || a.id.localeCompare(b.id));
+
+  const ready = [];
+  const tentative = new Set(occupied); // atomic all-or-nothing acquisition
+  let slots = maxParallel - running.length;
+
+  for (const w of candidates) {
+    const conflict = w.fileScope.find((p) => tentative.has(p));
+    if (conflict) {
+      blocked[w.id] = { reason: 'file_conflict', detail: `${conflict} overlaps a running/admitted WU` };
+      continue;
+    }
+    if (slots <= 0) {
+      blocked[w.id] = { reason: 'concurrency_cap', detail: `max_parallel_wus=${maxParallel} reached` };
+      continue;
+    }
+    ready.push(w.id);
+    for (const p of w.fileScope) tentative.add(p); // union whole scope atomically
+    slots -= 1;
+  }
+
+  return { ready, blocked, running, occupied_files: [...occupied] };
+}
+
+module.exports = { parsePlan, parseState, computePlanWarnings, buildReachability, criticalPathDepths, computeReadiness };
