@@ -6,6 +6,16 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+## [0.2.0] - 2026-07-02
+
+Adds a companion web stack and a Rust service layer alongside the existing mobile agents.
+
+### Added
+
+- 4 new agents: `astro-web-expert`, `nextjs-web-expert`, `admin-panel-architect`, `rust-service-architect`.
+- 18 new skills covering Astro (SEO/OG, content performance), Next.js/Tailwind/shadcn, a Vite + TanStack Router/Query/Table admin panel with Supabase (anon key + RLS only, TUS resumable uploads, Tremor charts, FormatJS/Lingui i18n with RTL-readiness), and a narrow-topic Rust/axum/sqlx service breakdown (routing, sqlx patterns, service architecture, testing pyramid, deployment).
+- Totals: 41 agents (was 37), 113 skills (was 95).
+
 ## [0.1.0] - 2026-06-25
 
 Initial release.

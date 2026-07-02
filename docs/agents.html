@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Agents — Telar</title>
-<meta name="description" content="The 37 specialized agents in Telar, grouped by domain.">
+<meta name="description" content="The 41 specialized agents in Telar, grouped by domain.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;650;800;850&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="assets/telar.css">
@@ -30,7 +30,7 @@
   <div class="page-title">
     <span class="eyebrow">Reference</span>
     <h1>Agents</h1>
-    <p>37 specialized subagents, each an expert in one domain. Expand a card for its capabilities, when to use it, and a link to its source.</p>
+    <p>41 specialized subagents, each an expert in one domain. Expand a card for its capabilities, when to use it, and a link to its source.</p>
   </div>
 
   <div class="filter-bar">
@@ -50,6 +50,7 @@
     <a href="#test">Testing</a>
     <a href="#backend">Backend &amp; Data</a>
     <a href="#ai">AI &amp; Advanced</a>
+    <a href="#web">Web &amp; Service</a>
     <a href="#orch">Orchestration</a>
   </nav>
 
@@ -924,6 +925,103 @@
     </div>
   </section>
 
+  <!-- WEB & SERVICE -->
+  <section class="group">
+    <h2 id="web">Web &amp; Service Layer <span class="gc">4</span></h2>
+    <p class="gdesc">A companion web stack (Astro, Next.js, Vite/TanStack) and a Rust backend service layer alongside the mobile agents.</p>
+    <div class="cards">
+
+      <article class="card" data-search="astro-web-expert astro ssg seo og content-collections islands marketing careers web">
+        <div class="card-head"><span class="card-icon">🚀</span><h3>astro-web-expert</h3></div>
+        <p class="desc">Astro specialist for public marketing/careers sites — SEO, OG, and islands.</p>
+        <div class="chips"><span class="chip">astro</span><span class="chip">seo</span><span class="chip">islands</span></div>
+        <button class="card-toggle" aria-expanded="false">Details</button>
+        <div class="card-detail" hidden>
+          <h4>Capabilities</h4><ul>
+            <li>Static-first architecture with selective per-route on-demand rendering</li>
+            <li>Content Collections with Zod schemas for type-safe structured content</li>
+            <li>Islands architecture with deliberate, minimal client-side hydration</li>
+            <li>Open Graph/SEO metadata and JSON-LD structured data setup</li>
+            <li>Multi-locale routing for international candidate-acquisition funnels</li>
+          </ul>
+          <h4>When to use</h4><ul>
+            <li>Building a public marketing or careers/candidate-acquisition site with Astro</li>
+            <li>Auditing SEO and Open Graph correctness across pages</li>
+            <li>Setting up Content Collections for job listings, blog posts, or team bios</li>
+          </ul>
+          <a class="src" href="https://github.com/zekiyugnak/telar-framework/blob/main/agents/astro-web-expert.md">Source ↗</a>
+        </div>
+      </article>
+
+      <article class="card" data-search="nextjs-web-expert nextjs next.js react tailwind shadcn app-router server-actions console web">
+        <div class="card-head"><span class="card-icon">▲</span><h3>nextjs-web-expert</h3></div>
+        <p class="desc">Next.js + Tailwind + shadcn specialist for authenticated client consoles.</p>
+        <div class="chips"><span class="chip">nextjs</span><span class="chip">shadcn</span><span class="chip">app-router</span></div>
+        <button class="card-toggle" aria-expanded="false">Details</button>
+        <div class="card-detail" hidden>
+          <h4>Capabilities</h4><ul>
+            <li>App Router architecture for authenticated internal/company consoles</li>
+            <li>Server vs Client Component boundaries in data-heavy dashboards</li>
+            <li>Server Actions and Route Handlers for console mutations</li>
+            <li>shadcn/ui + Tailwind design systems; middleware-based route protection</li>
+            <li>Type-safe forms with react-hook-form, zod, and Server Actions</li>
+          </ul>
+          <h4>When to use</h4><ul>
+            <li>Building a new authenticated "firma konsolu" (company dashboard)</li>
+            <li>Deciding the Server/Client Component line in a dashboard page</li>
+            <li>Diagnosing stale dashboard data after a mutation</li>
+          </ul>
+          <a class="src" href="https://github.com/zekiyugnak/telar-framework/blob/main/agents/nextjs-web-expert.md">Source ↗</a>
+        </div>
+      </article>
+
+      <article class="card" data-search="admin-panel-architect vite tanstack-router tanstack-query supabase admin-panel rtl i18n operator web">
+        <div class="card-head"><span class="card-icon">🎛️</span><h3>admin-panel-architect</h3></div>
+        <p class="desc">Vite + React 19 + TanStack + Supabase RLS specialist for operator panels.</p>
+        <div class="chips"><span class="chip">tanstack</span><span class="chip">supabase-rls</span><span class="chip">rtl</span></div>
+        <button class="card-toggle" aria-expanded="false">Details</button>
+        <div class="card-detail" hidden>
+          <h4>Capabilities</h4><ul>
+            <li>Vite + React 19 + TypeScript architecture for internal admin/operator panels</li>
+            <li>TanStack Router/Query/Table wiring against Supabase (anon key + RLS only)</li>
+            <li>Supabase Storage TUS resumable uploads for large operator-facing media</li>
+            <li>Bilingual (TR/EN) i18n and RTL-readiness planning</li>
+            <li>Static SPA deployment topology for EU CDN hosting (no SSR, no server secrets)</li>
+          </ul>
+          <h4>When to use</h4><ul>
+            <li>Scaffolding a new internal admin/operator panel on this exact stack</li>
+            <li>Deciding how authorization is enforced when the client only holds an anon key</li>
+            <li>Reviewing whether a pattern leaks trust to the client in a service-role-free stack</li>
+          </ul>
+          <a class="src" href="https://github.com/zekiyugnak/telar-framework/blob/main/agents/admin-panel-architect.md">Source ↗</a>
+        </div>
+      </article>
+
+      <article class="card" data-search="rust-service-architect rust axum tokio sqlx backend service api postgres">
+        <div class="card-head"><span class="card-icon">🦀</span><h3>rust-service-architect</h3></div>
+        <p class="desc">Rust backend service specialist — axum, tokio, sqlx.</p>
+        <div class="chips"><span class="chip">axum</span><span class="chip">tokio</span><span class="chip">sqlx</span></div>
+        <button class="card-toggle" aria-expanded="false">Details</button>
+        <div class="card-detail" hidden>
+          <h4>Capabilities</h4><ul>
+            <li>Rust backend service architecture using axum, tokio, and sqlx</li>
+            <li>Project layering (routes/handlers/services/repositories, AppState sharing)</li>
+            <li>Error handling strategy with thiserror and IntoResponse mapping</li>
+            <li>Auth boundary design (extractors vs middleware); connection pool sizing</li>
+            <li>Observability, containerization, and graceful shutdown strategy</li>
+          </ul>
+          <h4>When to use</h4><ul>
+            <li>Standing up a new Rust backend service for mobile and/or web clients</li>
+            <li>Choosing between axum/actix-web, sqlx/diesel, or tasks/queues</li>
+            <li>Investigating stalled async runtime, exhausted DB pool, or ungraceful shutdown</li>
+          </ul>
+          <a class="src" href="https://github.com/zekiyugnak/telar-framework/blob/main/agents/rust-service-architect.md">Source ↗</a>
+        </div>
+      </article>
+
+    </div>
+  </section>
+
   <!-- ORCHESTRATION & KNOWLEDGE -->
   <section class="group">
     <h2 id="orch">Orchestration &amp; Knowledge <span class="gc">2</span></h2>
@@ -978,7 +1076,7 @@
 </main>
 
 <footer><div class="wrap fl">
-  <span>Telar v0.1.0 — MIT © 2026 Zeki Yugnak</span>
+  <span>Telar v0.2.0 — MIT © 2026 Zeki Yugnak</span>
   <span><a href="https://github.com/zekiyugnak/telar-framework/tree/main/agents">All agents on GitHub</a> · <a href="index.html">Docs home</a></span>
 </div></footer>
 
