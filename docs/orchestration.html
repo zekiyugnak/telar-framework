@@ -47,6 +47,27 @@
       <span class="node">COMMIT-READY</span>
     </div>
 
+    <h2 id="commands">The commands, and how they wire into the workflow</h2>
+    <p>You drive the whole pipeline with <strong>one</strong> command — <code>/tl-telar:orchestrate</code>. It invokes the gates, decomposition, parallel execution, and final review for you. The other commands set it up, recover it, or run a single stage on its own. The command-level lifecycle:</p>
+    <div class="flow">
+      <span class="node">setup-orchestration</span><span class="arrow">→</span>
+      <span class="node">orchestrate</span><span class="arrow">→</span>
+      <span class="node">resume (if interrupted)</span><span class="arrow">→</span>
+      <span class="node">self-reflect (after merge)</span>
+    </div>
+    <table class="t">
+      <thead><tr><th>Command</th><th>Role in the orchestrated workflow</th><th>You run it</th></tr></thead>
+      <tbody>
+        <tr><td><code>/tl-telar:setup-orchestration</code></td><td>One-time opt-in: detects the framework, writes <code>.tl-telar-thresholds.json</code> (including <code>execution.max_parallel_wus</code>), and creates the <code>.tl-telar/</code> state skeleton.</td><td>Once per project</td></tr>
+        <tr><td><code>/tl-telar:orchestrate</code></td><td><strong>The entry point.</strong> Drives the entire pipeline above — it runs the design and plan gates, decomposes into Work Units, dispatches independent WUs in parallel, and does the final review, all from one session.</td><td>Per feature</td></tr>
+        <tr><td><code>/tl-telar:review-design</code></td><td>The <em>design gate</em> as a standalone command. <code>orchestrate</code> runs this stage automatically; invoke it directly to gate a design doc outside a full run.</td><td>Standalone / optional</td></tr>
+        <tr><td><code>/tl-telar:review-plan</code></td><td>The <em>plan gate</em> as a standalone command — same relationship to <code>orchestrate</code> as review-design.</td><td>Standalone / optional</td></tr>
+        <tr><td><code>/tl-telar:resume</code></td><td>Recovers an interrupted run: re-reads the state files and re-runs the scheduler to reconstruct the ready frontier, then continues where it left off.</td><td>After an interruption</td></tr>
+        <tr><td><code>/tl-telar:prime</code> · <code>/tl-telar:self-reflect</code></td><td>The knowledge loop around the pipeline — <code>prime</code> re-injects relevant facts into a run's context; <code>self-reflect</code> captures learnings back into the KB after a PR.</td><td>Auto + after merge</td></tr>
+      </tbody>
+    </table>
+    <div class="callout"><strong>The short version.</strong> Run <code>setup-orchestration</code> once, then <code>orchestrate &lt;task&gt;</code> for every feature — everything between the gates and COMMIT-READY, including the parallel Work Unit dispatch, happens inside that one command. <code>resume</code>, <code>review-plan</code>, <code>review-design</code>, <code>prime</code>, and <code>self-reflect</code> are the supporting cast.</div>
+
     <h2>The document chain</h2>
     <p>Each stage produces an artifact that feeds the next — the correctness guarantee that keeps generated work aligned to intent.</p>
     <div class="flow">
