@@ -269,9 +269,9 @@
     <h2 id="orch">Orchestration <span class="gc">3</span></h2>
     <div class="cards">
 
-      <article class="card" data-search="orchestrate orchestrator full pipeline plan review work-unit 4-phase">
+      <article class="card" data-search="orchestrate orchestrator full pipeline plan review work-unit 4-phase parallel workflow scheduler concurrent">
         <div class="card-head"><h3>/tl-telar:orchestrate</h3><span class="tag">command</span></div>
-        <p class="desc">End-to-end orchestrated execution: plan, plan review (3 reviewers), WU decomposition, 4-phase execution loop per WU, final review, COMMIT-READY emit. Honors your git policy (no auto-commit).</p>
+        <p class="desc">End-to-end orchestrated execution: plan, plan review (3 reviewers), WU decomposition, then a continuous-frontier loop that runs independent Work Units in parallel (bounded by <code>execution.max_parallel_wus</code>), final review, COMMIT-READY emit. Honors your git policy (no auto-commit).</p>
         <div class="usage">/tl-telar:orchestrate &lt;task&gt; | --epic &lt;path&gt; | --plan-file &lt;path&gt;</div>
         <button class="card-toggle" aria-expanded="false">Details</button>
         <div class="card-detail" hidden>

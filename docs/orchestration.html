@@ -42,7 +42,7 @@
       <span class="node">Plan</span><span class="arrow">→</span>
       <span class="node">Plan gate</span><span class="arrow">→</span>
       <span class="node">Work Units</span><span class="arrow">→</span>
-      <span class="node">4-phase loop</span><span class="arrow">→</span>
+      <span class="node">Parallel 4-phase loops</span><span class="arrow">→</span>
       <span class="node">Final review</span><span class="arrow">→</span>
       <span class="node">COMMIT-READY</span>
     </div>
@@ -63,13 +63,44 @@
     <p>Three fresh-instance adversarial reviewers inspect the implementation plan. <strong>PASS</strong> means it's fit to execute; <strong>FAIL</strong> means blocking defects, cited with file:line evidence and rubric rule IDs. Fresh instances each iteration prevent anchoring bias. Max 3 iterations, then human escalation.</p>
 
     <h2>The 4-phase execution loop</h2>
-    <p>Each Work Unit runs through the same loop. Validation is run by the orchestrator itself (never delegated); reviewers are fresh each pass.</p>
+    <p>Each Work Unit runs through the same loop — and, when Work Units are independent, several of these loops run <strong>concurrently</strong> (see <a href="#parallel">Parallel dispatch</a> below). Validation is run by the orchestrator itself (never delegated); reviewers are fresh each pass.</p>
     <ol class="steps">
       <li><strong>IMPLEMENT</strong> — make the change for this Work Unit.</li>
       <li><strong>VALIDATE</strong> — run validation commands directly; output is redirected to logs to keep the terminal quiet.</li>
       <li><strong>REVIEW</strong> — spawn 2–4 fresh adversarial reviewers (always-on: Adversarial Code + Mobile Security; conditional: UX/A11y, Performance). Any FAIL blocks COMMIT.</li>
       <li><strong>COMMIT</strong> — on PASS, emit COMMIT-READY. After 3 failed retries, escalate with the full failure history.</li>
     </ol>
+
+    <h2 id="parallel">Parallel Work Unit dispatch</h2>
+    <p>Independent Work Units run <strong>at the same time</strong> instead of one after another. A portable Node scheduler — <code>scripts/tl-telar-wu-scheduler.js</code> — reads the plan and live state, computes which WUs are eligible <em>right now</em>, and the orchestrator dispatches each eligible WU as a concurrent background <code>Task()</code>. On every completion the frontier is recomputed, so newly-unblocked WUs start immediately. The scheduler is pure (it only reads state and returns JSON), which is what makes runs deterministic and resumable.</p>
+
+    <p>Two facts every WU already declares drive the decision — no new authoring burden:</p>
+    <ul>
+      <li><strong><code>deps</code></strong> — the WUs that must be <code>COMPLETE</code> first (the dependency DAG).</li>
+      <li><strong><code>file_scope</code></strong> — the paths this WU may modify. Two WUs may run together only if their <code>file_scope</code> arrays are <strong>disjoint</strong> — so two agents can never touch the same file at once.</li>
+    </ul>
+
+    <p>A diamond plan makes it concrete: once <code>WU-A</code> completes, <code>WU-B</code> and <code>WU-C</code> (disjoint scopes) run in parallel; <code>WU-D</code> waits for both, then integrates.</p>
+    <div class="flow">
+      <span class="node">WU-A</span><span class="arrow">→</span>
+      <span class="node">WU-B ‖ WU-C</span><span class="arrow">→</span>
+      <span class="node">WU-D</span>
+    </div>
+
+    <p>The scheduler classifies every non-complete WU each round and returns a JSON frontier — <code>ready</code> (dispatch now), <code>running</code>, and <code>blocked</code> with a reason: <code>deps</code> (a dependency isn't complete), <code>file_conflict</code> (its scope overlaps a running WU), or <code>concurrency_cap</code> (the ceiling is full). The <code>ready</code> set is always internally disjoint and acquired all-or-nothing, so the pipeline is <strong>deadlock-free by construction</strong>. If the plan itself is ambiguous — two dependency-unordered WUs declaring the same path — the scheduler surfaces a <code>plan_warnings</code> entry and the orchestrator stops rather than guessing an order.</p>
+
+    <div class="callout"><strong>The concurrency knob.</strong> <code>execution.max_parallel_wus</code> in <code>.tl-telar-thresholds.json</code> caps how many WUs run at once (default <strong>3</strong>, matching Anthropic's 3–5 subagent guidance). Parallel agent runs cost roughly 15× chat tokens, so keep it modest and raise it only for many small, disjoint WUs. An absent or invalid value safely falls back to 3.</div>
+
+    <p>You don't invoke the scheduler yourself — <code>/tl-telar:orchestrate</code> drives it. To see the frontier for a plan directly:</p>
+    <pre><code># Prints the JSON frontier {ready, blocked, running, occupied_files, plan_warnings}
+node scripts/tl-telar-wu-scheduler.js \
+  .tl-telar/plans/active-plan.md \
+  .tl-telar/context/execution-state.md
+
+# Tune concurrency for the current project
+# .tl-telar-thresholds.json → { "execution": { "max_parallel_wus": 3 } }</code></pre>
+
+    <p>Single-WU plans are just the degenerate case — <code>ready</code> holds one WU per round, and the loop behaves exactly as it did before.</p>
 
     <h2>Knowledge base</h2>
     <p>Telar keeps a typed JSONL knowledge base under <code>.tl-telar/knowledge/</code> that compounds over time:</p>
@@ -81,6 +112,7 @@
 
     <h2>State persistence &amp; recovery</h2>
     <p>A 3-file state model under <code>.tl-telar/</code> (plan, project-context, execution-state) lets the orchestrator survive compaction and cross-session restarts. A SessionStart hook re-primes context automatically; <code>/tl-telar:resume</code> restores an in-progress run after confirming the resume position.</p>
+    <p>Recovery is scheduler-driven: <code>execution-state.md</code> records every active WU with its own phase and retry count (up to <code>max_parallel_wus</code> at once), and each snapshot doubles as the resume journal. On resume the orchestrator re-runs the scheduler against that snapshot to reconstruct the ready frontier from scratch — completed WUs are skipped, and any WU left <code>IN-PROGRESS</code> by a crashed session is reclaimed (reset to <code>PENDING</code> or escalated), so a crash frees its files instead of wedging the run.</p>
 
     <h2>External AI delegation <span style="color:var(--text-faint);font-weight:400">(Phase β/γ — disabled by default)</span></h2>
     <p>Optional adapters can delegate implementation or review to external models (Codex, Gemini) with a budget circuit breaker ($1/task, $10/session) and fail-closed behavior. Cross-model review enforces that the model which wrote a diff never reviews it. Enable per-adapter in <code>.tl-telar/external-tools.yaml</code>; check status with <code>/tl-telar:external-tools-health</code>.</p>

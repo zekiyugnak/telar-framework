@@ -6,6 +6,17 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+### Added
+
+- **Work Unit-level parallelism for orchestrated mode.** A portable, pure Node scheduler (`scripts/tl-telar-wu-scheduler.js`) computes a readiness frontier from each WU's existing `deps` and `file_scope`, so independent Work Units run as concurrent background `Task()`s instead of one at a time. Deadlock-free by construction (atomic, all-or-nothing file-scope acquisition), with critical-path ordering and a plan-time ambiguity check (two dependency-unordered WUs writing the same path). The orchestrator recomputes the frontier on every WU completion.
+- `execution.max_parallel_wus` threshold (default 3) to cap orchestrator concurrency, in `.tl-telar-thresholds.json` and the framework-aware `setup-orchestration` output.
+- Multi-WU execution-state format (`## Active Work Units`, multiple `IN-PROGRESS` rows) with scheduler-driven resume and crash reclamation of orphaned WUs.
+- `tests/workflow/` suite (parse, readiness, diamond-DAG integration, CLI smoke) covering the scheduler end to end.
+
+### Changed
+
+- The orchestrator's WU execution step is now a continuous-frontier dispatch loop; the `recovery` skill and `execution-state.md` template were reconciled to the multi-WU model. Single-WU plans behave exactly as before.
+
 ## [0.2.0] - 2026-07-02
 
 Adds a companion web stack and a Rust service layer alongside the existing mobile agents.
