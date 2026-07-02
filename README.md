@@ -1,7 +1,7 @@
 # Telar
 
 > **The agentic engineering framework** — plan, build, review, and ship, with agents.
-> By Zeki Yugnak · v0.2.0 — 41 agents, 113 skills, 23 commands, 4 hooks, 7 rules, 19 scripts
+> By Zeki Yugnak · v0.3.0 — 41 agents, 113 skills, 23 commands, 4 hooks, 7 rules, 25 scripts
 
 Telar is a multi-agent engineering framework for Claude Code that takes a feature from idea to production — orchestrated planning, adversarial review gates, a persistent knowledge base, and cross-model verification. Its first edition targets **cross-platform mobile** (**React Native** & **Flutter**) with deep native integration, plus a companion web stack (**Astro**, **Next.js**/Tailwind/shadcn, **Vite**/TanStack admin panels) and a **Rust** service layer.
 

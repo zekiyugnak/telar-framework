@@ -6,6 +6,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+## [0.3.0] - 2026-07-02
+
+Adds Work Unit-level parallelism to orchestrated mode — independent Work Units now run concurrently.
+
 ### Added
 
 - **Work Unit-level parallelism for orchestrated mode.** A portable, pure Node scheduler (`scripts/tl-telar-wu-scheduler.js`) computes a readiness frontier from each WU's existing `deps` and `file_scope`, so independent Work Units run as concurrent background `Task()`s instead of one at a time. Deadlock-free by construction (atomic, all-or-nothing file-scope acquisition), with critical-path ordering and a plan-time ambiguity check (two dependency-unordered WUs writing the same path). The orchestrator recomputes the frontier on every WU completion.
