@@ -21,6 +21,7 @@
     <a href="skills.html">Skills</a>
     <a href="rules.html">Rules</a>
     <a href="orchestration.html">Orchestration</a>
+    <a href="configuration.html">Configuration</a>
     <a href="examples.html">Examples</a>
     <a class="nav-gh" href="https://github.com/zekiyugnak/telar-framework">GitHub ↗</a>
   </nav>
@@ -98,7 +99,7 @@
     <p>Two facts every WU already declares drive the decision — no new authoring burden:</p>
     <ul>
       <li><strong><code>deps</code></strong> — the WUs that must be <code>COMPLETE</code> first (the dependency DAG).</li>
-      <li><strong><code>file_scope</code></strong> — the paths this WU may modify. Two WUs may run together only if their <code>file_scope</code> arrays are <strong>disjoint</strong> — so two agents can never touch the same file at once.</li>
+      <li><strong><code>file_scope</code></strong> — the paths this WU may modify. Two WUs may run together only if their <code>file_scope</code> arrays are <strong>disjoint</strong> — so two agents can never touch the same file at once. (With <a href="#cc-features">worktree isolation</a> enabled, overlapping scopes may run concurrently in isolated checkouts instead.)</li>
     </ul>
 
     <p>A diamond plan makes it concrete: once <code>WU-A</code> completes, <code>WU-B</code> and <code>WU-C</code> (disjoint scopes) run in parallel; <code>WU-D</code> waits for both, then integrates.</p>
@@ -122,6 +123,15 @@ node scripts/tl-telar-wu-scheduler.js \
 # .tl-telar-thresholds.json → { "execution": { "max_parallel_wus": 3 } }</code></pre>
 
     <p>Single-WU plans are just the degenerate case — <code>ready</code> holds one WU per round, and the loop behaves exactly as it did before.</p>
+
+    <h2 id="cc-features">Claude Code native features <span style="color:var(--text-faint);font-weight:400">(opt-in, capability-gated)</span></h2>
+    <p>Telar can opt into newer Claude Code native capabilities, configured under <code>cc_features</code> in <code>.tl-telar/external-tools.yaml</code>. Every one follows the same rule: <strong><code>enabled</code> is intent, not capability.</strong> A feature activates only when it is enabled <em>and</em> a runtime probe confirms the capability is really present — otherwise the orchestrator <strong>falls back to the current behavior</strong> (fail-closed), logs one line, and never hard-fails. Defaults are <code>true</code> because absence degrades safely, so older Claude Code runs unchanged. The gating is one tested code path — <code>scripts/tl-telar-cc-features.sh</code> — not prose. See the <a href="configuration.html#cc-features">Configuration reference</a> for the keys.</p>
+
+    <h3>Worktree isolation — concurrent overlapping Work Units</h3>
+    <p>By default two WUs may run together only if their <code>file_scope</code> arrays are <strong>disjoint</strong>. With <code>cc_features.worktree_isolation</code> active, each WU runs in its own git worktree, so WUs with <strong>overlapping</strong> <code>file_scope</code> run concurrently too — the scheduler is called with <code>--isolate</code> to admit them, and each WU's branch is merged back with <code>git merge --squash</code> (staged, uncommitted — your commit stays yours). A real merge conflict routes through the same retry/escalate loop. When the capability isn't confirmed, the scheduler keeps the disjoint constraint (slower, never wrong).</p>
+
+    <h3>Dynamic Workflows — deterministic review gates</h3>
+    <p>With <code>cc_features.dynamic_workflows</code> active and the <code>Workflow</code> tool available, the plan-review gate runs its 3 adversarial reviewers via a deterministic Workflow script (<code>parallel()</code> fan-out + schema-validated verdicts) instead of prose <code>Task()</code> dispatch — no dropped reviewer, no malformed-verdict drift. Both paths emit the identical aggregated verdict, so the rest of the pipeline is oblivious to which ran; on older Claude Code the gate transparently uses the prose path.</p>
 
     <h2>Knowledge base</h2>
     <p>Telar keeps a typed JSONL knowledge base under <code>.tl-telar/knowledge/</code> that compounds over time:</p>
@@ -165,7 +175,7 @@ node scripts/tl-telar-wu-scheduler.js \
 </main>
 
 <footer><div class="wrap fl">
-  <span>Telar v0.3.0 — MIT © 2026 Zeki Yugnak</span>
+  <span>Telar v0.5.0 — MIT © 2026 Zeki Yugnak</span>
   <span><a href="https://github.com/zekiyugnak/telar-framework">GitHub</a> · <a href="index.html">Docs home</a></span>
 </div></footer>
 

@@ -40,3 +40,35 @@ cross_model_review:
     codex: ["gemini", "claude"]
     gemini: ["codex", "claude"]
     claude: ["codex", "gemini"]
+
+cc_features:
+  # Opt-in adoption of newer Claude Code native capabilities. Same idiom as the
+  # adapters block: `enabled` is INTENT, not capability. A feature activates ONLY
+  # when enabled AND a runtime capability probe confirms it; otherwise the
+  # orchestrator falls back to the current-behavior path (fail-closed), emits a
+  # one-line advisory, and NEVER hard-fails on absence. Defaults are `true`
+  # (prefer the accelerated path when available) because every path degrades
+  # gracefully on older Claude Code that lacks the feature.
+  #
+  # on_unavailable: what to do when enabled but the capability is NOT confirmed:
+  #   "warn_and_proceed" = run the current-behavior fallback path, logged LOUDLY (default)
+  #   "block"            = STOP at preflight and surface the missing capability (use only
+  #                        when the feature is a hard requirement for your team)
+  dynamic_workflows:
+    # Run review gates (plan-review first) via a deterministic Workflow script
+    # instead of prose Task() fan-out, when the `Workflow` tool is available.
+    # Fallback: the existing agent-prompt gate path. Both paths emit the identical
+    # aggregated verdict object, so downstream wiring is oblivious to which ran.
+    # Capability probe: the `Workflow` tool is present in the top-level session.
+    enabled: true
+    on_unavailable: "warn_and_proceed"
+  worktree_isolation:
+    # Run each parallel Work Unit in its own git worktree so WUs with OVERLAPPING
+    # file_scope can run concurrently (relaxes the disjoint-file-scope constraint).
+    # Fallback: today's disjoint-scope serialization (slower, never wrong).
+    # Capability probe: `isolation: worktree` support is CONFIRMED (not merely a
+    # silently-ignored frontmatter field on older Claude Code). Fail-closed: if the
+    # probe cannot positively confirm support, the scheduler keeps the disjoint
+    # constraint even when enabled: true — trusting the probe, never the flag.
+    enabled: true
+    on_unavailable: "warn_and_proceed"

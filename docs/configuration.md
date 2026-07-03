@@ -390,6 +390,34 @@ Orchestrated mode'da her WU için **iki bağımsız review** çalışır:
 
 **Şu anki durum (Phase β):** `cross_model_review` YAML'da mevcuttur ancak Phase 3'e bağlanmamıştır. Phase γ (sub-spec 8) bunu aktifleştirecek.
 
+### CC features (Claude Code yerel yetenekleri)
+
+```yaml
+cc_features:
+  dynamic_workflows:
+    enabled: true
+    on_unavailable: "warn_and_proceed"
+  worktree_isolation:
+    enabled: true
+    on_unavailable: "warn_and_proceed"
+```
+
+Daha yeni Claude Code yerel yeteneklerinin **opt-in** adaptasyonu. `adapters` bloğuyla aynı deseni kullanır — ama kritik bir farkla: `enabled` **niyet** demek, **yetenek** değil. Bir özellik yalnızca `enabled: true` **VE** runtime capability probe doğruladığında aktifleşir; aksi halde orchestrator mevcut-davranış yoluna **fail-closed** düşer, tek satır uyarı basar ve yokluğunda **asla hard-fail etmez**.
+
+Bu yüzden varsayılanlar `true`'dur: her yol eski Claude Code'da zarifçe eski davranışa döndüğü için, yeteneği olan session'larda hızlı yolu tercih etmek güvenlidir.
+
+| Alan | Tip | Açıklama |
+|------|-----|---------|
+| `dynamic_workflows.enabled` | boolean | `true` (default) → review kapıları (önce plan-review) prose Task() fan-out yerine deterministik bir **Workflow** scripti ile koşar (`Workflow` aracı mevcutsa). Her iki yol da birebir aynı aggregated verdict objesini döndürür; downstream wiring hangisinin koştuğunu bilmez. |
+| `worktree_isolation.enabled` | boolean | `true` (default) → her paralel WU kendi git worktree'sinde koşar; böylece **çakışan** `file_scope`'a sahip WU'lar eşzamanlı çalışabilir (ayrık-scope kısıtı gevşer). Fallback: bugünkü ayrık-scope serileştirmesi (yavaş ama asla yanlış değil). |
+| `<feature>.on_unavailable` | string | Yetenek doğrulanamadığında: `"warn_and_proceed"` (default) mevcut-davranış fallback'ini LOUDLY loglayarak koşar; `"block"` preflight'ta durur (özellik takımın için zorunluysa). |
+
+**Capability probe sinyalleri:**
+- `dynamic_workflows` → top-level session'da `Workflow` aracının mevcut olması (binary tool-presence).
+- `worktree_isolation` → `isolation: worktree` desteğinin **pozitif doğrulanması**. Eski Claude Code bu frontmatter'ı **sessizce yok sayabileceği** için, probe pozitif doğrulayamazsa scheduler `enabled: true` olsa bile ayrık kısıtı korur — bayrağa değil, probe'a güvenir.
+
+**Şu anki durum:** `dynamic_workflows` plan-review kapısı için bağlanmıştır (`skills/orchestration/plan-review-gate/workflow/plan-review.mjs`). `worktree_isolation` WU execution döngüsüne bağlanmıştır: orchestrator Step 5b fail-closed capability preflight'ı yapar, aktifse scheduler'a `--isolate` geçer (çakışan-scope WU'lar eşzamanlı) ve her WU'nun `wu-<id>` branch'ini `git merge --squash` ile geri birleştirir (staged, commit'siz — `ben yapacagim` korunur); merge conflict mevcut retry/escalate döngüsüne yönlenir.
+
 ---
 
 ## Hardcode (config ile değiştirilemeyen) değerler

@@ -53,6 +53,27 @@ Runs an adversarial review gate against an implementation plan (typically `PLAN.
 - If invoked by orchestrator: returns `{ overall_verdict, iteration, blocking_reviewers, all_blockers, all_advisories, max_iterations_reached }`.
 - If invoked standalone: prints the same JSON aggregated verdict followed by a human-readable summary.
 
+## Execution substrate (prefer-workflow-else-prompt)
+
+This gate has **two interchangeable execution paths that MUST emit the identical aggregated verdict object** (Step 3). The prose path below is the canonical fallback and the single source of truth for reviewer prompts and the schema (`references/reviewer-prompts.md`, `references/verdict-schema.md`). An optional deterministic **Workflow** path accelerates the fan-out without changing the contract.
+
+Before Step 1, resolve the path with the **tested gating resolver** — do NOT hand-reason the flag/capability logic (it is fail-closed and matrix-tested in `tests/workflow/cc-features.test.sh`):
+
+1. **Determine the one thing only you can see:** whether **you (the top-level session) actually have the `Workflow` tool** available. Call this `wf` = `true`/`false`.
+2. **Resolve the decision.** Run:
+   ```bash
+   bash "$PLUGIN_ROOT/scripts/tl-telar-cc-features.sh" decision dynamic_workflows \
+     --workflow-available <wf> --worktree-supported false
+   ```
+   It reads `cc_features.dynamic_workflows.{enabled,on_unavailable}` from the consumer's `.tl-telar/external-tools.yaml` (default `enabled: true` when the key/file is absent) and returns one word:
+   - `active` → **Workflow path** (step 3).
+   - `fallback` → **prose path** (Step 1 onward) — either disabled by config, or the tool is unavailable under `on_unavailable: warn_and_proceed`. Print one line (`Plan gate: running prose path`) and proceed.
+   - `blocked` (exit 3) → `on_unavailable: block` with the tool unavailable. STOP and report the missing capability + how to downgrade (`set cc_features.dynamic_workflows.enabled: false`).
+   Fail-closed is enforced by the resolver: `active` requires `wf=true` exactly; never assume the tool exists because the flag is set.
+3. **Workflow path.** Invoke the workflow script `workflow/plan-review.mjs` (co-located with this skill) via the `Workflow` tool with `args: { planText, userRequest, iteration }`. It runs the 3 reviewers via `parallel()` with schema-validated verdicts and **returns the exact aggregated object of Step 3** — consume it as if the prose path produced it, then continue at Step 4a/4b/4c. The workflow runs ONE pass; iteration management, escalation, and the human gate stay here in the skill/orchestrator layer (see "Iteration management"). Do NOT let the workflow prompt the user.
+
+Everything from Step 1 to Step 3 below is the **prose fallback**. Steps 4a/4b/4c (presentation, iteration, escalation) are path-independent and always run here.
+
 ## Step-by-step procedure
 
 ### Step 0: Resolve inputs
