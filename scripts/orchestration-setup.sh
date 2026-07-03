@@ -145,7 +145,7 @@ node -e '
     notes: "This file is the setup sentinel. Its presence tells the SessionStart hook that this project has opted in to the orchestration namespace. Delete it (and .tl-telar/) to start fresh."
   };
   fs.writeFileSync(args[2], JSON.stringify(out, null, 2));
-' "$FRAMEWORK" "${TL_TELAR_PLUGIN_VERSION:-3.3.0}" "$PROFILE"
+' "$FRAMEWORK" "${TL_TELAR_PLUGIN_VERSION:-0.4.0}" "$PROFILE"
 echo "Wrote $PROFILE (setup sentinel)"
 
 if [[ "$REPLACE" == "true" ]]; then

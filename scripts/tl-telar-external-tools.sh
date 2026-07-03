@@ -450,14 +450,47 @@ cmd_dispatch() {
 
   # Model + reasoning-effort overrides from config. BLANK (or absent => yq "null")
   # means "respect the tool's own config" (e.g. ~/.codex/config.toml) — pass nothing.
-  local cfg_model cfg_effort
+  local cfg_model cfg_effort cfg_timeout
   cfg_model=$(parse_yaml "adapters.$tool.model")
   cfg_effort=$(parse_yaml "adapters.$tool.reasoning_effort")
-  if [[ -n "$cfg_model" && "$cfg_model" != "null" ]]; then args+=("--model" "$cfg_model"); fi
-  if [[ -n "$cfg_effort" && "$cfg_effort" != "null" ]]; then args+=("--reasoning-effort" "$cfg_effort"); fi
+  cfg_timeout=$(parse_yaml "adapters.$tool.timeout_seconds")
+  if [[ -n "$cfg_model"   && "$cfg_model"   != "null" ]]; then args+=("--model"            "$cfg_model");   fi
+  if [[ -n "$cfg_effort"  && "$cfg_effort"  != "null" ]]; then args+=("--reasoning-effort" "$cfg_effort");  fi
+  # Pass timeout to adapter so safe_invoke uses the YAML value, not its 300s default.
+  # Validate: must be a positive integer; fall back to 300 on garbage input.
+  if [[ -n "$cfg_timeout" && "$cfg_timeout" != "null" ]] && [[ "$cfg_timeout" =~ ^[0-9]+$ ]] && (( cfg_timeout > 0 )); then
+    args+=("--timeout" "$cfg_timeout")
+  else
+    cfg_timeout=300
+    args+=("--timeout" "$cfg_timeout")
+  fi
 
+  # Layer-B hard timeout: wrap the entire adapter invocation so a hung adapter
+  # (e.g. codex exec with MCP transport glitch) cannot block indefinitely.
+  # Uses system timeout/gtimeout when available; falls back to adapter's own
+  # safe_invoke (which already has the timeout we just passed via --timeout).
   local envelope exit_code
-  envelope=$(bash "$adapter" "${args[@]}" 2>&1) && exit_code=0 || exit_code=$?
+  if command -v timeout >/dev/null 2>&1; then
+    envelope=$(timeout "$cfg_timeout" bash "$adapter" "${args[@]}" 2>&1) && exit_code=0 || exit_code=$?
+  elif command -v gtimeout >/dev/null 2>&1; then
+    envelope=$(gtimeout "$cfg_timeout" bash "$adapter" "${args[@]}" 2>&1) && exit_code=0 || exit_code=$?
+  else
+    envelope=$(bash "$adapter" "${args[@]}" 2>&1) && exit_code=0 || exit_code=$?
+  fi
+  # Normalise timeout exit code: both system timeout (124) and adapter safe_invoke
+  # (also 124) surface as error_type=timeout in the envelope. If the outer wrapper
+  # killed the process before the adapter could emit JSON, synthesise a minimal
+  # error envelope so callers always get parseable output.
+  if [[ "$exit_code" -eq 124 ]] && ! echo "$envelope" | jq -e '.tool' >/dev/null 2>&1; then
+    envelope=$(jq -n \
+      --arg tool "$tool" \
+      --arg task "$task" \
+      --argjson timeout "$cfg_timeout" \
+      '{"schema_version":"1","tool":$tool,"command":$task,"model":"unknown","attempt":1,
+        "exit_code":124,"branch":"","git_sha":"","files_changed":[],"diff_stats":{"additions":0,"deletions":0},
+        "duration_seconds":$timeout,"cost":{"input_tokens":0,"output_tokens":0},
+        "raw_log":"","error_type":"timeout"}')
+  fi
 
   # Parse envelope to extract cost
   local in_tok out_tok model
