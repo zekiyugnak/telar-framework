@@ -80,6 +80,7 @@ Idempotent checks that ensure the orchestrator can run on a fresh project:
      ".tl-telar/context/wu-*-baseline.tsv"
      ".tl-telar/context/wu-*-changes.txt"
      ".tl-telar/temp/"
+     ".claude/worktrees/"
    )
    touch "$GITIGNORE"
    grep -qF "$MARKER" "$GITIGNORE" || printf '\n%s (working files, not durable)\n' "$MARKER" >> "$GITIGNORE"
@@ -195,6 +196,29 @@ Recovery's contract (sub-spec 4) is that all three state files exist for any in-
 
 Then present a single **plan-ready** summary — WU decomposition + approved UI drafts + collected inputs — and WAIT for ONE explicit approval ("go / ready to execute?"). When `autonomy.cycle = unattended`, this is the ONLY human gate; everything after runs to PR-ready without pausing. When `interactive`, this is the start gate and later `checkpoint: true` WUs may still pause.
 
+## Step 5b: Worktree-isolation readiness preflight (cc_features)
+
+**Why:** worktree isolation lets WUs with OVERLAPPING `file_scope` run concurrently — but only if Claude Code actually supports `isolation: worktree`. On older builds that frontmatter is **silently ignored**, so relaxing the scheduler's disjoint-scope gate there would run overlapping WUs in ONE tree → silent write corruption. This preflight resolves capability up front and is **fail-closed**: trust the probe, never the flag.
+
+**When this fires:** `.tl-telar/external-tools.yaml` exists AND `cc_features.worktree_isolation.enabled: true` (default `true` when the key/file is absent). If `false`, print one line (`Worktree isolation: disabled — disjoint-file-scope serialization`) and skip; `isolationActive = false`.
+
+**Procedure:**
+
+1. **Determine the one thing only you can see:** whether this Claude Code build actually supports `isolation: worktree` for spawned `Task()`s (positive confirmation, not "no error"). Call this `wt` = `true`/`false`.
+2. **Resolve the decision with the tested resolver** — do NOT hand-reason the flag/capability logic (fail-closed, matrix-tested in `tests/workflow/cc-features.test.sh`):
+   ```bash
+   bash "$PLUGIN_ROOT/scripts/tl-telar-cc-features.sh" decision worktree_isolation \
+     --workflow-available false --worktree-supported <wt>
+   ```
+   It reads `cc_features.worktree_isolation.{enabled,on_unavailable}` (default `enabled: true`) and returns one word:
+   - `active` → set `isolationActive = true`.
+   - `fallback` → set `isolationActive = false` (disabled by config, or unsupported under `warn_and_proceed`). Print `Worktree isolation: disjoint-scope serialization`.
+   - `blocked` (exit 3) → `on_unavailable: block` with worktree unsupported. STOP and report + how to downgrade (`set cc_features.worktree_isolation.enabled: false`).
+3. If `isolationActive`, ensure a `.worktreeinclude` exists at project root (copy from `$PLUGIN_ROOT/resources/templates/orchestration/.worktreeinclude` if absent) so `.env*` and `.tl-telar/context/project-context.md` reach each worktree. Recommend `worktree.baseRef: "head"` in the consumer's Claude Code settings — WU worktrees MUST branch from the current integration tree (prior WUs are COMMIT-READY but uncommitted under the `ben yapacagim` policy); branching from `origin/HEAD` would lose their work.
+4. Print a one-line readiness note (`Worktree isolation: ACTIVE — overlapping-scope WUs may run concurrently`).
+
+`isolationActive` gates every isolation-specific behavior in Step 6 below. When `false`, Step 6 is byte-for-byte the pre-isolation behavior.
+
 ## Step 6: WU execution — continuous-frontier dispatch
 
 WUs run concurrently up to `execution.max_parallel_wus` (default 3). Because only
@@ -204,10 +228,13 @@ each WU subagent is a leaf (it never spawns subagents).
 Loop until every WU is COMPLETE:
 
 1. **Compute the frontier.** Run
-   `node scripts/tl-telar-wu-scheduler.js .tl-telar/plans/active-plan.md .tl-telar/context/execution-state.md`.
-   Parse its JSON `{ ready, blocked, running, occupied_files, plan_warnings }`.
+   `node scripts/tl-telar-wu-scheduler.js .tl-telar/plans/active-plan.md .tl-telar/context/execution-state.md`
+   — append `--isolate` when `isolationActive` (Step 5b) so overlapping-scope WUs
+   are admitted concurrently. Parse its JSON `{ ready, blocked, running, occupied_files, plan_warnings }`.
    - If `plan_warnings` is non-empty, STOP — an ambiguous plan slipped past the
      gate; surface it and have the plan revised (add a dep or split the file).
+     (Under `--isolate` the scheduler suppresses the shared-file warning by design;
+     overlaps are handled by merge-back in step 4, not flagged here.)
    - If `ready` is empty AND `running` is empty AND not all WUs are COMPLETE, STOP and
      surface (only reachable via an unresolved escalation; a cycle already exits
      non-zero at the scheduler).
@@ -215,20 +242,38 @@ Loop until every WU is COMPLETE:
    - Mark it `IN-PROGRESS` in `execution-state.md` (atomic full-file snapshot write).
    - Spawn `Task(run_in_background: true)` running the 4-phase loop for that WU,
      scoped to its `file_scope`. Put ALL of the batch's spawns in ONE message so
-     they run concurrently.
+     they run concurrently. **When `isolationActive`, spawn each WU Task with
+     `isolation: worktree`** so it edits its own checkout; the WU's Phase 4 commits
+     its work to the throwaway `wu-<id>` branch for merge-back (orchestrated-execution
+     Phase 4). When not active, WUs edit the shared tree as before.
    - Never dispatch a `checkpoint: true` WU ahead of its human gate — in
      `interactive` mode it pauses after Phase 4; in `unattended` its validation
      was hoisted to plan-readiness (Step 5a).
 3. **Wait for a completion notification.** Do not poll — the platform re-invokes
    this session when a background WU finishes.
-4. **Settle the finished WU.** On its COMMIT-READY, mark it `COMPLETE` in
-   `execution-state.md` (snapshot write). Its `file_scope` leaves the occupied
-   set; its dependents may now be ready. Go to step 1 (recompute the frontier).
+4. **Settle the finished WU.** On its COMMIT-READY:
+   - **(isolation only) Merge-back.** Integrate the WU's `wu-<id>` branch into the
+     main working tree with `git merge --squash wu-<id>` (leaves the net diff
+     STAGED but UNCOMMITTED — preserving the `ben yapacagim` policy; the user still
+     authors the final commit). Serialize merge-backs — you process one completion
+     at a time, so each merge sees the previous WU's already-integrated changes.
+     - **Clean merge** → continue below; then `git worktree remove` + delete the
+       `wu-<id>` branch.
+     - **Conflict** (`git merge --squash` reports conflicts) → this is a real
+       overlap against an already-integrated WU. `git merge --abort`, reset this WU
+       to re-run against the updated base via the existing retry/escalate machinery
+       (orchestrated-execution loop-back, reason `MERGE_CONFLICT`, max 3). Do NOT
+       mark it COMPLETE.
+   - Mark it `COMPLETE` in `execution-state.md` (snapshot write). Its `file_scope`
+     leaves the occupied set; its dependents may now be ready. Go to step 1
+     (recompute the frontier).
 5. **Crash reconciliation.** Before each frontier recompute, reconcile
    `IN-PROGRESS` rows against live background-task state. A WU whose task is gone
    with no COMMIT is reset to `PENDING` (retry) or escalated — this frees its
    files so one crashed WU cannot wedge the scheduler by leaving its scope
-   permanently occupied.
+   permanently occupied. **When `isolationActive`, also prune the orphan's
+   worktree and `wu-<id>` branch** (`git worktree remove --force` + branch delete),
+   else the retry's `Task(isolation: worktree)` fails on the pre-existing branch.
 
 Single-WU plans are just the degenerate case: `ready` holds one WU per round.
 

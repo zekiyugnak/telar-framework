@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Configuration — Telar</title>
+<meta name="description" content="Complete configuration reference for Telar: every key in .tl-telar-thresholds.json (coverage, performance, size, accessibility, autonomy, execution, enforcement) and .tl-telar/external-tools.yaml (adapters, routing, budget, cross-model review, cc_features).">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;650;800;850&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/telar.css">
+</head>
+<body>
+
+<header class="nav"><div class="wrap nav-inner">
+  <a class="brand" href="index.html"><span class="dot"></span> Telar</a>
+  <button class="nav-toggle" aria-label="Menu">☰</button>
+  <nav class="nav-links">
+    <a href="getting-started.html">Getting Started</a>
+    <a href="agents.html">Agents</a>
+    <a href="commands.html">Commands</a>
+    <a href="skills.html">Skills</a>
+    <a href="rules.html">Rules</a>
+    <a href="orchestration.html">Orchestration</a>
+    <a href="configuration.html">Configuration</a>
+    <a href="examples.html">Examples</a>
+    <a class="nav-gh" href="https://github.com/zekiyugnak/telar-framework">GitHub ↗</a>
+  </nav>
+</div></header>
+
+<main class="wrap">
+  <div class="page-title">
+    <span class="eyebrow">Reference</span>
+    <h1>Configuration</h1>
+    <p>Every knob Telar exposes, in two files: <code>.tl-telar-thresholds.json</code> (quality gates, autonomy, parallelism) and <code>.tl-telar/external-tools.yaml</code> (external AI adapters, cross-model review, and opt-in Claude Code native features). Both are created by <code>/tl-telar:setup-orchestration</code>; edit them by hand afterward.</p>
+  </div>
+
+  <div class="prose">
+    <div class="callout"><strong>Where these live.</strong> <code>.tl-telar-thresholds.json</code> sits at the project root and is committed. <code>.tl-telar/external-tools.yaml</code> lives under the git-ignored <code>.tl-telar/</code> state directory. Missing files fall back to safe defaults — nothing hard-fails on absence.</div>
+
+    <h2 id="thresholds"><code>.tl-telar-thresholds.json</code></h2>
+    <p>The quality-gate contract. Framework-aware defaults are written at setup based on the detected stack (React Native / Expo / Flutter).</p>
+
+    <h3>coverage</h3>
+    <table class="t">
+      <thead><tr><th>Key</th><th>Default</th><th>Meaning</th></tr></thead>
+      <tbody>
+        <tr><td><code>lines</code></td><td>80</td><td>Minimum line-coverage %.</td></tr>
+        <tr><td><code>branches</code></td><td>75</td><td>Minimum branch-coverage %.</td></tr>
+        <tr><td><code>functions</code></td><td>80</td><td>Minimum function-coverage %.</td></tr>
+        <tr><td><code>statements</code></td><td>80</td><td>Minimum statement-coverage %.</td></tr>
+      </tbody>
+    </table>
+
+    <h3>performance</h3>
+    <table class="t">
+      <thead><tr><th>Key</th><th>Default</th><th>Meaning</th></tr></thead>
+      <tbody>
+        <tr><td><code>min_fps</code></td><td>60</td><td>Minimum acceptable frame rate.</td></tr>
+        <tr><td><code>max_cold_start_ms</code></td><td>3000</td><td>Maximum cold-start time in milliseconds.</td></tr>
+      </tbody>
+    </table>
+
+    <h3>size</h3>
+    <table class="t">
+      <thead><tr><th>Key</th><th>Default</th><th>Meaning</th></tr></thead>
+      <tbody>
+        <tr><td><code>max_apk_mb</code></td><td>50</td><td>Maximum Android APK size (MB).</td></tr>
+        <tr><td><code>max_ipa_mb</code></td><td>60</td><td>Maximum iOS IPA size (MB).</td></tr>
+      </tbody>
+    </table>
+
+    <h3>accessibility</h3>
+    <table class="t">
+      <thead><tr><th>Key</th><th>Default</th><th>Meaning</th></tr></thead>
+      <tbody>
+        <tr><td><code>required_audit_pass</code></td><td>false</td><td>When <code>true</code>, an accessibility audit must pass before a task completes.</td></tr>
+      </tbody>
+    </table>
+
+    <h3>autonomy</h3>
+    <table class="t">
+      <thead><tr><th>Key</th><th>Default</th><th>Meaning</th></tr></thead>
+      <tbody>
+        <tr><td><code>cycle</code></td><td><code>"interactive"</code></td><td><code>interactive</code>: the orchestrator may pause at <code>checkpoint: true</code> WUs and at self-reflect. <code>unattended</code>: a single human gate at plan-readiness — scope + approved UI drafts + all inputs collected up front — then the WU cycle runs to PR-ready with zero pauses. Unattended never skips a decision; it makes it earlier.</td></tr>
+      </tbody>
+    </table>
+
+    <h3>execution</h3>
+    <table class="t">
+      <thead><tr><th>Key</th><th>Default</th><th>Meaning</th></tr></thead>
+      <tbody>
+        <tr><td><code>max_parallel_wus</code></td><td>3</td><td>How many Work Units run concurrently. A WU is dispatched only when its <code>deps</code> are COMPLETE and its <code>file_scope</code> is free (or, under <a href="#cc-features">worktree isolation</a>, in its own checkout). Parallel agent runs cost roughly 15× chat tokens — keep it modest. Absent/invalid → 3.</td></tr>
+      </tbody>
+    </table>
+
+    <h3>enforcement</h3>
+    <p>What blocks, and the commands the gates run. <code>*_command</code> pairs with a <code>*_strict</code> flag — advisory (log only) when <code>false</code>, blocking when <code>true</code>.</p>
+    <table class="t">
+      <thead><tr><th>Key</th><th>Default</th><th>Meaning</th></tr></thead>
+      <tbody>
+        <tr><td><code>coverage_command</code></td><td><em>framework-detected</em></td><td>e.g. <code>npx jest --coverage</code>, <code>flutter test --coverage</code>.</td></tr>
+        <tr><td><code>coverage_strict</code></td><td>true when a runner is detected</td><td>Block on coverage below threshold.</td></tr>
+        <tr><td><code>perf_command</code></td><td><code>bash scripts/perf-smoke.sh</code></td><td>Performance smoke command (advisory stub by default).</td></tr>
+        <tr><td><code>perf_strict</code></td><td>false</td><td>Block on performance regression.</td></tr>
+        <tr><td><code>size_command</code></td><td><code>bash scripts/size-check.sh</code></td><td>APK/IPA size check (advisory stub by default).</td></tr>
+        <tr><td><code>size_strict</code></td><td>false</td><td>Block on size over budget.</td></tr>
+        <tr><td><code>a11y_command</code></td><td><em>echo stub</em></td><td>Accessibility audit command.</td></tr>
+        <tr><td><code>a11y_strict</code></td><td>false</td><td>Block on accessibility failures.</td></tr>
+        <tr><td><code>blockPRCreation</code></td><td>true</td><td>Fail gates prevent PR creation.</td></tr>
+        <tr><td><code>blockTaskCompletion</code></td><td>true</td><td>Fail gates prevent marking a task complete.</td></tr>
+        <tr><td><code>self_reflect_per_wu</code></td><td>false</td><td>When <code>true</code>, fire <code>/tl-telar:self-reflect</code> after every WU (adds a user-approval step per WU) instead of once pre-PR.</td></tr>
+        <tr><td><code>detected_framework</code></td><td><em>at setup</em></td><td>Recorded framework (react-native / expo / flutter / node).</td></tr>
+      </tbody>
+    </table>
+
+    <h2 id="external-tools"><code>.tl-telar/external-tools.yaml</code></h2>
+    <p>External AI adapters (Codex, Gemini), cross-model review, and opt-in Claude Code native features. Git-ignored; created only by <code>/tl-telar:setup-orchestration</code>. Adapters are <strong>disabled by default</strong>.</p>
+
+    <h3>adapters</h3>
+    <table class="t">
+      <thead><tr><th>Key</th><th>Type</th><th>Meaning</th></tr></thead>
+      <tbody>
+        <tr><td><code>enabled</code></td><td>bool</td><td>Activate the adapter. The CLI must be installed and <code>auth_env_var</code> set first.</td></tr>
+        <tr><td><code>model</code></td><td>string</td><td>Blank = adapter's own default (Codex: <code>~/.codex/config.toml</code>). e.g. <code>"gpt-5.3-codex"</code>, <code>"pro"</code>.</td></tr>
+        <tr><td><code>reasoning_effort</code></td><td>string (codex)</td><td><code>minimal｜low｜medium｜high</code>. Blank = codex default.</td></tr>
+        <tr><td><code>timeout_seconds</code></td><td>number</td><td>Adapter invocation timeout.</td></tr>
+        <tr><td><code>auth_env_var</code></td><td>string</td><td>Env var the dispatcher reads for auth (e.g. <code>OPENAI_API_KEY</code>, <code>GEMINI_API_KEY</code>).</td></tr>
+        <tr><td><code>sandbox</code></td><td>string</td><td><code>"none"</code> — no sandbox isolation.</td></tr>
+      </tbody>
+    </table>
+
+    <h3>routing &amp; budget</h3>
+    <table class="t">
+      <thead><tr><th>Key</th><th>Default</th><th>Meaning</th></tr></thead>
+      <tbody>
+        <tr><td><code>routing.default_implementer</code></td><td><code>"cheapest-available"</code></td><td>Also <code>round-robin</code>, <code>claude</code>, or a specific tool name.</td></tr>
+        <tr><td><code>routing.escalation_order</code></td><td><code>[codex, gemini, claude]</code></td><td>Tried in order when the primary fails.</td></tr>
+        <tr><td><code>routing.health_recheck_every_n_tasks</code></td><td>10</td><td>Re-run health checks periodically.</td></tr>
+        <tr><td><code>budget.per_task_usd</code></td><td>1.00</td><td>Max USD per adapter invocation; over → fall back to Claude.</td></tr>
+        <tr><td><code>budget.per_session_usd</code></td><td>10.00</td><td>Session-wide adapter spend cap.</td></tr>
+        <tr><td><code>budget.ledger_file</code></td><td><em>JSONL path</em></td><td>Records every invocation for audit + <code>budget-status</code>.</td></tr>
+        <tr><td><code>budget.circuit_breaker_message</code></td><td><em>string</em></td><td>Printed when the budget trips.</td></tr>
+      </tbody>
+    </table>
+
+    <h3>cross_model_review <span style="color:var(--text-faint);font-weight:400">(Phase γ)</span></h3>
+    <p>An <strong>additive</strong> second review: Review 1 (the Claude roster) always runs; when enabled, Review 2 runs on top with a model distinct from both the writer and Claude. Both must PASS.</p>
+    <table class="t">
+      <thead><tr><th>Key</th><th>Default</th><th>Meaning</th></tr></thead>
+      <tbody>
+        <tr><td><code>enabled</code></td><td>false</td><td><code>true</code> → Review 2 is required on every WU.</td></tr>
+        <tr><td><code>on_unavailable</code></td><td><code>"block"</code></td><td><code>block</code>: stop if no distinct second model is ready. <code>warn_and_proceed</code>: skip Review 2 on Review 1 alone, logged loudly.</td></tr>
+        <tr><td><code>matrix</code></td><td><em>writer→reviewers</em></td><td>Which models may review each writer's diff. A model never reviews its own code.</td></tr>
+      </tbody>
+    </table>
+
+    <h2 id="cc-features">cc_features — Claude Code native capabilities</h2>
+    <div class="callout"><strong>Enabled is intent, not capability.</strong> A feature activates only when <code>enabled: true</code> <em>and</em> a runtime probe confirms the capability is really present. Otherwise Telar falls back to the current-behavior path (fail-closed), logs one line, and never hard-fails. Defaults are <code>true</code> because absence degrades safely — older Claude Code runs unchanged.</div>
+    <p>The gating is one tested code path — <code>scripts/tl-telar-cc-features.sh</code> — that the plan-review gate and the orchestrator call, rather than re-deciding it in prose.</p>
+    <pre><code>cc_features:
+  dynamic_workflows:
+    enabled: true
+    on_unavailable: "warn_and_proceed"
+  worktree_isolation:
+    enabled: true
+    on_unavailable: "warn_and_proceed"</code></pre>
+    <table class="t">
+      <thead><tr><th>Key</th><th>Default</th><th>Meaning</th></tr></thead>
+      <tbody>
+        <tr><td><code>dynamic_workflows.enabled</code></td><td>true</td><td>Run the plan-review gate as a deterministic Workflow script (<code>parallel()</code> fan-out + schema-validated verdicts) when the <code>Workflow</code> tool is available. Both paths emit the identical aggregated verdict, so downstream is oblivious to which ran.</td></tr>
+        <tr><td><code>worktree_isolation.enabled</code></td><td>true</td><td>Run each parallel WU in its own git worktree so WUs with <strong>overlapping</strong> <code>file_scope</code> run concurrently (relaxes the disjoint constraint). Fallback: disjoint-scope serialization — slower, never wrong.</td></tr>
+        <tr><td><code>&lt;feature&gt;.on_unavailable</code></td><td><code>"warn_and_proceed"</code></td><td>When the capability isn't confirmed: <code>warn_and_proceed</code> runs the fallback (logged); <code>block</code> stops at preflight (use when the feature is a hard requirement).</td></tr>
+      </tbody>
+    </table>
+    <p><strong>Capability probe signals.</strong> <code>dynamic_workflows</code> → the <code>Workflow</code> tool is present in the top-level session. <code>worktree_isolation</code> → <code>isolation: worktree</code> support is <em>positively confirmed</em>; because older Claude Code silently ignores that frontmatter, an unconfirmed probe keeps the disjoint constraint even when <code>enabled: true</code> — trusting the probe, never the flag.</p>
+
+    <h2 id="hardcoded">Values you can't configure</h2>
+    <p>Fixed in source, not tunable via either file:</p>
+    <table class="t">
+      <thead><tr><th>Aspect</th><th>Fixed value</th></tr></thead>
+      <tbody>
+        <tr><td>Plan-review reviewers</td><td>3 (parallel)</td></tr>
+        <tr><td>Design-review reviewers</td><td>6 (PM, Architect, Designer, Security-Design, CTO, Mobile-Platform)</td></tr>
+        <tr><td>Per-WU adversarial reviewers (always-on)</td><td>2 (Code + Mobile Security)</td></tr>
+        <tr><td>Per-WU adversarial reviewers (conditional)</td><td>+2 (A11y, Performance — by file_scope)</td></tr>
+        <tr><td>Max gate retries</td><td>3, then human escalation</td></tr>
+        <tr><td>Commit &amp; push</td><td>Never automatic — the orchestrator emits COMMIT-READY and leaves it to you</td></tr>
+      </tbody>
+    </table>
+
+    <h2 id="state">Auto-managed state (don't hand-edit)</h2>
+    <p>Written and maintained by the orchestrator under <code>.tl-telar/</code>; git-ignored working files, not durable artifacts:</p>
+    <table class="t">
+      <thead><tr><th>File</th><th>Role</th></tr></thead>
+      <tbody>
+        <tr><td><code>.tl-telar/plans/active-plan.md</code></td><td>Plan + WU list; the resume sentinel.</td></tr>
+        <tr><td><code>.tl-telar/context/execution-state.md</code></td><td>Per-WU phase, retry count, validation results; doubles as the resume journal.</td></tr>
+        <tr><td><code>.tl-telar/context/project-context.md</code></td><td>Cross-WU coherence context read by later WUs.</td></tr>
+        <tr><td><code>.tl-telar/project-profile.json</code></td><td>Setup sentinel — framework + plugin version captured once at setup.</td></tr>
+        <tr><td><code>.tl-telar/context/external-tools-budget.jsonl</code></td><td>External-adapter spend ledger.</td></tr>
+        <tr><td><code>.worktreeinclude</code></td><td>Files copied into each WU worktree when isolation is active.</td></tr>
+      </tbody>
+    </table>
+
+    <div class="callout"><strong>See also.</strong> The <a href="orchestration.html">Orchestration deep-dive</a> explains how these settings drive the pipeline, and <a href="orchestration.html#cc-features">how the cc_features gate</a> chooses its path at runtime.</div>
+  </div>
+</main>
+
+<footer><div class="wrap fl">
+  <span>Telar v0.5.0 — MIT © 2026 Zeki Yugnak</span>
+  <span><a href="https://github.com/zekiyugnak/telar-framework">GitHub</a> · <a href="index.html">Docs home</a></span>
+</div></footer>
+
+<script src="assets/telar.js"></script>
+</body>
+</html>

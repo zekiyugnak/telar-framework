@@ -145,7 +145,7 @@ node -e '
     notes: "This file is the setup sentinel. Its presence tells the SessionStart hook that this project has opted in to the orchestration namespace. Delete it (and .tl-telar/) to start fresh."
   };
   fs.writeFileSync(args[2], JSON.stringify(out, null, 2));
-' "$FRAMEWORK" "${TL_TELAR_PLUGIN_VERSION:-0.3.1}" "$PROFILE"
+' "$FRAMEWORK" "${TL_TELAR_PLUGIN_VERSION:-0.5.0}" "$PROFILE"
 echo "Wrote $PROFILE (setup sentinel)"
 
 if [[ "$REPLACE" == "true" ]]; then
@@ -214,6 +214,7 @@ REQUIRED_IGNORES=(
   ".tl-telar/context/wu-*-changes.txt"
   ".tl-telar/context/active-change.txt"
   ".tl-telar/temp/"
+  ".claude/worktrees/"
 )
 
 # Ensure file + marker exist (creates them on a fresh project).
@@ -263,6 +264,17 @@ ETOOLS_TEMPLATE="$PLUGIN_ROOT/resources/templates/orchestration/external-tools.y
 if [[ ! -f "$ETOOLS_YAML" && -f "$ETOOLS_TEMPLATE" ]]; then
   cp "$ETOOLS_TEMPLATE" "$ETOOLS_YAML"
   echo "External tools config initialized at $ETOOLS_YAML (adapters disabled by default — set adapters.*.enabled: true to activate)"
+fi
+
+# --- .worktreeinclude seed (cc_features.worktree_isolation) ---
+# Copied to PROJECT_ROOT so that when worktree isolation is active, each WU
+# worktree receives the env files + cross-WU context an isolated implementer
+# needs. Idempotent: never overwrite a user-customized file.
+WORKTREE_INCLUDE=".worktreeinclude"
+WORKTREE_TEMPLATE="$PLUGIN_ROOT/resources/templates/orchestration/.worktreeinclude"
+if [[ ! -f "$WORKTREE_INCLUDE" && -f "$WORKTREE_TEMPLATE" ]]; then
+  cp "$WORKTREE_TEMPLATE" "$WORKTREE_INCLUDE"
+  echo "Worktree include list initialized at $WORKTREE_INCLUDE (used when cc_features.worktree_isolation is active)"
 fi
 
 echo ""

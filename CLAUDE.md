@@ -1,4 +1,4 @@
-# Telar v0.4.0
+# Telar v0.5.0
 
 Cross-platform mobile development plugin for Claude Code — React Native, Flutter, and native platform integration. Also covers a companion web stack (Astro, Next.js/Tailwind/shadcn, Vite/TanStack admin panels) and a Rust service layer.
 
@@ -120,6 +120,7 @@ The recommended workflow for building features:
 | `scripts/tl-telar-wu-scheduler.js` | Pure WU readiness scheduler for `/tl-telar:orchestrate`. Reads `.tl-telar/plans/active-plan.md` + `.tl-telar/context/execution-state.md`, returns JSON `{ready, blocked, running, occupied_files, plan_warnings}` — the WUs whose `deps` are COMPLETE and whose `file_scope` is disjoint from every running WU, bounded by `execution.max_parallel_wus` (default 3). Deadlock-free (atomic all-or-nothing file-set acquisition); flags ambiguous plans (two dep-unordered WUs writing the same path). |
 | `scripts/tl-telar-external-tools.sh` | Layer B dispatcher: dispatch/health/budget-status/parse-verdict subcommands; real YAML parsing (yq or python3+PyYAML), cheapest-available routing + escalation, budget ledger (`.tl-telar/context/external-tools-budget.jsonl`) with fail-closed circuit breakers. |
 | `scripts/estimate-cost.sh` | USD estimator for external adapter invocations. |
+| `scripts/tl-telar-cc-features.sh` | Deterministic `cc_features` gating resolver. `resolve`/`decision` subcommands read `cc_features.*` from `external-tools.yaml`, take the runtime capability probe result, and emit `active｜fallback｜blocked` (fail-closed: `active` requires the probe to confirm the capability). Called by the plan-review gate and orchestrator Step 5b so gating is one tested path, not prose. |
 
 ## Resources
 
