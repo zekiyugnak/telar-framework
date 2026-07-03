@@ -1,4 +1,4 @@
-# Telar v0.3.1
+# Telar v0.4.0
 
 Cross-platform mobile development plugin for Claude Code — React Native, Flutter, and native platform integration. Also covers a companion web stack (Astro, Next.js/Tailwind/shadcn, Vite/TanStack admin panels) and a Rust service layer.
 

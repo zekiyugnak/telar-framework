@@ -1,7 +1,7 @@
 {
   "name": "tl-telar",
-  "version": "0.3.1",
-  "description": "Telar — the agentic engineering framework: plan, build, review, and ship, with agents. Cross-platform mobile (React Native & Flutter) plus a companion web stack (Astro, Next.js/shadcn, Vite/TanStack admin panels) and Rust services, with 41 agents, 113 skills, 23 commands, 4 hooks, 7 rules, 25 scripts.",
+  "version": "0.4.0",
+  "description": "Cross-platform mobile application development with React Native and Flutter - 41 agents, 113 skills, 23 commands, 4 hooks, 7 rules, 25 scripts",
   "author": {
     "name": "Zeki Yugnak",
     "url": "https://github.com/zekiyugnak"
