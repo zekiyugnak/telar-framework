@@ -6,6 +6,19 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+## [0.4.0] - 2026-07-03
+
+### Added
+
+- **Configuration reference** (`docs/configuration.md`): comprehensive single-source doc covering every key in `.tl-telar-thresholds.json` (coverage, performance, size, accessibility, autonomy, execution, enforcement) and `.tl-telar/external-tools.yaml` (adapters, routing, budget, cross-model review matrix), plus hardcoded values and auto-managed state files.
+- Link to configuration reference from README.
+
+### Fixed
+
+- **Dispatcher timeout bug**: `timeout_seconds` from `external-tools.yaml` was read but never forwarded to the adapter — adapters always used the 300 s default regardless of config. The dispatcher now reads `adapters.<tool>.timeout_seconds`, validates it, and passes `--timeout` to the adapter.
+- **Layer-B hard timeout wrapper**: dispatcher wraps the adapter invocation with system `timeout`/`gtimeout` when available, so a hung adapter process (e.g. MCP transport glitch) cannot block indefinitely even if the adapter's own `safe_invoke` fails to fire.
+- **Timeout envelope synthesis**: when the outer wrapper kills the adapter before it can emit JSON, the dispatcher synthesises a well-formed `error_type: "timeout"` envelope so callers always receive parseable output.
+
 ## [0.3.0] - 2026-07-02
 
 Adds Work Unit-level parallelism to orchestrated mode — independent Work Units now run concurrently.
