@@ -1,0 +1,48 @@
+{
+  "name": "tl-telar",
+  "version": "0.5.0",
+  "description": "Cross-platform mobile application development with React Native and Flutter - 41 agents, 113 skills, 23 commands, 4 hooks, 7 rules, 26 scripts",
+  "author": {
+    "name": "Zeki Yugnak",
+    "url": "https://github.com/zekiyugnak"
+  },
+  "license": "MIT",
+  "keywords": [
+    "mobile",
+    "react-native",
+    "flutter",
+    "ios",
+    "android",
+    "cross-platform",
+    "app-development",
+    "expo",
+    "supabase",
+    "mobile-testing",
+    "app-store",
+    "play-store",
+    "astro",
+    "nextjs",
+    "tailwind",
+    "shadcn",
+    "tanstack",
+    "rust",
+    "axum"
+  ],
+  "structure": {
+    "agents": "../agents",
+    "skills": "../skills",
+    "commands": "../commands",
+    "hooks": "../hooks",
+    "rules": "../rules",
+    "scripts": "../scripts",
+    "resources": "../resources"
+  },
+  "features": {
+    "hooks": true,
+    "rules": true,
+    "scripts": true,
+    "self-learning": true,
+    "references": true,
+    "validation": true
+  }
+}

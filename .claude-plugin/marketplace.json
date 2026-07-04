@@ -1,0 +1,17 @@
+{
+  "name": "telar",
+  "owner": {
+    "name": "Zeki Yugnak"
+  },
+  "metadata": {
+    "description": "Telar — the agentic engineering framework. By Zeki Yugnak."
+  },
+  "plugins": [
+    {
+      "name": "tl-telar",
+      "source": "./",
+      "description": "Telar — the agentic engineering framework: plan, build, review, and ship, with agents. Cross-platform mobile (React Native & Flutter).",
+      "version": "0.5.0"
+    }
+  ]
+}

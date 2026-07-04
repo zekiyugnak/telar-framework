@@ -1,0 +1,128 @@
+name: Auto-tag and Release on PR Merge
+
+on:
+  pull_request:
+    types: [closed]
+    branches: [main]
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    if: github.event.pull_request.merged == true
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.SUBMODULE_PAT }}
+
+      - name: Auto-increment version from latest tag
+        id: version
+        run: |
+          LATEST=$(git tag --sort=-v:refname | grep -E '^v[0-9]+\.[0-9]+\.[0-9]+$' | head -1)
+          if [ -z "$LATEST" ]; then
+            VERSION="v0.1.0"
+          else
+            MAJOR=$(echo "$LATEST" | sed 's/^v//' | cut -d. -f1)
+            MINOR=$(echo "$LATEST" | sed 's/^v//' | cut -d. -f2)
+            if [ "$MINOR" -lt 9 ]; then
+              MINOR=$((MINOR + 1))
+            else
+              MAJOR=$((MAJOR + 1))
+              MINOR=0
+            fi
+            VERSION="v${MAJOR}.${MINOR}.0"
+          fi
+          echo "Latest tag: ${LATEST:-none}, new version: $VERSION"
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+
+      - name: Check if tag already exists
+        id: check_tag
+        run: |
+          if git rev-parse "refs/tags/${{ steps.version.outputs.version }}" >/dev/null 2>&1; then
+            echo "Tag ${{ steps.version.outputs.version }} already exists, skipping."
+            echo "exists=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "exists=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Setup Node
+        if: steps.check_tag.outputs.exists == 'false'
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Recompute component counts
+        if: steps.check_tag.outputs.exists == 'false'
+        id: counts
+        run: |
+          AGENTS=$(find agents -maxdepth 1 -name '*.md' -not -name '_*' | wc -l | tr -d ' ')
+          # Skills: exclude references/ subdirs (supplementary material, not skills —
+          # same rule as scripts/validate-skills.js, which is the canonical counter).
+          SKILLS=$(find skills -name '*.md' -not -name '_*' -not -path '*/references/*' | wc -l | tr -d ' ')
+          COMMANDS=$(find commands -maxdepth 1 -name '*.md' | wc -l | tr -d ' ')
+          # Hooks: exclude *.deprecated.sh markers (kept on disk for discoverability,
+          # not registered in settings.json).
+          HOOKS=$(find hooks -maxdepth 1 -name '*.sh' -not -name '*.deprecated.sh' | wc -l | tr -d ' ')
+          RULES=$(find rules -maxdepth 1 -name '*.md' | wc -l | tr -d ' ')
+          # Scripts: include *.ts (e.g. tl-telar-fetch-pr-comments.ts).
+          SCRIPTS=$(find scripts -maxdepth 1 \( -name '*.js' -o -name '*.sh' -o -name '*.ts' \) | wc -l | tr -d ' ')
+          SUMMARY="${AGENTS} agents, ${SKILLS} skills, ${COMMANDS} commands, ${HOOKS} hooks, ${RULES} rules, ${SCRIPTS} scripts"
+          echo "summary=$SUMMARY" >> "$GITHUB_OUTPUT"
+          echo "Recomputed counts: $SUMMARY"
+
+      - name: Update plugin version, counts, and AGENTS.md
+        if: steps.check_tag.outputs.exists == 'false'
+        env:
+          TAG: ${{ steps.version.outputs.version }}
+          SUMMARY: ${{ steps.counts.outputs.summary }}
+        run: |
+          SEMVER="${TAG#v}"
+          DESC="Cross-platform mobile application development with React Native and Flutter - ${SUMMARY}"
+
+          jq --arg v "$SEMVER" --arg d "$DESC" '.version = $v | .description = $d' \
+            .claude-plugin/plugin.json > tmp.json && mv tmp.json .claude-plugin/plugin.json
+
+          jq --arg v "$SEMVER" '(.plugins[] | select(.name == "tl-telar")).version = $v' \
+            .claude-plugin/marketplace.json > tmp.json && mv tmp.json .claude-plugin/marketplace.json
+
+          # README badge: rewrites the whole "> **vX.Y.Z** — N agents, ..." line.
+          sed -i "s|^> \*\*v[0-9]\+\.[0-9]\+\.[0-9]\+\*\* — .*|> **v${SEMVER}** — ${SUMMARY}|" README.md
+
+          # CLAUDE.md header line.
+          sed -i "s|^# Telar v[0-9]\+\.[0-9]\+\.[0-9]\+|# Telar v${SEMVER}|" CLAUDE.md
+
+          # Regenerate AGENTS.md so it reflects current agent set + compile date.
+          node scripts/compile-agents-md.js
+
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add .claude-plugin/plugin.json .claude-plugin/marketplace.json \
+                  README.md CLAUDE.md AGENTS.md
+          if git diff --cached --quiet; then
+            echo "No changes to commit"
+          else
+            git commit -m "chore: bump plugin version to $SEMVER and sync counts"
+            git push origin HEAD:main
+          fi
+
+      - name: Create tag and GitHub Release
+        if: steps.check_tag.outputs.exists == 'false'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PR_TITLE: ${{ github.event.pull_request.title }}
+          PR_BODY: ${{ github.event.pull_request.body }}
+          TAG: ${{ steps.version.outputs.version }}
+        run: |
+          LATEST_SHA=$(git rev-parse HEAD)
+          git tag "$TAG" "$LATEST_SHA"
+          git push origin "$TAG"
+
+          gh release create "$TAG" \
+            --title "$PR_TITLE" \
+            --notes "${PR_BODY:-No description provided.}" \
+            --latest

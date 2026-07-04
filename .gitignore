@@ -1,0 +1,20 @@
+# Internal development/design artifacts — not part of the published product.
+# Kept locally and in git history; excluded from the public repository.
+docs/plans/
+docs/specs/
+
+# Internal working/strategy drafts (licensing analysis, branding) — keep local.
+docs/*-DRAFT.md
+
+# Internal design specs (brainstorming output) — keep local, not published.
+docs/superpowers/
+
+# macOS Finder metadata.
+.DS_Store
+
+# IDE / editor config — local only.
+.idea/
+*.iml
+
+# Claude Code local settings (machine-specific paths, personal allowlist).
+.claude/settings.local.json

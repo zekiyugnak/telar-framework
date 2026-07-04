@@ -1,0 +1,117 @@
+---
+id: render-optimization
+category: skill
+tags: [re-renders, memoization, profiling, 60fps]
+capabilities:
+  - Preventing unnecessary re-renders
+  - Memoization techniques
+  - Render profiling
+  - 60fps optimization
+useWhen:
+  - Fixing janky UI
+  - Reducing re-renders
+  - Profiling render performance
+---
+
+# Render Optimization
+
+Optimizing rendering performance for smooth 60fps.
+
+## React Native Memoization
+
+```typescript
+// Memoize components
+const ExpensiveComponent = memo(({ data }) => {
+  return <View>{/* expensive render */}</View>
+}, (prevProps, nextProps) => {
+  // Custom comparison
+  return prevProps.data.id === nextProps.data.id
+})
+
+// Memoize callbacks
+function Parent() {
+  const handlePress = useCallback((id) => {
+    // handle press
+  }, [])
+
+  return <Child onPress={handlePress} />
+}
+
+// Memoize computed values
+function Component({ items }) {
+  const sortedItems = useMemo(() => {
+    return [...items].sort((a, b) => a.name.localeCompare(b.name))
+  }, [items])
+}
+```
+
+## Avoiding Re-renders
+
+```typescript
+// ❌ Bad - creates new object each render
+<Child style={{ flex: 1 }} />
+
+// ✅ Good - stable reference
+const styles = StyleSheet.create({ container: { flex: 1 } })
+<Child style={styles.container} />
+
+// ❌ Bad - creates new function each render
+<Button onPress={() => handlePress(id)} />
+
+// ✅ Good - memoized callback
+const handlePress = useCallback(() => {
+  // handle
+}, [id])
+<Button onPress={handlePress} />
+```
+
+## State Optimization
+
+```typescript
+// Split state to prevent unnecessary renders
+// ❌ Bad
+const [state, setState] = useState({ user: null, posts: [], loading: false })
+
+// ✅ Good
+const [user, setUser] = useState(null)
+const [posts, setPosts] = useState([])
+const [loading, setLoading] = useState(false)
+
+// Use context splitting
+const UserContext = createContext(null)
+const PostsContext = createContext([])
+```
+
+## Flutter Optimization
+
+```dart
+// Use const constructors
+const MyWidget({super.key});
+
+// Split widgets for rebuild isolation
+class ParentWidget extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        const StaticHeader(), // Won't rebuild
+        Consumer<Counter>( // Only this rebuilds
+          builder: (_, counter, __) => Text('${counter.value}'),
+        ),
+      ],
+    );
+  }
+}
+
+// Use RepaintBoundary for heavy widgets
+RepaintBoundary(
+  child: ExpensiveAnimatedWidget(),
+)
+```
+
+## Best Practices
+
+- Use React DevTools Profiler to identify re-renders
+- Memoize expensive computations
+- Keep component state as local as possible
+- Split contexts to reduce update scope

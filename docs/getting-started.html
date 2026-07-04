@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Getting Started — Telar</title>
+<meta name="description" content="Install Telar and run your first workflow in Claude Code.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;650;800;850&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/telar.css">
+</head>
+<body>
+
+<header class="nav"><div class="wrap nav-inner">
+  <a class="brand" href="index.html"><span class="dot"></span> Telar</a>
+  <button class="nav-toggle" aria-label="Menu">☰</button>
+  <nav class="nav-links">
+    <a href="getting-started.html">Getting Started</a>
+    <a href="agents.html">Agents</a>
+    <a href="commands.html">Commands</a>
+    <a href="skills.html">Skills</a>
+    <a href="rules.html">Rules</a>
+    <a href="orchestration.html">Orchestration</a>
+    <a href="configuration.html">Configuration</a>
+    <a href="examples.html">Examples</a>
+    <a class="nav-gh" href="https://github.com/zekiyugnak/telar-framework">GitHub ↗</a>
+  </nav>
+</div></header>
+
+<main class="wrap">
+  <div class="page-title">
+    <span class="eyebrow">Guide</span>
+    <h1>Getting Started</h1>
+    <p>Install Telar, understand the workflow, and run your first command.</p>
+  </div>
+
+  <div class="prose">
+    <h2>Requirements</h2>
+    <ul>
+      <li><a href="https://www.anthropic.com/claude-code">Claude Code</a> installed and authenticated.</li>
+      <li>A React Native or Flutter project (or start a new one with <code>/tl-telar:create-app</code>).</li>
+      <li>For simulator automation: Xcode (iOS) and/or Android SDK with an emulator.</li>
+    </ul>
+
+    <h2>Installation</h2>
+    <pre><code># Add the marketplace
+claude plugin marketplace add zekiyugnak/telar-framework
+
+# Install the plugin
+claude plugin install tl-telar@telar</code></pre>
+    <p>After installation, <strong>restart Claude Code</strong> to load the plugin. All commands are namespaced under <code>/tl-telar:</code>.</p>
+
+    <h2>Quick start</h2>
+    <table class="t">
+      <thead><tr><th>Goal</th><th>Command</th></tr></thead>
+      <tbody>
+        <tr><td>New app from scratch</td><td><code>/tl-telar:create-app [description]</code></td></tr>
+        <tr><td>Add a feature</td><td><code>/tl-telar:add-feature [feature]</code></td></tr>
+        <tr><td>Run tests</td><td><code>/tl-telar:test-app [scope]</code></td></tr>
+        <tr><td>Code review</td><td><code>/tl-telar:review-code [path]</code></td></tr>
+        <tr><td>End-to-end orchestrated build</td><td><code>/tl-telar:orchestrate &lt;task&gt;</code></td></tr>
+        <tr><td>Release to stores</td><td><code>/tl-telar:release-app</code></td></tr>
+      </tbody>
+    </table>
+    <p>See the <a href="commands.html">full command reference</a> for all 23 workflows.</p>
+
+    <h2>The 8-step workflow</h2>
+    <p>Telar structures feature work into eight phases. Each maps to skills and rules that enforce the discipline automatically.</p>
+    <ol class="steps">
+      <li><strong>Explore</strong> — read the existing codebase first (<code>codebase-first</code> rule).</li>
+      <li><strong>Requirements</strong> — establish what to build in <code>REQUIREMENTS.md</code>.</li>
+      <li><strong>Research</strong> — decide how to build it in <code>RESEARCH.md</code>.</li>
+      <li><strong>Plan</strong> — break work into atomic tasks in <code>PLAN.md</code> + <code>PROGRESS.md</code>.</li>
+      <li><strong>Build</strong> — iterate with simulator verification.</li>
+      <li><strong>Debug</strong> — find the root cause before fixing.</li>
+      <li><strong>Verify</strong> — require fresh evidence before claiming done.</li>
+      <li><strong>Review</strong> — two-stage gates: requirement compliance + code quality.</li>
+    </ol>
+
+    <h2>Automatic behaviors</h2>
+    <p>Some safeguards run with no action needed, via hooks and always-on <a href="rules.html">rules</a>:</p>
+    <ul>
+      <li>Codebase exploration is encouraged before code generation.</li>
+      <li>Security reminders surface for sensitive operations.</li>
+      <li>Pre-build checks flag common issues (e.g. localhost URLs in production paths).</li>
+      <li>After compaction or restart, a SessionStart hook re-primes orchestration context.</li>
+    </ul>
+
+    <h2>Optional: orchestrated mode</h2>
+    <p>Orchestration is strictly opt-in. Legacy commands work unchanged until you run setup.</p>
+    <pre><code># One-time opt-in: framework detection + .tl-telar/ skeleton
+/tl-telar:setup-orchestration
+
+# Run the full pipeline: design gate → plan gate → 4-phase execution
+/tl-telar:orchestrate &lt;task&gt;</code></pre>
+    <div class="callout"><strong>Git policy is honored.</strong> The orchestrator never auto-commits — it emits a COMMIT-READY signal and leaves the commit to you. Learn more on the <a href="orchestration.html">Orchestration</a> page.</div>
+  </div>
+</main>
+
+<footer><div class="wrap fl">
+  <span>Telar v0.5.0 — MIT © 2026 Zeki Yugnak</span>
+  <span><a href="https://github.com/zekiyugnak/telar-framework">GitHub</a> · <a href="index.html">Docs home</a></span>
+</div></footer>
+
+<script src="assets/telar.js"></script>
+</body>
+</html>

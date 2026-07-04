@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Orchestration — Telar</title>
+<meta name="description" content="Telar's opt-in orchestrated mode: design and plan review gates, a 4-phase execution loop, a knowledge base, and external AI delegation.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;650;800;850&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/telar.css">
+</head>
+<body>
+
+<header class="nav"><div class="wrap nav-inner">
+  <a class="brand" href="index.html"><span class="dot"></span> Telar</a>
+  <button class="nav-toggle" aria-label="Menu">☰</button>
+  <nav class="nav-links">
+    <a href="getting-started.html">Getting Started</a>
+    <a href="agents.html">Agents</a>
+    <a href="commands.html">Commands</a>
+    <a href="skills.html">Skills</a>
+    <a href="rules.html">Rules</a>
+    <a href="orchestration.html">Orchestration</a>
+    <a href="configuration.html">Configuration</a>
+    <a href="examples.html">Examples</a>
+    <a class="nav-gh" href="https://github.com/zekiyugnak/telar-framework">GitHub ↗</a>
+  </nav>
+</div></header>
+
+<main class="wrap">
+  <div class="page-title">
+    <span class="eyebrow">Deep dive</span>
+    <h1>Orchestrated Mode</h1>
+    <p>Opt-in multi-agent orchestration that takes a feature from idea to commit-ready — with review gates, blocking quality gates, a persistent knowledge base, and cross-model verification. Strictly opt-in: legacy commands work unchanged until you run setup.</p>
+  </div>
+
+  <div class="prose">
+    <div class="callout"><strong>Opt-in &amp; git-safe.</strong> Run <code>/tl-telar:setup-orchestration</code> once to enable it. The orchestrator never auto-commits — it emits a COMMIT-READY signal and leaves the commit to you.</div>
+
+    <h2>The pipeline</h2>
+    <div class="flow">
+      <span class="node">Design gate</span><span class="arrow">→</span>
+      <span class="node">Plan</span><span class="arrow">→</span>
+      <span class="node">Plan gate</span><span class="arrow">→</span>
+      <span class="node">Work Units</span><span class="arrow">→</span>
+      <span class="node">Parallel 4-phase loops</span><span class="arrow">→</span>
+      <span class="node">Final review</span><span class="arrow">→</span>
+      <span class="node">COMMIT-READY</span>
+    </div>
+
+    <h2 id="commands">The commands, and how they wire into the workflow</h2>
+    <p>You drive the whole pipeline with <strong>one</strong> command — <code>/tl-telar:orchestrate</code>. It invokes the gates, decomposition, parallel execution, and final review for you. The other commands set it up, recover it, or run a single stage on its own. The command-level lifecycle:</p>
+    <div class="flow">
+      <span class="node">setup-orchestration</span><span class="arrow">→</span>
+      <span class="node">orchestrate</span><span class="arrow">→</span>
+      <span class="node">resume (if interrupted)</span><span class="arrow">→</span>
+      <span class="node">self-reflect (after merge)</span>
+    </div>
+    <table class="t">
+      <thead><tr><th>Command</th><th>Role in the orchestrated workflow</th><th>You run it</th></tr></thead>
+      <tbody>
+        <tr><td><code>/tl-telar:setup-orchestration</code></td><td>One-time opt-in: detects the framework, writes <code>.tl-telar-thresholds.json</code> (including <code>execution.max_parallel_wus</code>), and creates the <code>.tl-telar/</code> state skeleton.</td><td>Once per project</td></tr>
+        <tr><td><code>/tl-telar:orchestrate</code></td><td><strong>The entry point.</strong> Drives the entire pipeline above — it runs the design and plan gates, decomposes into Work Units, dispatches independent WUs in parallel, and does the final review, all from one session.</td><td>Per feature</td></tr>
+        <tr><td><code>/tl-telar:review-design</code></td><td>The <em>design gate</em> as a standalone command. <code>orchestrate</code> runs this stage automatically; invoke it directly to gate a design doc outside a full run.</td><td>Standalone / optional</td></tr>
+        <tr><td><code>/tl-telar:review-plan</code></td><td>The <em>plan gate</em> as a standalone command — same relationship to <code>orchestrate</code> as review-design.</td><td>Standalone / optional</td></tr>
+        <tr><td><code>/tl-telar:resume</code></td><td>Recovers an interrupted run: re-reads the state files and re-runs the scheduler to reconstruct the ready frontier, then continues where it left off.</td><td>After an interruption</td></tr>
+        <tr><td><code>/tl-telar:prime</code> · <code>/tl-telar:self-reflect</code></td><td>The knowledge loop around the pipeline — <code>prime</code> re-injects relevant facts into a run's context; <code>self-reflect</code> captures learnings back into the KB after a PR.</td><td>Auto + after merge</td></tr>
+      </tbody>
+    </table>
+    <div class="callout"><strong>The short version.</strong> Run <code>setup-orchestration</code> once, then <code>orchestrate &lt;task&gt;</code> for every feature — everything between the gates and COMMIT-READY, including the parallel Work Unit dispatch, happens inside that one command. <code>resume</code>, <code>review-plan</code>, <code>review-design</code>, <code>prime</code>, and <code>self-reflect</code> are the supporting cast.</div>
+
+    <h2>The document chain</h2>
+    <p>Each stage produces an artifact that feeds the next — the correctness guarantee that keeps generated work aligned to intent.</p>
+    <div class="flow">
+      <span class="node">REQUIREMENTS.md</span><span class="arrow">→</span>
+      <span class="node">RESEARCH.md</span><span class="arrow">→</span>
+      <span class="node">PLAN.md</span><span class="arrow">→</span>
+      <span class="node">PROGRESS.md</span>
+    </div>
+
+    <h2>Review gates</h2>
+    <h3>Design review gate — collaborative, 6 reviewers</h3>
+    <p>A pre-implementation review of a design doc. <strong>APPROVED</strong> only if all six reviewers approve: PM, Architect, Designer, Security-Design, CTO, and Mobile-Platform. It catches scope ambiguity, architecture drift, UX inconsistency, threat-model gaps, strategic misfit, and platform-convention violations before any plan is drafted. Max 3 iterations, then structured escalation.</p>
+    <h3>Plan review gate — adversarial, 3 reviewers</h3>
+    <p>Three fresh-instance adversarial reviewers inspect the implementation plan. <strong>PASS</strong> means it's fit to execute; <strong>FAIL</strong> means blocking defects, cited with file:line evidence and rubric rule IDs. Fresh instances each iteration prevent anchoring bias. Max 3 iterations, then human escalation.</p>
+
+    <h2>The 4-phase execution loop</h2>
+    <p>Each Work Unit runs through the same loop — and, when Work Units are independent, several of these loops run <strong>concurrently</strong> (see <a href="#parallel">Parallel dispatch</a> below). Validation is run by the orchestrator itself (never delegated); reviewers are fresh each pass.</p>
+    <ol class="steps">
+      <li><strong>IMPLEMENT</strong> — make the change for this Work Unit.</li>
+      <li><strong>VALIDATE</strong> — run validation commands directly; output is redirected to logs to keep the terminal quiet.</li>
+      <li><strong>REVIEW</strong> — spawn 2–4 fresh adversarial reviewers (always-on: Adversarial Code + Mobile Security; conditional: UX/A11y, Performance). Any FAIL blocks COMMIT.</li>
+      <li><strong>COMMIT</strong> — on PASS, emit COMMIT-READY. After 3 failed retries, escalate with the full failure history.</li>
+    </ol>
+
+    <h2 id="parallel">Parallel Work Unit dispatch</h2>
+    <p>Independent Work Units run <strong>at the same time</strong> instead of one after another. A portable Node scheduler — <code>scripts/tl-telar-wu-scheduler.js</code> — reads the plan and live state, computes which WUs are eligible <em>right now</em>, and the orchestrator dispatches each eligible WU as a concurrent background <code>Task()</code>. On every completion the frontier is recomputed, so newly-unblocked WUs start immediately. The scheduler is pure (it only reads state and returns JSON), which is what makes runs deterministic and resumable.</p>
+
+    <p>Two facts every WU already declares drive the decision — no new authoring burden:</p>
+    <ul>
+      <li><strong><code>deps</code></strong> — the WUs that must be <code>COMPLETE</code> first (the dependency DAG).</li>
+      <li><strong><code>file_scope</code></strong> — the paths this WU may modify. Two WUs may run together only if their <code>file_scope</code> arrays are <strong>disjoint</strong> — so two agents can never touch the same file at once. (With <a href="#cc-features">worktree isolation</a> enabled, overlapping scopes may run concurrently in isolated checkouts instead.)</li>
+    </ul>
+
+    <p>A diamond plan makes it concrete: once <code>WU-A</code> completes, <code>WU-B</code> and <code>WU-C</code> (disjoint scopes) run in parallel; <code>WU-D</code> waits for both, then integrates.</p>
+    <div class="flow">
+      <span class="node">WU-A</span><span class="arrow">→</span>
+      <span class="node">WU-B ‖ WU-C</span><span class="arrow">→</span>
+      <span class="node">WU-D</span>
+    </div>
+
+    <p>The scheduler classifies every non-complete WU each round and returns a JSON frontier — <code>ready</code> (dispatch now), <code>running</code>, and <code>blocked</code> with a reason: <code>deps</code> (a dependency isn't complete), <code>file_conflict</code> (its scope overlaps a running WU), or <code>concurrency_cap</code> (the ceiling is full). The <code>ready</code> set is always internally disjoint and acquired all-or-nothing, so the pipeline is <strong>deadlock-free by construction</strong>. If the plan itself is ambiguous — two dependency-unordered WUs declaring the same path — the scheduler surfaces a <code>plan_warnings</code> entry and the orchestrator stops rather than guessing an order.</p>
+
+    <div class="callout"><strong>The concurrency knob.</strong> <code>execution.max_parallel_wus</code> in <code>.tl-telar-thresholds.json</code> caps how many WUs run at once (default <strong>3</strong>, matching Anthropic's 3–5 subagent guidance). Parallel agent runs cost roughly 15× chat tokens, so keep it modest and raise it only for many small, disjoint WUs. An absent or invalid value safely falls back to 3.</div>
+
+    <p>You don't invoke the scheduler yourself — <code>/tl-telar:orchestrate</code> drives it. To see the frontier for a plan directly:</p>
+    <pre><code># Prints the JSON frontier {ready, blocked, running, occupied_files, plan_warnings}
+node scripts/tl-telar-wu-scheduler.js \
+  .tl-telar/plans/active-plan.md \
+  .tl-telar/context/execution-state.md
+
+# Tune concurrency for the current project
+# .tl-telar-thresholds.json → { "execution": { "max_parallel_wus": 3 } }</code></pre>
+
+    <p>Single-WU plans are just the degenerate case — <code>ready</code> holds one WU per round, and the loop behaves exactly as it did before.</p>
+
+    <h2 id="cc-features">Claude Code native features <span style="color:var(--text-faint);font-weight:400">(opt-in, capability-gated)</span></h2>
+    <p>Telar can opt into newer Claude Code native capabilities, configured under <code>cc_features</code> in <code>.tl-telar/external-tools.yaml</code>. Every one follows the same rule: <strong><code>enabled</code> is intent, not capability.</strong> A feature activates only when it is enabled <em>and</em> a runtime probe confirms the capability is really present — otherwise the orchestrator <strong>falls back to the current behavior</strong> (fail-closed), logs one line, and never hard-fails. Defaults are <code>true</code> because absence degrades safely, so older Claude Code runs unchanged. The gating is one tested code path — <code>scripts/tl-telar-cc-features.sh</code> — not prose. See the <a href="configuration.html#cc-features">Configuration reference</a> for the keys.</p>
+
+    <h3>Worktree isolation — concurrent overlapping Work Units</h3>
+    <p>By default two WUs may run together only if their <code>file_scope</code> arrays are <strong>disjoint</strong>. With <code>cc_features.worktree_isolation</code> active, each WU runs in its own git worktree, so WUs with <strong>overlapping</strong> <code>file_scope</code> run concurrently too — the scheduler is called with <code>--isolate</code> to admit them, and each WU's branch is merged back with <code>git merge --squash</code> (staged, uncommitted — your commit stays yours). A real merge conflict routes through the same retry/escalate loop. When the capability isn't confirmed, the scheduler keeps the disjoint constraint (slower, never wrong).</p>
+
+    <h3>Dynamic Workflows — deterministic review gates</h3>
+    <p>With <code>cc_features.dynamic_workflows</code> active and the <code>Workflow</code> tool available, the plan-review gate runs its 3 adversarial reviewers via a deterministic Workflow script (<code>parallel()</code> fan-out + schema-validated verdicts) instead of prose <code>Task()</code> dispatch — no dropped reviewer, no malformed-verdict drift. Both paths emit the identical aggregated verdict, so the rest of the pipeline is oblivious to which ran; on older Claude Code the gate transparently uses the prose path.</p>
+
+    <h2>Knowledge base</h2>
+    <p>Telar keeps a typed JSONL knowledge base under <code>.tl-telar/knowledge/</code> that compounds over time:</p>
+    <ul>
+      <li><strong>Capture</strong> — <code>/tl-telar:self-reflect</code> harvests learnings from PR comments, the current conversation, and config audits, with a user-approval gate on every candidate.</li>
+      <li><strong>Prime</strong> — <code>/tl-telar:prime</code> re-injects the relevant facts into a new task's context, in five fixed categories: MUST FOLLOW, GOTCHAS, PATTERNS, DECISIONS, API BEHAVIORS.</li>
+      <li><strong>Curate</strong> — the knowledge curator dedups facts, promotes confidence on repeated provenance, and sweeps stale entries.</li>
+    </ul>
+
+    <h2>State persistence &amp; recovery</h2>
+    <p>A 3-file state model under <code>.tl-telar/</code> (plan, project-context, execution-state) lets the orchestrator survive compaction and cross-session restarts. A SessionStart hook re-primes context automatically; <code>/tl-telar:resume</code> restores an in-progress run after confirming the resume position.</p>
+    <p>Recovery is scheduler-driven: <code>execution-state.md</code> records every active WU with its own phase and retry count (up to <code>max_parallel_wus</code> at once), and each snapshot doubles as the resume journal. On resume the orchestrator re-runs the scheduler against that snapshot to reconstruct the ready frontier from scratch — completed WUs are skipped, and any WU left <code>IN-PROGRESS</code> by a crashed session is reclaimed (reset to <code>PENDING</code> or escalated), so a crash frees its files instead of wedging the run.</p>
+
+    <h2>External AI delegation <span style="color:var(--text-faint);font-weight:400">(Phase β/γ — disabled by default)</span></h2>
+    <p>Optional adapters can delegate implementation or review to external models (Codex, Gemini) with a budget circuit breaker ($1/task, $10/session) and fail-closed behavior. Cross-model review enforces that the model which wrote a diff never reviews it. Enable per-adapter in <code>.tl-telar/external-tools.yaml</code>; check status with <code>/tl-telar:external-tools-health</code>.</p>
+
+    <h2>Authoring inputs for orchestrate</h2>
+    <p><code>/tl-telar:orchestrate</code> accepts three input modes:</p>
+    <table class="t">
+      <thead><tr><th>Mode</th><th>Invocation</th><th>When</th></tr></thead>
+      <tbody>
+        <tr><td>Free-text</td><td><code>/tl-telar:orchestrate &lt;description&gt;</code></td><td>No plan yet — the orchestrator drafts one</td></tr>
+        <tr><td>Epic file</td><td><code>/tl-telar:orchestrate --epic &lt;path&gt;</code></td><td>A prepared single-feature epic</td></tr>
+        <tr><td>Plan file</td><td><code>/tl-telar:orchestrate --plan-file &lt;path&gt;</code></td><td>You already keep a WU-decomposable plan</td></tr>
+      </tbody>
+    </table>
+
+    <h2>Get started with orchestration</h2>
+    <pre><code># 1. One-time opt-in
+/tl-telar:setup-orchestration
+
+# 2. Run the full pipeline
+/tl-telar:orchestrate Add a login screen with email + password
+
+# 3. Resume after an interruption
+/tl-telar:resume
+
+# 4. Capture learnings after a PR
+/tl-telar:self-reflect</code></pre>
+  </div>
+</main>
+
+<footer><div class="wrap fl">
+  <span>Telar v0.5.0 — MIT © 2026 Zeki Yugnak</span>
+  <span><a href="https://github.com/zekiyugnak/telar-framework">GitHub</a> · <a href="index.html">Docs home</a></span>
+</div></footer>
+
+<script src="assets/telar.js"></script>
+</body>
+</html>

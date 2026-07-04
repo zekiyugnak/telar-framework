@@ -1,0 +1,1086 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Agents — Telar</title>
+<meta name="description" content="The 41 specialized agents in Telar, grouped by domain.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;650;800;850&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/telar.css">
+</head>
+<body>
+
+<header class="nav"><div class="wrap nav-inner">
+  <a class="brand" href="index.html"><span class="dot"></span> Telar</a>
+  <button class="nav-toggle" aria-label="Menu">☰</button>
+  <nav class="nav-links">
+    <a href="getting-started.html">Getting Started</a>
+    <a href="agents.html">Agents</a>
+    <a href="commands.html">Commands</a>
+    <a href="skills.html">Skills</a>
+    <a href="rules.html">Rules</a>
+    <a href="orchestration.html">Orchestration</a>
+    <a href="configuration.html">Configuration</a>
+    <a href="examples.html">Examples</a>
+    <a class="nav-gh" href="https://github.com/zekiyugnak/telar-framework">GitHub ↗</a>
+  </nav>
+</div></header>
+
+<main class="wrap">
+  <div class="page-title">
+    <span class="eyebrow">Reference</span>
+    <h1>Agents</h1>
+    <p>41 specialized subagents, each an expert in one domain. Expand a card for its capabilities, when to use it, and a link to its source.</p>
+  </div>
+
+  <div class="filter-bar">
+    <input id="filter" type="search" placeholder="Filter agents by name, tag, or capability…" autocomplete="off">
+    <div class="filter-meta" id="filter-meta"></div>
+  </div>
+
+  <nav class="subnav">
+    <a href="#core">Core Platform</a>
+    <a href="#native">Native Bridges</a>
+    <a href="#arch">Architecture</a>
+    <a href="#uiux">UI/UX &amp; Design</a>
+    <a href="#sec">Security</a>
+    <a href="#perf">Performance &amp; Offline</a>
+    <a href="#release">CI/CD &amp; Release</a>
+    <a href="#stores">App Stores</a>
+    <a href="#test">Testing</a>
+    <a href="#backend">Backend &amp; Data</a>
+    <a href="#ai">AI &amp; Advanced</a>
+    <a href="#web">Web &amp; Service</a>
+    <a href="#orch">Orchestration</a>
+  </nav>
+
+  <!-- CORE PLATFORM -->
+  <section class="group">
+    <h2 id="core">Core Platform Experts <span class="gc">2</span></h2>
+    <p class="gdesc">The two cross-platform specialists at the heart of every Telar build.</p>
+    <div class="cards">
+
+      <article class="card" data-search="react-native-expert react native cross-platform typescript expo hermes turbomodules fabric">
+        <div class="card-head"><span class="card-icon">⚛️</span><h3>react-native-expert</h3></div>
+        <p class="desc">React Native cross-platform specialist.</p>
+        <div class="chips"><span class="chip">react-native</span><span class="chip">expo</span><span class="chip">turbomodules</span></div>
+        <button class="card-toggle" aria-expanded="false">Details</button>
+        <div class="card-detail" hidden>
+          <h4>Capabilities</h4><ul>
+            <li>Cross-platform development with functional components and hooks</li>
+            <li>TurboModules and Fabric (new architecture) implementation</li>
+            <li>React Navigation with deep linking and type-safe routing</li>
+            <li>State with Redux Toolkit, Zustand, and React Query</li>
+            <li>Performance: Hermes, FlatList tuning, bridge optimization</li>
+            <li>Expo SDK and EAS Build for managed and bare workflows</li>
+          </ul>
+          <h4>When to use</h4><ul>
+            <li>Building cross-platform apps needing native-like performance</li>
+            <li>Complex navigation with deep linking</li>
+            <li>Migrating to the new architecture (TurboModules/Fabric)</li>
+            <li>Integrating native modules and platform-specific code</li>
+          </ul>
+          <a class="src" href="https://github.com/zekiyugnak/telar-framework/blob/main/agents/react-native-expert.md">Source ↗</a>
+        </div>
+      </article>
+
+      <article class="card" data-search="flutter-expert flutter dart riverpod bloc material3 cupertino impeller cross-platform">
+        <div class="card-head"><span class="card-icon">🦋</span><h3>flutter-expert</h3></div>
+        <p class="desc">Flutter / Dart cross-platform specialist.</p>
+        <div class="chips"><span class="chip">flutter</span><span class="chip">dart</span><span class="chip">riverpod</span></div>
+        <button class="card-toggle" aria-expanded="false">Details</button>
+        <div class="card-detail" hidden>
+          <h4>Capabilities</h4><ul>
+            <li>Flutter development with Dart 3 best practices</li>
+            <li>State management with Riverpod, Bloc, and Provider</li>
+            <li>GoRouter and AutoRoute navigation with deep linking</li>
+            <li>Platform channels for native iOS/Android integration</li>
+            <li>Impeller rendering engine optimization</li>
+            <li>Material 3 and Cupertino adaptive widgets; clean architecture</li>
+          </ul>
+          <h4>When to use</h4><ul>
+            <li>Building cross-platform apps with Flutter and Dart</li>
+            <li>Complex state management with Riverpod or Bloc</li>
+            <li>Platform-adaptive UIs that feel native on iOS and Android</li>
+            <li>Optimizing Flutter performance with Impeller</li>
+          </ul>
+          <a class="src" href="https://github.com/zekiyugnak/telar-framework/blob/main/agents/flutter-expert.md">Source ↗</a>
+        </div>
+      </article>
+
+    </div>
+  </section>
+
+  <!-- NATIVE BRIDGES -->
+  <section class="group">
+    <h2 id="native">Native Bridges <span class="gc">2</span></h2>
+    <p class="gdesc">Drop to native Swift/Kotlin when cross-platform APIs aren't enough.</p>
+    <div class="cards">
+
+      <article class="card" data-search="ios-native-bridge ios swift objective-c native-modules cocoapods xcframework keychain healthkit">
+        <div class="card-head"><span class="card-icon">🍎</span><h3>ios-native-bridge</h3></div>
+        <p class="desc">iOS native code for RN/Flutter bridges.</p>
+        <div class="chips"><span class="chip">swift</span><span class="chip">cocoapods</span><span class="chip">xcframework</span></div>
+        <button class="card-toggle" aria-expanded="false">Details</button>
+        <div class="card-detail" hidden>
+          <h4>Capabilities</h4><ul>
+            <li>Swift and Objective-C bridging for React Native and Flutter</li>
+            <li>Native module creation with promises and callbacks</li>
+            <li>CocoaPods and SPM dependency management</li>
+            <li>iOS APIs (Keychain, CoreLocation, HealthKit, Push)</li>
+            <li>XCFramework creation; app lifecycle and background tasks</li>
+          </ul>
+          <h4>When to use</h4><ul>
+            <li>Creating native iOS modules for RN or Flutter</li>
+            <li>iOS-specific features unavailable in cross-platform APIs</li>
+            <li>Integrating third-party iOS SDKs; handling entitlements</li>
+          </ul>
+          <a class="src" href="https://github.com/zekiyugnak/telar-framework/blob/main/agents/ios-native-bridge.md">Source ↗</a>
+        </div>
+      </article>
+
+      <article class="card" data-search="android-native-bridge android kotlin java native-modules gradle aar workmanager fcm">
+        <div class="card-head"><span class="card-icon">🤖</span><h3>android-native-bridge</h3></div>
+        <p class="desc">Android native code for RN/Flutter bridges.</p>
+        <div class="chips"><span class="chip">kotlin</span><span class="chip">gradle</span><span class="chip">aar</span></div>
+        <button class="card-toggle" aria-expanded="false">Details</button>
+        <div class="card-detail" hidden>
+          <h4>Capabilities</h4><ul>
+            <li>Kotlin and Java bridging for React Native and Flutter</li>
+            <li>Native module creation with coroutines and promises</li>
+            <li>Gradle configuration and AAR library creation</li>
+            <li>Android APIs (Keystore, Location, WorkManager, FCM)</li>
+            <li>Lifecycle management, background processing, Play Core</li>
+          </ul>
+          <h4>When to use</h4><ul>
+            <li>Creating native Android modules for RN or Flutter</li>
+            <li>Android-specific features unavailable cross-platform</li>
+            <li>Integrating third-party Android SDKs; runtime permissions</li>
+          </ul>
+          <a class="src" href="https://github.com/zekiyugnak/telar-framework/blob/main/agents/android-native-bridge.md">Source ↗</a>
+        </div>
+      </article>
+
+    </div>
+  </section>
+
+  <!-- ARCHITECTURE -->
+  <section class="group">
+    <h2 id="arch">Architecture <span class="gc">4</span></h2>
+    <p class="gdesc">Navigation, state, backend, and adversarial architecture review.</p>
+    <div class="cards">
+
+      <article class="card" data-search="mobile-navigation-architect navigation deep-linking universal-links app-links routing react-navigation gorouter">
+        <div class="card-head"><span class="card-icon">🧭</span><h3>mobile-navigation-architect</h3></div>
+        <p class="desc">Navigation patterns and deep linking.</p>
+        <div class="chips"><span class="chip">navigation</span><span class="chip">deep-linking</span><span class="chip">routing</span></div>
+        <button class="card-toggle" aria-expanded="false">Details</button>
+        <div class="card-detail" hidden>
+          <h4>Capabilities</h4><ul>
+            <li>Deep linking and universal/app links configuration</li>
+            <li>Complex patterns: tabs, stacks, drawers, modals</li>
+            <li>Auth-flow navigation with protected routes</li>
+            <li>Navigation state persistence and restoration</li>
+            <li>URL-based routing and cross-platform consistency</li>
+          </ul>
+          <h4>When to use</h4><ul>
+            <li>Designing navigation architecture</li>
+            <li>Implementing universal links (iOS) and app links (Android)</li>
+            <li>Nested navigators and protected routes</li>
+          </ul>
+          <a class="src" href="https://github.com/zekiyugnak/telar-framework/blob/main/agents/mobile-navigation-architect.md">Source ↗</a>
+        </div>
+      </article>
+
+      <article class="card" data-search="mobile-state-management redux zustand riverpod bloc react-query persistence">
+        <div class="card-head"><span class="card-icon">🔄</span><h3>mobile-state-management</h3></div>
+        <p class="desc">State management solutions.</p>
+        <div class="chips"><span class="chip">redux</span><span class="chip">zustand</span><span class="chip">react-query</span></div>
+        <button class="card-toggle" aria-expanded="false">Details</button>
+        <div class="card-detail" hidden>
+          <h4>Capabilities</h4><ul>
+            <li>Redux Toolkit with TypeScript and async thunks</li>
+            <li>Zustand and Jotai lightweight state</li>
+            <li>Riverpod and Bloc patterns for Flutter</li>
+            <li>Server state with React Query / TanStack Query</li>
+            <li>Persistence, hydration, optimistic updates</li>
+          </ul>
+          <h4>When to use</h4><ul>
+            <li>Choosing a state management solution</li>
+            <li>Managing server state with caching and revalidation</li>
+            <li>Persisting state across sessions</li>
+          </ul>
+          <a class="src" href="https://github.com/zekiyugnak/telar-framework/blob/main/agents/mobile-state-management.md">Source ↗</a>
+        </div>
+      </article>
+
+      <article class="card" data-search="mobile-backend-architect backend architecture postgresql microservices api-design redis serverless">
+        <div class="card-head"><span class="card-icon">🏗️</span><h3>mobile-backend-architect</h3></div>
+        <p class="desc">Backend architecture for mobile.</p>
+        <div class="chips"><span class="chip">postgresql</span><span class="chip">microservices</span><span class="chip">serverless</span></div>
+        <button class="card-toggle" aria-expanded="false">Details</button>
+        <div class="card-detail" hidden>
+          <h4>Capabilities</h4><ul>
+            <li>Database design with PostgreSQL and MongoDB</li>
+            <li>Microservices architecture for mobile backends</li>
+            <li>RESTful and GraphQL API design</li>
+            <li>Authentication and user management systems</li>
+            <li>Caching with Redis; serverless function architecture</li>
+          </ul>
+          <h4>When to use</h4><ul>
+            <li>Designing backend architecture for mobile apps</li>
+            <li>Creating database schemas and scalable API services</li>
+            <li>Choosing between serverless and traditional backends</li>
+          </ul>
+          <a class="src" href="https://github.com/zekiyugnak/telar-framework/blob/main/agents/mobile-backend-architect.md">Source ↗</a>
+        </div>
+      </article>
+
+      <article class="card" data-search="mobile-architect-adversarial orchestration review architect adversarial multi-agent gate">
+        <div class="card-head"><span class="card-icon">🏛️</span><h3>mobile-architect-adversarial</h3></div>
+        <p class="desc">Adversarial-mode architecture reviewer (Plan + Design gates).</p>
+        <div class="chips"><span class="chip">review</span><span class="chip">adversarial</span><span class="chip">gate</span></div>
+        <button class="card-toggle" aria-expanded="false">Details</button>
+        <div class="card-detail" hidden>
+          <h4>Capabilities</h4><ul>
+            <li>Apply architecture-rubric criteria in adversarial mode</li>
+            <li>Produce binary or APPROVED/NEEDS_REVISION verdicts per gate</li>
+            <li>Cite findings with file:line evidence</li>
+          </ul>
+          <h4>When to use</h4><ul>
+            <li>Spawned by the plan-review gate as the Completeness reviewer</li>
+            <li>Spawned by the design-review gate as the Architect reviewer</li>
+            <li>Explicit request to architect-review a plan or design</li>
+          </ul>
+          <a class="src" href="https://github.com/zekiyugnak/telar-framework/blob/main/agents/mobile-architect-adversarial.md">Source ↗</a>
+        </div>
+      </article>
+
+    </div>
+  </section>
+
+  <!-- UI/UX & DESIGN -->
+  <section class="group">
+    <h2 id="uiux">UI/UX &amp; Design <span class="gc">5</span></h2>
+    <p class="gdesc">Interface, accessibility, motion, design systems, and screen building.</p>
+    <div class="cards">
+
+      <article class="card" data-search="mobile-ui-ux-specialist ui ux design ios-hig material-design responsive gestures dark-mode">
+        <div class="card-head"><span class="card-icon">🎨</span><h3>mobile-ui-ux-specialist</h3></div>
+        <p class="desc">UI/UX design and implementation.</p>
+        <div class="chips"><span class="chip">ios-hig</span><span class="chip">material-design</span><span class="chip">responsive</span></div>
+        <button class="card-toggle" aria-expanded="false">Details</button>
+        <div class="card-detail" hidden>
+          <h4>Capabilities</h4><ul>
+            <li>Platform-specific design (iOS HIG, Material Design)</li>
+            <li>Responsive layouts with safe areas and orientations</li>
+            <li>Gesture handling and haptic feedback</li>
+            <li>Dark mode and dynamic theming</li>
+            <li>Adaptive components and micro-interactions</li>
+          </ul>
+          <h4>When to use</h4><ul>
+            <li>Designing UI that follows platform conventions</li>
+            <li>Responsive layouts for different screen sizes</li>
+            <li>Dark mode support with proper theming</li>
+          </ul>
+          <a class="src" href="https://github.com/zekiyugnak/telar-framework/blob/main/agents/mobile-ui-ux-specialist.md">Source ↗</a>
+        </div>
+      </article>
+
+      <article class="card" data-search="mobile-accessibility-expert accessibility a11y voiceover talkback wcag screen-reader focus">
+        <div class="card-head"><span class="card-icon">♿</span><h3>mobile-accessibility-expert</h3></div>
+        <p class="desc">Accessibility compliance and best practices.</p>
+        <div class="chips"><span class="chip">a11y</span><span class="chip">voiceover</span><span class="chip">wcag</span></div>
+        <button class="card-toggle" aria-expanded="false">Details</button>
+        <div class="card-detail" hidden>
+          <h4>Capabilities</h4><ul>
+            <li>VoiceOver (iOS) and TalkBack (Android) support</li>
+            <li>WCAG 2.1 compliance for mobile applications</li>
+            <li>Semantic accessibility labels and hints</li>
+            <li>Focus management and keyboard navigation</li>
+            <li>Screen reader testing; accessible forms and components</li>
+          </ul>
+          <h4>When to use</h4><ul>
+            <li>Making apps accessible to users with disabilities</li>
+            <li>Testing with VoiceOver and TalkBack</li>
+            <li>Ensuring WCAG compliance</li>
+          </ul>
+          <a class="src" href="https://github.com/zekiyugnak/telar-framework/blob/main/agents/mobile-accessibility-expert.md">Source ↗</a>
+        </div>
+      </article>
+
+      <article class="card" data-search="mobile-animations-specialist animations reanimated lottie transitions gestures spring-physics">
+        <div class="card-head"><span class="card-icon">✨</span><h3>mobile-animations-specialist</h3></div>
+        <p class="desc">Animations and micro-interactions.</p>
+        <div class="chips"><span class="chip">reanimated</span><span class="chip">lottie</span><span class="chip">transitions</span></div>
+        <button class="card-toggle" aria-expanded="false">Details</button>
+        <div class="card-detail" hidden>
+          <h4>Capabilities</h4><ul>
+            <li>React Native Reanimated 3 worklet animations</li>
+            <li>Lottie animations integration</li>
+            <li>Shared element transitions</li>
+            <li>Gesture-driven animations with spring physics</li>
+            <li>Flutter animations; 60fps performance</li>
+          </ul>
+          <h4>When to use</h4><ul>
+            <li>Implementing complex animations</li>
+            <li>Gesture-driven interactions and shared transitions</li>
+            <li>Optimizing animation performance</li>
+          </ul>
+          <a class="src" href="https://github.com/zekiyugnak/telar-framework/blob/main/agents/mobile-animations-specialist.md">Source ↗</a>
+        </div>
+      </article>
+
+      <article class="card" data-search="mobile-design-system-architect design-system design-tokens figma theming dark-mode hig material">
+        <div class="card-head"><span class="card-icon">🖌️</span><h3>mobile-design-system-architect</h3></div>
+        <p class="desc">Design systems, tokens, and theming (DESIGN.md).</p>
+        <div class="chips"><span class="chip">design-tokens</span><span class="chip">figma</span><span class="chip">theming</span></div>
+        <button class="card-toggle" aria-expanded="false">Details</button>
+        <div class="card-detail" hidden>
+          <h4>Capabilities</h4><ul>
+            <li>Generate DESIGN.md from app code or Figma specs</li>
+            <li>Maintain token consistency across iOS and Android</li>
+            <li>Theme structures with dark mode and high contrast</li>
+            <li>Validate accessibility compliance of tokens</li>
+            <li>Integrate tokens with UI component libraries</li>
+          </ul>
+          <h4>When to use</h4><ul>
+            <li>Creating a design system for a new app</li>
+            <li>Migrating to a token-based design system</li>
+            <li>Integrating Figma exports into a codebase</li>
+          </ul>
+          <a class="src" href="https://github.com/zekiyugnak/telar-framework/blob/main/agents/mobile-design-system-architect.md">Source ↗</a>
+        </div>
+      </article>
+
+      <article class="card" data-search="mobile-screen-builder screen-builder iterative scaffolding navigation baton design-tokens verification figma">
+        <div class="card-head"><span class="card-icon">🧱</span><h3>mobile-screen-builder</h3></div>
+        <p class="desc">Spec-to-screen scaffolding with simulator verification.</p>
+        <div class="chips"><span class="chip">scaffolding</span><span class="chip">baton</span><span class="chip">verification</span></div>
+        <button class="card-toggle" aria-expanded="false">Details</button>
+        <div class="card-detail" hidden>
+          <h4>Capabilities</h4><ul>
+            <li>Check REQUIREMENTS.md Design Assets before building</li>
+            <li>Scaffold complete component trees from specs</li>
+            <li>Wire screen navigation with deep linking</li>
+            <li>Verify built screens on simulator between iterations</li>
+            <li>Validate output against DESIGN.md tokens; baton handoff</li>
+          </ul>
+          <h4>When to use</h4><ul>
+            <li>Building a screen or multi-screen flow from a spec</li>
+            <li>Iterative construction with simulator verification</li>
+            <li>Scaffolding screens that follow a design system</li>
+          </ul>
+          <a class="src" href="https://github.com/zekiyugnak/telar-framework/blob/main/agents/mobile-screen-builder.md">Source ↗</a>
+        </div>
+      </article>
+
+    </div>
+  </section>
+
+  <!-- SECURITY -->
+  <section class="group">
+    <h2 id="sec">Security <span class="gc">2</span></h2>
+    <p class="gdesc">Implementation-level hardening and architecture-level security design.</p>
+    <div class="cards">
+
+      <article class="card" data-search="mobile-security-specialist security keychain keystore certificate-pinning jailbreak obfuscation biometric">
+        <div class="card-head"><span class="card-icon">🔐</span><h3>mobile-security-specialist</h3></div>
+        <p class="desc">App security implementation.</p>
+        <div class="chips"><span class="chip">keychain</span><span class="chip">cert-pinning</span><span class="chip">obfuscation</span></div>
+        <button class="card-toggle" aria-expanded="false">Details</button>
+        <div class="card-detail" hidden>
+          <h4>Capabilities</h4><ul>
+            <li>Secure storage with Keychain (iOS) and Keystore (Android)</li>
+            <li>Certificate pinning for network security</li>
+            <li>Jailbreak and root detection</li>
+            <li>Code obfuscation with ProGuard and R8</li>
+            <li>Biometric auth; secure communication and encryption</li>
+          </ul>
+          <h4>When to use</h4><ul>
+            <li>Implementing secure storage for sensitive data</li>
+            <li>Certificate pinning and compromised-device detection</li>
+            <li>Auditing mobile app security</li>
+          </ul>
+          <a class="src" href="https://github.com/zekiyugnak/telar-framework/blob/main/agents/mobile-security-specialist.md">Source ↗</a>
+        </div>
+      </article>
+
+      <article class="card" data-search="mobile-security-architect security owasp encryption pii gdpr compliance threat-modeling">
+        <div class="card-head"><span class="card-icon">🛡️</span><h3>mobile-security-architect</h3></div>
+        <p class="desc">Security architecture design.</p>
+        <div class="chips"><span class="chip">owasp</span><span class="chip">gdpr</span><span class="chip">threat-modeling</span></div>
+        <button class="card-toggle" aria-expanded="false">Details</button>
+        <div class="card-detail" hidden>
+          <h4>Capabilities</h4><ul>
+            <li>OWASP Mobile Security guidelines implementation</li>
+            <li>Secure API design and authentication</li>
+            <li>Data encryption at rest and in transit</li>
+            <li>PII handling; GDPR and CCPA compliance</li>
+            <li>Security audit and penetration testing guidance</li>
+          </ul>
+          <h4>When to use</h4><ul>
+            <li>Designing secure mobile app architecture</li>
+            <li>Ensuring regulatory compliance (GDPR, CCPA)</li>
+            <li>Threat modeling for mobile apps</li>
+          </ul>
+          <a class="src" href="https://github.com/zekiyugnak/telar-framework/blob/main/agents/mobile-security-architect.md">Source ↗</a>
+        </div>
+      </article>
+
+    </div>
+  </section>
+
+  <!-- PERFORMANCE & OFFLINE -->
+  <section class="group">
+    <h2 id="perf">Performance &amp; Offline <span class="gc">2</span></h2>
+    <p class="gdesc">Runtime profiling and offline-first architecture.</p>
+    <div class="cards">
+
+      <article class="card" data-search="mobile-performance-optimizer performance profiling optimization flipper devtools hermes impeller memory">
+        <div class="card-head"><span class="card-icon">🚀</span><h3>mobile-performance-optimizer</h3></div>
+        <p class="desc">Performance profiling and optimization.</p>
+        <div class="chips"><span class="chip">profiling</span><span class="chip">hermes</span><span class="chip">memory</span></div>
+        <button class="card-toggle" aria-expanded="false">Details</button>
+        <div class="card-detail" hidden>
+          <h4>Capabilities</h4><ul>
+            <li>Profiling with Flipper and Flutter DevTools</li>
+            <li>FlatList/ListView optimization for large datasets</li>
+            <li>Image caching and lazy loading strategies</li>
+            <li>Bundle size reduction and code splitting</li>
+            <li>Startup optimization; memory leak detection</li>
+          </ul>
+          <h4>When to use</h4><ul>
+            <li>Profiling performance bottlenecks</li>
+            <li>Optimizing list rendering for 60fps scrolling</li>
+            <li>Reducing startup time and bundle size</li>
+          </ul>
+          <a class="src" href="https://github.com/zekiyugnak/telar-framework/blob/main/agents/mobile-performance-optimizer.md">Source ↗</a>
+        </div>
+      </article>
+
+      <article class="card" data-search="mobile-offline-architect offline sync local-database conflict-resolution optimistic-updates background-sync">
+        <div class="card-head"><span class="card-icon">📴</span><h3>mobile-offline-architect</h3></div>
+        <p class="desc">Offline-first architecture.</p>
+        <div class="chips"><span class="chip">sync</span><span class="chip">conflict-resolution</span><span class="chip">local-first</span></div>
+        <button class="card-toggle" aria-expanded="false">Details</button>
+        <div class="card-detail" hidden>
+          <h4>Capabilities</h4><ul>
+            <li>Local-first architecture with offline support</li>
+            <li>Database synchronization and conflict resolution</li>
+            <li>Optimistic updates with rollback handling</li>
+            <li>Background sync with queue management</li>
+            <li>Connectivity detection; retry strategies</li>
+          </ul>
+          <h4>When to use</h4><ul>
+            <li>Building apps that work offline</li>
+            <li>Data synchronization between local and remote</li>
+            <li>Conflict resolution for concurrent edits</li>
+          </ul>
+          <a class="src" href="https://github.com/zekiyugnak/telar-framework/blob/main/agents/mobile-offline-architect.md">Source ↗</a>
+        </div>
+      </article>
+
+    </div>
+  </section>
+
+  <!-- CI/CD & RELEASE -->
+  <section class="group">
+    <h2 id="release">CI/CD &amp; Release <span class="gc">4</span></h2>
+    <p class="gdesc">Build automation, code signing, OTA updates, and release orchestration.</p>
+    <div class="cards">
+
+      <article class="card" data-search="mobile-cicd-engineer cicd github-actions bitrise codemagic fastlane eas-build automation">
+        <div class="card-head"><span class="card-icon">⚙️</span><h3>mobile-cicd-engineer</h3></div>
+        <p class="desc">CI/CD pipeline setup and maintenance.</p>
+        <div class="chips"><span class="chip">github-actions</span><span class="chip">fastlane</span><span class="chip">eas-build</span></div>
+        <button class="card-toggle" aria-expanded="false">Details</button>
+        <div class="card-detail" hidden>
+          <h4>Capabilities</h4><ul>
+            <li>GitHub Actions workflow configuration for mobile</li>
+            <li>Bitrise and Codemagic pipeline setup</li>
+            <li>Fastlane automation for build and deploy</li>
+            <li>EAS Build configuration for Expo apps</li>
+            <li>Automated testing in CI; secrets management</li>
+          </ul>
+          <h4>When to use</h4><ul>
+            <li>Setting up CI/CD pipelines</li>
+            <li>Automating iOS and Android builds</li>
+            <li>Managing code signing in CI environments</li>
+          </ul>
+          <a class="src" href="https://github.com/zekiyugnak/telar-framework/blob/main/agents/mobile-cicd-engineer.md">Source ↗</a>
+        </div>
+      </article>
+
+      <article class="card" data-search="mobile-release-manager release versioning changelog rollout feature-flags crash-monitoring ab-testing">
+        <div class="card-head"><span class="card-icon">📦</span><h3>mobile-release-manager</h3></div>
+        <p class="desc">Release orchestration and versioning.</p>
+        <div class="chips"><span class="chip">versioning</span><span class="chip">rollout</span><span class="chip">feature-flags</span></div>
+        <button class="card-toggle" aria-expanded="false">Details</button>
+        <div class="card-detail" hidden>
+          <h4>Capabilities</h4><ul>
+            <li>Semantic versioning for mobile apps</li>
+            <li>Changelog generation and release notes</li>
+            <li>Phased rollouts and release strategies</li>
+            <li>Feature flags for gradual rollout; A/B testing</li>
+            <li>Crash monitoring and release health</li>
+          </ul>
+          <h4>When to use</h4><ul>
+            <li>Planning and executing releases</li>
+            <li>Phased rollout strategies and feature flags</li>
+            <li>Coordinating cross-platform releases</li>
+          </ul>
+          <a class="src" href="https://github.com/zekiyugnak/telar-framework/blob/main/agents/mobile-release-manager.md">Source ↗</a>
+        </div>
+      </article>
+
+      <article class="card" data-search="mobile-code-signing-expert code-signing certificates provisioning-profiles keystore fastlane-match entitlements">
+        <div class="card-head"><span class="card-icon">🔑</span><h3>mobile-code-signing-expert</h3></div>
+        <p class="desc">Code signing and certificates.</p>
+        <div class="chips"><span class="chip">certificates</span><span class="chip">keystore</span><span class="chip">fastlane-match</span></div>
+        <button class="card-toggle" aria-expanded="false">Details</button>
+        <div class="card-detail" hidden>
+          <h4>Capabilities</h4><ul>
+            <li>iOS certificates and provisioning profiles</li>
+            <li>Android keystore creation and management</li>
+            <li>Fastlane Match for team certificate sharing</li>
+            <li>Entitlements configuration for iOS capabilities</li>
+            <li>Play App Signing; CI/CD signing automation</li>
+          </ul>
+          <h4>When to use</h4><ul>
+            <li>Setting up code signing for iOS and Android</li>
+            <li>Sharing certificates across a team</li>
+            <li>Troubleshooting signing issues</li>
+          </ul>
+          <a class="src" href="https://github.com/zekiyugnak/telar-framework/blob/main/agents/mobile-code-signing-expert.md">Source ↗</a>
+        </div>
+      </article>
+
+      <article class="card" data-search="mobile-ota-updates-specialist ota codepush expo-updates shorebird hot-reload version-management rollback">
+        <div class="card-head"><span class="card-icon">📲</span><h3>mobile-ota-updates-specialist</h3></div>
+        <p class="desc">OTA updates (CodePush, Expo Updates, Shorebird).</p>
+        <div class="chips"><span class="chip">codepush</span><span class="chip">expo-updates</span><span class="chip">shorebird</span></div>
+        <button class="card-toggle" aria-expanded="false">Details</button>
+        <div class="card-detail" hidden>
+          <h4>Capabilities</h4><ul>
+            <li>CodePush configuration and deployment</li>
+            <li>Expo Updates for managed workflow</li>
+            <li>Shorebird for Flutter apps</li>
+            <li>OTA policies; version management and rollback</li>
+            <li>Update monitoring and analytics</li>
+          </ul>
+          <h4>When to use</h4><ul>
+            <li>Setting up over-the-air updates</li>
+            <li>Deploying JS/Dart bundle updates with rollback</li>
+            <li>Deciding between OTA vs store updates</li>
+          </ul>
+          <a class="src" href="https://github.com/zekiyugnak/telar-framework/blob/main/agents/mobile-ota-updates-specialist.md">Source ↗</a>
+        </div>
+      </article>
+
+    </div>
+  </section>
+
+  <!-- APP STORES -->
+  <section class="group">
+    <h2 id="stores">App Stores <span class="gc">2</span></h2>
+    <p class="gdesc">Submission, review compliance, and store-specific policies.</p>
+    <div class="cards">
+
+      <article class="card" data-search="ios-app-store-specialist app-store testflight app-review metadata screenshots in-app-purchase subscriptions">
+        <div class="card-head"><span class="card-icon">🍏</span><h3>ios-app-store-specialist</h3></div>
+        <p class="desc">App Store submission and compliance.</p>
+        <div class="chips"><span class="chip">testflight</span><span class="chip">app-review</span><span class="chip">aso</span></div>
+        <button class="card-toggle" aria-expanded="false">Details</button>
+        <div class="card-detail" hidden>
+          <h4>Capabilities</h4><ul>
+            <li>App Store Connect configuration and management</li>
+            <li>TestFlight beta distribution setup</li>
+            <li>App review guidelines compliance</li>
+            <li>Metadata and screenshot optimization</li>
+            <li>In-app purchases, subscriptions, and App Clips</li>
+          </ul>
+          <h4>When to use</h4><ul>
+            <li>Submitting apps to the App Store</li>
+            <li>Handling App Store review rejections</li>
+            <li>Optimizing listing and ASO</li>
+          </ul>
+          <a class="src" href="https://github.com/zekiyugnak/telar-framework/blob/main/agents/ios-app-store-specialist.md">Source ↗</a>
+        </div>
+      </article>
+
+      <article class="card" data-search="google-play-specialist google-play play-console android testing-tracks data-safety app-bundle play-integrity">
+        <div class="card-head"><span class="card-icon">▶️</span><h3>google-play-specialist</h3></div>
+        <p class="desc">Play Store submission and policies.</p>
+        <div class="chips"><span class="chip">play-console</span><span class="chip">data-safety</span><span class="chip">app-bundle</span></div>
+        <button class="card-toggle" aria-expanded="false">Details</button>
+        <div class="card-detail" hidden>
+          <h4>Capabilities</h4><ul>
+            <li>Play Console configuration and management</li>
+            <li>Internal, closed, and open testing tracks</li>
+            <li>Staged rollouts and release management</li>
+            <li>Play Store policies compliance; data safety section</li>
+            <li>Android App Bundle optimization; Play Integrity API</li>
+          </ul>
+          <h4>When to use</h4><ul>
+            <li>Publishing apps to Google Play</li>
+            <li>Setting up testing tracks for beta distribution</li>
+            <li>Handling policy violations and data safety</li>
+          </ul>
+          <a class="src" href="https://github.com/zekiyugnak/telar-framework/blob/main/agents/google-play-specialist.md">Source ↗</a>
+        </div>
+      </article>
+
+    </div>
+  </section>
+
+  <!-- TESTING -->
+  <section class="group">
+    <h2 id="test">Testing <span class="gc">4</span></h2>
+    <p class="gdesc">Unit, E2E, real-device, and performance testing.</p>
+    <div class="cards">
+
+      <article class="card" data-search="mobile-unit-testing-expert testing jest react-native-testing-library flutter-test mocking snapshot coverage">
+        <div class="card-head"><span class="card-icon">🧪</span><h3>mobile-unit-testing-expert</h3></div>
+        <p class="desc">Unit testing strategies.</p>
+        <div class="chips"><span class="chip">jest</span><span class="chip">flutter-test</span><span class="chip">coverage</span></div>
+        <button class="card-toggle" aria-expanded="false">Details</button>
+        <div class="card-detail" hidden>
+          <h4>Capabilities</h4><ul>
+            <li>Jest configuration for React Native</li>
+            <li>React Native Testing Library patterns</li>
+            <li>Flutter widget testing with flutter_test</li>
+            <li>Mocking native modules and APIs</li>
+            <li>Snapshot testing; coverage reporting</li>
+          </ul>
+          <h4>When to use</h4><ul>
+            <li>Setting up unit testing</li>
+            <li>Writing component and widget tests</li>
+            <li>Improving test coverage</li>
+          </ul>
+          <a class="src" href="https://github.com/zekiyugnak/telar-framework/blob/main/agents/mobile-unit-testing-expert.md">Source ↗</a>
+        </div>
+      </article>
+
+      <article class="card" data-search="mobile-e2e-testing-expert e2e detox maestro appium integration-testing visual-regression">
+        <div class="card-head"><span class="card-icon">🎯</span><h3>mobile-e2e-testing-expert</h3></div>
+        <p class="desc">E2E testing with Detox / Maestro.</p>
+        <div class="chips"><span class="chip">detox</span><span class="chip">maestro</span><span class="chip">appium</span></div>
+        <button class="card-toggle" aria-expanded="false">Details</button>
+        <div class="card-detail" hidden>
+          <h4>Capabilities</h4><ul>
+            <li>Detox E2E testing for React Native</li>
+            <li>Maestro UI testing framework</li>
+            <li>Appium cross-platform testing</li>
+            <li>Flutter integration testing</li>
+            <li>CI/CD integration; visual regression testing</li>
+          </ul>
+          <h4>When to use</h4><ul>
+            <li>Setting up E2E testing</li>
+            <li>Writing automated UI tests</li>
+            <li>Debugging flaky E2E tests</li>
+          </ul>
+          <a class="src" href="https://github.com/zekiyugnak/telar-framework/blob/main/agents/mobile-e2e-testing-expert.md">Source ↗</a>
+        </div>
+      </article>
+
+      <article class="card" data-search="mobile-device-testing device-testing device-farm firebase-test-lab browserstack real-devices parallel-testing">
+        <div class="card-head"><span class="card-icon">📱</span><h3>mobile-device-testing</h3></div>
+        <p class="desc">Device testing and compatibility.</p>
+        <div class="chips"><span class="chip">device-farm</span><span class="chip">firebase-test-lab</span><span class="chip">browserstack</span></div>
+        <button class="card-toggle" aria-expanded="false">Details</button>
+        <div class="card-detail" hidden>
+          <h4>Capabilities</h4><ul>
+            <li>AWS Device Farm configuration</li>
+            <li>Firebase Test Lab setup</li>
+            <li>BrowserStack App Automate</li>
+            <li>Real device testing strategies; device matrices</li>
+            <li>Parallel test execution</li>
+          </ul>
+          <h4>When to use</h4><ul>
+            <li>Cloud device testing infrastructure</li>
+            <li>Running tests on real devices at scale</li>
+            <li>Debugging device-specific issues</li>
+          </ul>
+          <a class="src" href="https://github.com/zekiyugnak/telar-framework/blob/main/agents/mobile-device-testing.md">Source ↗</a>
+        </div>
+      </article>
+
+      <article class="card" data-search="mobile-performance-testing performance-testing load-testing profiling benchmarks memory-leaks startup-time">
+        <div class="card-head"><span class="card-icon">📊</span><h3>mobile-performance-testing</h3></div>
+        <p class="desc">Performance benchmarking.</p>
+        <div class="chips"><span class="chip">load-testing</span><span class="chip">benchmarks</span><span class="chip">startup-time</span></div>
+        <button class="card-toggle" aria-expanded="false">Details</button>
+        <div class="card-detail" hidden>
+          <h4>Capabilities</h4><ul>
+            <li>Load testing for mobile backends</li>
+            <li>Performance profiling automation</li>
+            <li>Benchmark suite implementation</li>
+            <li>Memory leak detection; startup time measurement</li>
+            <li>Battery and resource usage testing</li>
+          </ul>
+          <h4>When to use</h4><ul>
+            <li>Setting up performance testing</li>
+            <li>Creating automated benchmark suites</li>
+            <li>Testing app performance under load</li>
+          </ul>
+          <a class="src" href="https://github.com/zekiyugnak/telar-framework/blob/main/agents/mobile-performance-testing.md">Source ↗</a>
+        </div>
+      </article>
+
+    </div>
+  </section>
+
+  <!-- BACKEND & DATA -->
+  <section class="group">
+    <h2 id="backend">Backend &amp; Data <span class="gc">5</span></h2>
+    <p class="gdesc">Supabase, API integration, push, auth, and local storage.</p>
+    <div class="cards">
+
+      <article class="card" data-search="supabase-expert supabase postgresql rls auth edge-functions storage realtime">
+        <div class="card-head"><span class="card-icon">⚡</span><h3>supabase-expert</h3></div>
+        <p class="desc">Supabase backend integration.</p>
+        <div class="chips"><span class="chip">rls</span><span class="chip">edge-functions</span><span class="chip">realtime</span></div>
+        <button class="card-toggle" aria-expanded="false">Details</button>
+        <div class="card-detail" hidden>
+          <h4>Capabilities</h4><ul>
+            <li>Supabase project setup and configuration</li>
+            <li>Row Level Security (RLS) policy design</li>
+            <li>Supabase Auth with social providers</li>
+            <li>Edge Functions development with Deno</li>
+            <li>Storage and realtime subscriptions/presence</li>
+          </ul>
+          <h4>When to use</h4><ul>
+            <li>Building mobile apps with a Supabase backend</li>
+            <li>Designing secure RLS policies</li>
+            <li>Adding realtime features</li>
+          </ul>
+          <a class="src" href="https://github.com/zekiyugnak/telar-framework/blob/main/agents/supabase-expert.md">Source ↗</a>
+        </div>
+      </article>
+
+      <article class="card" data-search="mobile-api-integration api rest graphql axios apollo dio interceptors caching">
+        <div class="card-head"><span class="card-icon">🔌</span><h3>mobile-api-integration</h3></div>
+        <p class="desc">API integration and networking.</p>
+        <div class="chips"><span class="chip">rest</span><span class="chip">graphql</span><span class="chip">apollo</span></div>
+        <button class="card-toggle" aria-expanded="false">Details</button>
+        <div class="card-detail" hidden>
+          <h4>Capabilities</h4><ul>
+            <li>REST API integration with axios and fetch</li>
+            <li>GraphQL client setup with Apollo</li>
+            <li>API interceptors for auth and logging</li>
+            <li>Request caching and offline queueing</li>
+            <li>Error handling, retry logic, type safety</li>
+          </ul>
+          <h4>When to use</h4><ul>
+            <li>Setting up API clients</li>
+            <li>Implementing GraphQL with Apollo Client</li>
+            <li>Offline request queuing</li>
+          </ul>
+          <a class="src" href="https://github.com/zekiyugnak/telar-framework/blob/main/agents/mobile-api-integration.md">Source ↗</a>
+        </div>
+      </article>
+
+      <article class="card" data-search="mobile-push-notifications push-notifications apns fcm onesignal expo-notifications deep-linking rich-notifications">
+        <div class="card-head"><span class="card-icon">🔔</span><h3>mobile-push-notifications</h3></div>
+        <p class="desc">Push notification implementation.</p>
+        <div class="chips"><span class="chip">apns</span><span class="chip">fcm</span><span class="chip">onesignal</span></div>
+        <button class="card-toggle" aria-expanded="false">Details</button>
+        <div class="card-detail" hidden>
+          <h4>Capabilities</h4><ul>
+            <li>APNs (iOS) and FCM (Android) setup</li>
+            <li>OneSignal integration</li>
+            <li>Expo Notifications configuration</li>
+            <li>Rich notifications with images and actions</li>
+            <li>Notification categories; deep linking</li>
+          </ul>
+          <h4>When to use</h4><ul>
+            <li>Setting up push notifications</li>
+            <li>Cross-platform push with OneSignal</li>
+            <li>Handling notification deep links</li>
+          </ul>
+          <a class="src" href="https://github.com/zekiyugnak/telar-framework/blob/main/agents/mobile-push-notifications.md">Source ↗</a>
+        </div>
+      </article>
+
+      <article class="card" data-search="mobile-auth-specialist authentication oauth oidc social-login biometric jwt sso webauthn">
+        <div class="card-head"><span class="card-icon">🔓</span><h3>mobile-auth-specialist</h3></div>
+        <p class="desc">Authentication flows.</p>
+        <div class="chips"><span class="chip">oauth</span><span class="chip">biometric</span><span class="chip">jwt</span></div>
+        <button class="card-toggle" aria-expanded="false">Details</button>
+        <div class="card-detail" hidden>
+          <h4>Capabilities</h4><ul>
+            <li>OAuth 2.0 and OIDC implementation</li>
+            <li>Social login (Google, Apple, Facebook)</li>
+            <li>Biometric authentication (Face ID, Touch ID, fingerprint)</li>
+            <li>JWT token management and refresh flows</li>
+            <li>SSO integration; secure token storage</li>
+          </ul>
+          <h4>When to use</h4><ul>
+            <li>Implementing authentication flows</li>
+            <li>Adding social login providers</li>
+            <li>Managing JWT tokens and refresh logic</li>
+          </ul>
+          <a class="src" href="https://github.com/zekiyugnak/telar-framework/blob/main/agents/mobile-auth-specialist.md">Source ↗</a>
+        </div>
+      </article>
+
+      <article class="card" data-search="mobile-storage-specialist storage asyncstorage mmkv sqlite realm hive watermelondb encryption">
+        <div class="card-head"><span class="card-icon">💾</span><h3>mobile-storage-specialist</h3></div>
+        <p class="desc">Local storage and persistence.</p>
+        <div class="chips"><span class="chip">sqlite</span><span class="chip">mmkv</span><span class="chip">realm</span></div>
+        <button class="card-toggle" aria-expanded="false">Details</button>
+        <div class="card-detail" hidden>
+          <h4>Capabilities</h4><ul>
+            <li>AsyncStorage and MMKV for key-value storage</li>
+            <li>SQLite and Realm for relational data</li>
+            <li>WatermelonDB for large datasets; Hive for Flutter</li>
+            <li>Encrypted storage implementation</li>
+            <li>Database migration strategies</li>
+          </ul>
+          <h4>When to use</h4><ul>
+            <li>Choosing a local storage solution</li>
+            <li>Implementing SQLite/Realm/WatermelonDB</li>
+            <li>Managing schema migrations</li>
+          </ul>
+          <a class="src" href="https://github.com/zekiyugnak/telar-framework/blob/main/agents/mobile-storage-specialist.md">Source ↗</a>
+        </div>
+      </article>
+
+    </div>
+  </section>
+
+  <!-- AI & ADVANCED -->
+  <section class="group">
+    <h2 id="ai">AI &amp; Advanced <span class="gc">3</span></h2>
+    <p class="gdesc">On-device and cloud AI, AR/VR, and realtime communication.</p>
+    <div class="cards">
+
+      <article class="card" data-search="mobile-ai-integration ai openai claude gemini ml text-to-speech coreml ml-kit">
+        <div class="card-head"><span class="card-icon">🤖</span><h3>mobile-ai-integration</h3></div>
+        <p class="desc">AI/ML integration in mobile apps.</p>
+        <div class="chips"><span class="chip">openai</span><span class="chip">coreml</span><span class="chip">ml-kit</span></div>
+        <button class="card-toggle" aria-expanded="false">Details</button>
+        <div class="card-detail" hidden>
+          <h4>Capabilities</h4><ul>
+            <li>OpenAI, Claude, and Gemini API integration</li>
+            <li>Streaming responses for chat interfaces</li>
+            <li>Image generation (DALL-E, Stable Diffusion)</li>
+            <li>Text-to-speech and speech-to-text</li>
+            <li>On-device ML with CoreML and ML Kit</li>
+          </ul>
+          <h4>When to use</h4><ul>
+            <li>Integrating AI/ML capabilities</li>
+            <li>Chat interfaces with streaming</li>
+            <li>On-device ML inference</li>
+          </ul>
+          <a class="src" href="https://github.com/zekiyugnak/telar-framework/blob/main/agents/mobile-ai-integration.md">Source ↗</a>
+        </div>
+      </article>
+
+      <article class="card" data-search="mobile-ar-vr-specialist ar vr arkit arcore reality-kit webxr 3d spatial-tracking">
+        <div class="card-head"><span class="card-icon">👓</span><h3>mobile-ar-vr-specialist</h3></div>
+        <p class="desc">AR/VR experiences.</p>
+        <div class="chips"><span class="chip">arkit</span><span class="chip">arcore</span><span class="chip">3d</span></div>
+        <button class="card-toggle" aria-expanded="false">Details</button>
+        <div class="card-detail" hidden>
+          <h4>Capabilities</h4><ul>
+            <li>ARKit and ARCore implementation</li>
+            <li>RealityKit for iOS AR experiences</li>
+            <li>AR Foundation for cross-platform AR</li>
+            <li>3D object rendering and placement</li>
+            <li>Plane detection, world anchors, face tracking</li>
+          </ul>
+          <h4>When to use</h4><ul>
+            <li>Building AR features</li>
+            <li>3D object placement and face filters</li>
+            <li>Integrating AR with e-commerce</li>
+          </ul>
+          <a class="src" href="https://github.com/zekiyugnak/telar-framework/blob/main/agents/mobile-ar-vr-specialist.md">Source ↗</a>
+        </div>
+      </article>
+
+      <article class="card" data-search="mobile-realtime-specialist realtime websockets socket-io supabase-realtime mqtt streaming presence">
+        <div class="card-head"><span class="card-icon">⏱️</span><h3>mobile-realtime-specialist</h3></div>
+        <p class="desc">Real-time communication.</p>
+        <div class="chips"><span class="chip">websockets</span><span class="chip">mqtt</span><span class="chip">presence</span></div>
+        <button class="card-toggle" aria-expanded="false">Details</button>
+        <div class="card-detail" hidden>
+          <h4>Capabilities</h4><ul>
+            <li>WebSocket implementation for mobile</li>
+            <li>Socket.io client integration</li>
+            <li>Supabase Realtime subscriptions</li>
+            <li>MQTT for IoT applications</li>
+            <li>Live streaming, chat, presence/typing status</li>
+          </ul>
+          <h4>When to use</h4><ul>
+            <li>Building real-time features</li>
+            <li>Chat and messaging systems</li>
+            <li>Presence and online status</li>
+          </ul>
+          <a class="src" href="https://github.com/zekiyugnak/telar-framework/blob/main/agents/mobile-realtime-specialist.md">Source ↗</a>
+        </div>
+      </article>
+
+    </div>
+  </section>
+
+  <!-- WEB & SERVICE -->
+  <section class="group">
+    <h2 id="web">Web &amp; Service Layer <span class="gc">4</span></h2>
+    <p class="gdesc">A companion web stack (Astro, Next.js, Vite/TanStack) and a Rust backend service layer alongside the mobile agents.</p>
+    <div class="cards">
+
+      <article class="card" data-search="astro-web-expert astro ssg seo og content-collections islands marketing careers web">
+        <div class="card-head"><span class="card-icon">🚀</span><h3>astro-web-expert</h3></div>
+        <p class="desc">Astro specialist for public marketing/careers sites — SEO, OG, and islands.</p>
+        <div class="chips"><span class="chip">astro</span><span class="chip">seo</span><span class="chip">islands</span></div>
+        <button class="card-toggle" aria-expanded="false">Details</button>
+        <div class="card-detail" hidden>
+          <h4>Capabilities</h4><ul>
+            <li>Static-first architecture with selective per-route on-demand rendering</li>
+            <li>Content Collections with Zod schemas for type-safe structured content</li>
+            <li>Islands architecture with deliberate, minimal client-side hydration</li>
+            <li>Open Graph/SEO metadata and JSON-LD structured data setup</li>
+            <li>Multi-locale routing for international candidate-acquisition funnels</li>
+          </ul>
+          <h4>When to use</h4><ul>
+            <li>Building a public marketing or careers/candidate-acquisition site with Astro</li>
+            <li>Auditing SEO and Open Graph correctness across pages</li>
+            <li>Setting up Content Collections for job listings, blog posts, or team bios</li>
+          </ul>
+          <a class="src" href="https://github.com/zekiyugnak/telar-framework/blob/main/agents/astro-web-expert.md">Source ↗</a>
+        </div>
+      </article>
+
+      <article class="card" data-search="nextjs-web-expert nextjs next.js react tailwind shadcn app-router server-actions console web">
+        <div class="card-head"><span class="card-icon">▲</span><h3>nextjs-web-expert</h3></div>
+        <p class="desc">Next.js + Tailwind + shadcn specialist for authenticated client consoles.</p>
+        <div class="chips"><span class="chip">nextjs</span><span class="chip">shadcn</span><span class="chip">app-router</span></div>
+        <button class="card-toggle" aria-expanded="false">Details</button>
+        <div class="card-detail" hidden>
+          <h4>Capabilities</h4><ul>
+            <li>App Router architecture for authenticated internal/company consoles</li>
+            <li>Server vs Client Component boundaries in data-heavy dashboards</li>
+            <li>Server Actions and Route Handlers for console mutations</li>
+            <li>shadcn/ui + Tailwind design systems; middleware-based route protection</li>
+            <li>Type-safe forms with react-hook-form, zod, and Server Actions</li>
+          </ul>
+          <h4>When to use</h4><ul>
+            <li>Building a new authenticated "firma konsolu" (company dashboard)</li>
+            <li>Deciding the Server/Client Component line in a dashboard page</li>
+            <li>Diagnosing stale dashboard data after a mutation</li>
+          </ul>
+          <a class="src" href="https://github.com/zekiyugnak/telar-framework/blob/main/agents/nextjs-web-expert.md">Source ↗</a>
+        </div>
+      </article>
+
+      <article class="card" data-search="admin-panel-architect vite tanstack-router tanstack-query supabase admin-panel rtl i18n operator web">
+        <div class="card-head"><span class="card-icon">🎛️</span><h3>admin-panel-architect</h3></div>
+        <p class="desc">Vite + React 19 + TanStack + Supabase RLS specialist for operator panels.</p>
+        <div class="chips"><span class="chip">tanstack</span><span class="chip">supabase-rls</span><span class="chip">rtl</span></div>
+        <button class="card-toggle" aria-expanded="false">Details</button>
+        <div class="card-detail" hidden>
+          <h4>Capabilities</h4><ul>
+            <li>Vite + React 19 + TypeScript architecture for internal admin/operator panels</li>
+            <li>TanStack Router/Query/Table wiring against Supabase (anon key + RLS only)</li>
+            <li>Supabase Storage TUS resumable uploads for large operator-facing media</li>
+            <li>Bilingual (TR/EN) i18n and RTL-readiness planning</li>
+            <li>Static SPA deployment topology for EU CDN hosting (no SSR, no server secrets)</li>
+          </ul>
+          <h4>When to use</h4><ul>
+            <li>Scaffolding a new internal admin/operator panel on this exact stack</li>
+            <li>Deciding how authorization is enforced when the client only holds an anon key</li>
+            <li>Reviewing whether a pattern leaks trust to the client in a service-role-free stack</li>
+          </ul>
+          <a class="src" href="https://github.com/zekiyugnak/telar-framework/blob/main/agents/admin-panel-architect.md">Source ↗</a>
+        </div>
+      </article>
+
+      <article class="card" data-search="rust-service-architect rust axum tokio sqlx backend service api postgres">
+        <div class="card-head"><span class="card-icon">🦀</span><h3>rust-service-architect</h3></div>
+        <p class="desc">Rust backend service specialist — axum, tokio, sqlx.</p>
+        <div class="chips"><span class="chip">axum</span><span class="chip">tokio</span><span class="chip">sqlx</span></div>
+        <button class="card-toggle" aria-expanded="false">Details</button>
+        <div class="card-detail" hidden>
+          <h4>Capabilities</h4><ul>
+            <li>Rust backend service architecture using axum, tokio, and sqlx</li>
+            <li>Project layering (routes/handlers/services/repositories, AppState sharing)</li>
+            <li>Error handling strategy with thiserror and IntoResponse mapping</li>
+            <li>Auth boundary design (extractors vs middleware); connection pool sizing</li>
+            <li>Observability, containerization, and graceful shutdown strategy</li>
+          </ul>
+          <h4>When to use</h4><ul>
+            <li>Standing up a new Rust backend service for mobile and/or web clients</li>
+            <li>Choosing between axum/actix-web, sqlx/diesel, or tasks/queues</li>
+            <li>Investigating stalled async runtime, exhausted DB pool, or ungraceful shutdown</li>
+          </ul>
+          <a class="src" href="https://github.com/zekiyugnak/telar-framework/blob/main/agents/rust-service-architect.md">Source ↗</a>
+        </div>
+      </article>
+
+    </div>
+  </section>
+
+  <!-- ORCHESTRATION & KNOWLEDGE -->
+  <section class="group">
+    <h2 id="orch">Orchestration &amp; Knowledge <span class="gc">2</span></h2>
+    <p class="gdesc">The lifecycle owner and the knowledge-base curator.</p>
+    <div class="cards">
+
+      <article class="card" data-search="mobile-orchestrator orchestration lifecycle multi-agent top-level pipeline work-unit">
+        <div class="card-head"><span class="card-icon">🎼</span><h3>mobile-orchestrator</h3></div>
+        <p class="desc">End-to-end orchestrated execution: gates, WU DAG, 4-phase loop.</p>
+        <div class="chips"><span class="chip">lifecycle</span><span class="chip">multi-agent</span><span class="chip">pipeline</span></div>
+        <button class="card-toggle" aria-expanded="false">Details</button>
+        <div class="card-detail" hidden>
+          <h4>Capabilities</h4><ul>
+            <li>Boot probe: ensure .tl-telar/ skeleton + thresholds exist</li>
+            <li>Capture the request and produce a Work Unit decomposition</li>
+            <li>Invoke the plan-review gate before decomposition</li>
+            <li>Drive each WU through the orchestrated-execution loop</li>
+            <li>Track state; surface escalations with structured options</li>
+          </ul>
+          <h4>When to use</h4><ul>
+            <li>Invoking <code>/tl-telar:orchestrate &lt;task&gt;</code></li>
+            <li>Requesting "orchestrated mode" or the full pipeline</li>
+          </ul>
+          <a class="src" href="https://github.com/zekiyugnak/telar-framework/blob/main/agents/mobile-orchestrator.md">Source ↗</a>
+        </div>
+      </article>
+
+      <article class="card" data-search="mobile-knowledge-curator orchestration knowledge-base curation periodic dedup confidence staleness">
+        <div class="card-head"><span class="card-icon">📚</span><h3>mobile-knowledge-curator</h3></div>
+        <p class="desc">KB curation: dedup, confidence promotion, staleness sweep.</p>
+        <div class="chips"><span class="chip">knowledge-base</span><span class="chip">curation</span><span class="chip">dedup</span></div>
+        <button class="card-toggle" aria-expanded="false">Details</button>
+        <div class="card-detail" hidden>
+          <h4>Capabilities</h4><ul>
+            <li>Dedup near-duplicate facts by merging provenance</li>
+            <li>Promote confidence medium→high on 3+ provenance</li>
+            <li>Mark facts stale when contradicted</li>
+            <li>Generate weekly maintenance report</li>
+          </ul>
+          <h4>When to use</h4><ul>
+            <li>Periodic knowledge-base maintenance</li>
+            <li>When the KB grows beyond ~100 facts since last curation</li>
+          </ul>
+          <a class="src" href="https://github.com/zekiyugnak/telar-framework/blob/main/agents/mobile-knowledge-curator.md">Source ↗</a>
+        </div>
+      </article>
+
+    </div>
+  </section>
+
+  <p class="empty" id="empty" hidden>No agents match your filter.</p>
+</main>
+
+<footer><div class="wrap fl">
+  <span>Telar v0.5.0 — MIT © 2026 Zeki Yugnak</span>
+  <span><a href="https://github.com/zekiyugnak/telar-framework/tree/main/agents">All agents on GitHub</a> · <a href="index.html">Docs home</a></span>
+</div></footer>
+
+<script src="assets/telar.js"></script>
+</body>
+</html>

@@ -1,0 +1,1471 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Skills — Telar</title>
+<meta name="description" content="The reference skill modules in Telar, grouped by domain.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;650;800;850&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/telar.css">
+</head>
+<body>
+
+<header class="nav"><div class="wrap nav-inner">
+  <a class="brand" href="index.html"><span class="dot"></span> Telar</a>
+  <button class="nav-toggle" aria-label="Menu">☰</button>
+  <nav class="nav-links">
+    <a href="getting-started.html">Getting Started</a>
+    <a href="agents.html">Agents</a>
+    <a href="commands.html">Commands</a>
+    <a href="skills.html">Skills</a>
+    <a href="rules.html">Rules</a>
+    <a href="orchestration.html">Orchestration</a>
+    <a href="configuration.html">Configuration</a>
+    <a href="examples.html">Examples</a>
+    <a class="nav-gh" href="https://github.com/zekiyugnak/telar-framework">GitHub ↗</a>
+  </nav>
+</div></header>
+
+<main class="wrap">
+  <div class="page-title">
+    <span class="eyebrow">Reference</span>
+    <h1>Skills</h1>
+    <p>Reusable reference modules that encode mobile expertise — patterns, decision frameworks, and ready-to-use blueprints. Expand a card for its capabilities and source.</p>
+  </div>
+
+  <div class="filter-bar">
+    <input id="filter" type="search" placeholder="Filter skills by name, tag, or capability…" autocomplete="off">
+    <div class="filter-meta" id="filter-meta"></div>
+  </div>
+
+  <nav class="subnav">
+    <a href="#rn">React Native</a>
+    <a href="#flutter">Flutter</a>
+    <a href="#xplat">Cross-Platform</a>
+    <a href="#design">UI &amp; Design</a>
+    <a href="#perf">Performance</a>
+    <a href="#deploy">Deployment</a>
+    <a href="#test">Testing</a>
+    <a href="#backend">Supabase &amp; Backend</a>
+    <a href="#pay">Payments</a>
+    <a href="#maps">Maps &amp; Location</a>
+    <a href="#ai">AI &amp; Advanced</a>
+    <a href="#workflow">Workflow</a>
+    <a href="#blueprints">Blueprints</a>
+    <a href="#orch">Orchestration</a>
+    <a href="#astro">Astro</a>
+    <a href="#nextweb">Next.js Web</a>
+    <a href="#adminpanel">Admin Panel</a>
+    <a href="#rustsvc">Rust Service</a>
+  </nav>
+
+  <!-- REACT NATIVE -->
+  <section class="group">
+    <h2 id="rn">React Native <span class="gc">8</span></h2>
+    <div class="cards">
+      <article class="card" data-search="rn-navigation react-navigation deep-linking stack tabs drawer auth-flow modal">
+        <div class="card-head"><h3>rn-navigation</h3></div>
+        <p class="desc">Prevents data leaks on logout and stale screen-state bugs in navigation-heavy apps.</p>
+        <div class="chips"><span class="chip">react-navigation</span><span class="chip">deep-linking</span><span class="chip">auth-flow</span></div>
+        <button class="card-toggle" aria-expanded="false">Details</button>
+        <div class="card-detail" hidden><h4>Capabilities</h4><ul>
+          <li>Auth flow switching between auth and main stacks by token</li>
+          <li>Modal stacks; tab persistence and state saving</li>
+          <li>Navigation reset patterns for logout</li>
+          <li>Type-safe navigation; deep linking with universal links</li>
+        </ul><a class="src" href="https://github.com/zekiyugnak/telar-framework/blob/main/skills/rn-navigation.md">Source ↗</a></div>
+      </article>
+      <article class="card" data-search="rn-state-management zustand react-query tanstack persistence optimistic selectors">
+        <div class="card-head"><h3>rn-state-management</h3></div>
+        <p class="desc">Eliminates prop-drilling re-render cascades; reduces state boilerplate by ~60%.</p>
+        <div class="chips"><span class="chip">zustand</span><span class="chip">react-query</span><span class="chip">persistence</span></div>
+        <button class="card-toggle" aria-expanded="false">Details</button>
+        <div class="card-detail" hidden><h4>Capabilities</h4><ul>
+          <li>Replace prop drilling with Zustand selectors</li>
+          <li>React Query cache patterns (staleTime, queryKey design)</li>
+          <li>Zustand persist middleware; optimistic updates with rollback</li>
+          <li>Server state vs client state separation</li>
+        </ul><a class="src" href="https://github.com/zekiyugnak/telar-framework/blob/main/skills/rn-state-management.md">Source ↗</a></div>
+      </article>
+      <article class="card" data-search="rn-native-modules native-modules swift kotlin bridging turbomodules">
+        <div class="card-head"><h3>rn-native-modules</h3></div>
+        <p class="desc">Native module development for React Native — iOS (Swift) and Android (Kotlin).</p>
+        <div class="chips"><span class="chip">swift</span><span class="chip">kotlin</span><span class="chip">turbomodules</span></div>
+        <button class="card-toggle" aria-expanded="false">Details</button>
+        <div class="card-detail" hidden><h4>Capabilities</h4><ul>
+          <li>Creating native modules for iOS (Swift)</li>
+          <li>Creating native modules for Android (Kotlin)</li>
+          <li>Bridging native code to JavaScript; TurboModules basics</li>
+        </ul><a class="src" href="https://github.com/zekiyugnak/telar-framework/blob/main/skills/rn-native-modules.md">Source ↗</a></div>
+      </article>
+      <article class="card" data-search="rn-new-architecture fabric turbomodules jsi codegen new-architecture">
+        <div class="card-head"><h3>rn-new-architecture</h3></div>
+        <p class="desc">React Native's new architecture — Fabric, TurboModules, JSI, Codegen.</p>
+        <div class="chips"><span class="chip">fabric</span><span class="chip">jsi</span><span class="chip">codegen</span></div>
+        <button class="card-toggle" aria-expanded="false">Details</button>
+        <div class="card-detail" hidden><h4>Capabilities</h4><ul>
+          <li>Fabric renderer understanding</li>
+          <li>TurboModules migration; JSI direct native access</li>
+          <li>Codegen for type-safe modules</li>
+        </ul><a class="src" href="https://github.com/zekiyugnak/telar-framework/blob/main/skills/rn-new-architecture.md">Source ↗</a></div>
+      </article>
+      <article class="card" data-search="rn-styling stylesheet styled-components nativewind tailwind theming responsive">
+        <div class="card-head"><h3>rn-styling</h3></div>
+        <p class="desc">Styling approaches and design systems for React Native.</p>
+        <div class="chips"><span class="chip">stylesheet</span><span class="chip">nativewind</span><span class="chip">theming</span></div>
+        <button class="card-toggle" aria-expanded="false">Details</button>
+        <div class="card-detail" hidden><h4>Capabilities</h4><ul>
+          <li>StyleSheet patterns and best practices</li>
+          <li>Styled-components for React Native</li>
+          <li>NativeWind (Tailwind CSS); responsive design patterns</li>
+        </ul><a class="src" href="https://github.com/zekiyugnak/telar-framework/blob/main/skills/rn-styling.md">Source ↗</a></div>
+      </article>
+      <article class="card" data-search="rn-animations reanimated gesture-handler lottie animations transitions">
+        <div class="card-head"><h3>rn-animations</h3></div>
+        <p class="desc">Reanimated, Moti, and Skia animations for React Native.</p>
+        <div class="chips"><span class="chip">reanimated</span><span class="chip">gesture-handler</span><span class="chip">lottie</span></div>
+        <button class="card-toggle" aria-expanded="false">Details</button>
+        <div class="card-detail" hidden><h4>Capabilities</h4><ul>
+          <li>Reanimated 3 worklet animations</li>
+          <li>Gesture Handler integration; Lottie animations</li>
+          <li>Shared element transitions</li>
+        </ul><a class="src" href="https://github.com/zekiyugnak/telar-framework/blob/main/skills/rn-animations.md">Source ↗</a></div>
+      </article>
+      <article class="card" data-search="rn-testing jest testing-library mocking snapshot coverage">
+        <div class="card-head"><h3>rn-testing</h3></div>
+        <p class="desc">Jest and Testing Library patterns for React Native.</p>
+        <div class="chips"><span class="chip">jest</span><span class="chip">testing-library</span><span class="chip">snapshot</span></div>
+        <button class="card-toggle" aria-expanded="false">Details</button>
+        <div class="card-detail" hidden><h4>Capabilities</h4><ul>
+          <li>Jest configuration for React Native</li>
+          <li>React Native Testing Library; mocking native modules</li>
+          <li>Snapshot testing and coverage</li>
+        </ul><a class="src" href="https://github.com/zekiyugnak/telar-framework/blob/main/skills/rn-testing.md">Source ↗</a></div>
+      </article>
+      <article class="card" data-search="rn-expo expo eas-build expo-router managed-workflow development-client">
+        <div class="card-head"><h3>rn-expo</h3></div>
+        <p class="desc">Expo workflow and managed apps — SDK, EAS Build, Expo Router.</p>
+        <div class="chips"><span class="chip">expo</span><span class="chip">eas-build</span><span class="chip">expo-router</span></div>
+        <button class="card-toggle" aria-expanded="false">Details</button>
+        <div class="card-detail" hidden><h4>Capabilities</h4><ul>
+          <li>Expo SDK and APIs; EAS Build configuration</li>
+          <li>Expo Router for navigation</li>
+          <li>Managed vs bare workflow decisions</li>
+        </ul><a class="src" href="https://github.com/zekiyugnak/telar-framework/blob/main/skills/rn-expo.md">Source ↗</a></div>
+      </article>
+    </div>
+  </section>
+
+  <!-- FLUTTER -->
+  <section class="group">
+    <h2 id="flutter">Flutter <span class="gc">13</span></h2>
+    <div class="cards">
+      <article class="card" data-search="flutter-navigation gorouter deep-linking shell-route routing guards typed-routes">
+        <div class="card-head"><h3>flutter-navigation</h3></div>
+        <p class="desc">Eliminates broken back stacks from push/go confusion — the top GoRouter bug in production.</p>
+        <div class="chips"><span class="chip">gorouter</span><span class="chip">shell-route</span><span class="chip">guards</span></div>
+        <button class="card-toggle" aria-expanded="false">Details</button>
+        <div class="card-detail" hidden><h4>Capabilities</h4><ul>
+          <li>GoRouter declarative routing with auth guards</li>
+          <li>Shell routes for persistent bottom navigation</li>
+          <li>Deep link testing; typed route parameters</li>
+          <li>Push vs go semantics; redirect logic for auth</li>
+        </ul><a class="src" href="https://github.com/zekiyugnak/telar-framework/blob/main/skills/flutter-navigation.md">Source ↗</a></div>
+      </article>
+      <article class="card" data-search="flutter-state-management riverpod bloc async-notifier state-notifier provider family">
+        <div class="card-head"><h3>flutter-state-management</h3></div>
+        <p class="desc">Eliminates rebuild storms from setState; reduces widget rebuilds 10–50× in complex screens.</p>
+        <div class="chips"><span class="chip">riverpod</span><span class="chip">bloc</span><span class="chip">async-notifier</span></div>
+        <button class="card-toggle" aria-expanded="false">Details</button>
+        <div class="card-detail" hidden><h4>Capabilities</h4><ul>
+          <li>Riverpod vs BLoC decision framework</li>
+          <li>AsyncNotifier patterns for data fetching</li>
+          <li>StateNotifier for complex state machines</li>
+          <li>Provider scoping and family modifiers</li>
+        </ul><a class="src" href="https://github.com/zekiyugnak/telar-framework/blob/main/skills/flutter-state-management.md">Source ↗</a></div>
+      </article>
+      <article class="card" data-search="flutter-platform-channels method-channel event-channel pigeon platform-specific">
+        <div class="card-head"><h3>flutter-platform-channels</h3></div>
+        <p class="desc">Platform-specific code via MethodChannel, EventChannel, and Pigeon codegen.</p>
+        <div class="chips"><span class="chip">method-channel</span><span class="chip">pigeon</span><span class="chip">event-channel</span></div>
+        <button class="card-toggle" aria-expanded="false">Details</button>
+        <div class="card-detail" hidden><h4>Capabilities</h4><ul>
+          <li>MethodChannel for native calls</li>
+          <li>EventChannel for streams</li>
+          <li>Pigeon code generation; platform-specific implementations</li>
+        </ul><a class="src" href="https://github.com/zekiyugnak/telar-framework/blob/main/skills/flutter-platform-channels.md">Source ↗</a></div>
+      </article>
+      <article class="card" data-search="flutter-flavors flavors environments build-configuration conditional-compilation">
+        <div class="card-head"><h3>flutter-flavors</h3></div>
+        <p class="desc">Build flavors and environments for Flutter (dev/staging/prod).</p>
+        <div class="chips"><span class="chip">flavors</span><span class="chip">environments</span></div>
+        <button class="card-toggle" aria-expanded="false">Details</button>
+        <div class="card-detail" hidden><h4>Capabilities</h4><ul>
+          <li>Flutter flavors for environments</li>
+          <li>Build configuration management; environment variables</li>
+          <li>Conditional compilation</li>
+        </ul><a class="src" href="https://github.com/zekiyugnak/telar-framework/blob/main/skills/flutter-flavors.md">Source ↗</a></div>
+      </article>
+      <article class="card" data-search="flutter-styling theming material3 cupertino responsive design-system google-fonts">
+        <div class="card-head"><h3>flutter-styling</h3></div>
+        <p class="desc">Theming and design systems — Material 3 and Cupertino.</p>
+        <div class="chips"><span class="chip">material3</span><span class="chip">cupertino</span><span class="chip">responsive</span></div>
+        <button class="card-toggle" aria-expanded="false">Details</button>
+        <div class="card-detail" hidden><h4>Capabilities</h4><ul>
+          <li>Material 3 theming; Cupertino styling for iOS</li>
+          <li>Custom theme creation; responsive layouts</li>
+        </ul><a class="src" href="https://github.com/zekiyugnak/telar-framework/blob/main/skills/flutter-styling.md">Source ↗</a></div>
+      </article>
+      <article class="card" data-search="flutter-animations implicit explicit hero rive animation-controller">
+        <div class="card-head"><h3>flutter-animations</h3></div>
+        <p class="desc">Implicit, explicit, and custom animations — including Hero and Rive.</p>
+        <div class="chips"><span class="chip">implicit</span><span class="chip">hero</span><span class="chip">rive</span></div>
+        <button class="card-toggle" aria-expanded="false">Details</button>
+        <div class="card-detail" hidden><h4>Capabilities</h4><ul>
+          <li>Implicit animations; explicit animations with controllers</li>
+          <li>Hero transitions; Rive animations</li>
+        </ul><a class="src" href="https://github.com/zekiyugnak/telar-framework/blob/main/skills/flutter-animations.md">Source ↗</a></div>
+      </article>
+      <article class="card" data-search="flutter-testing widget-testing integration-testing mockito golden-tests">
+        <div class="card-head"><h3>flutter-testing</h3></div>
+        <p class="desc">Widget, integration, and golden tests for Flutter.</p>
+        <div class="chips"><span class="chip">widget-testing</span><span class="chip">golden-tests</span><span class="chip">mockito</span></div>
+        <button class="card-toggle" aria-expanded="false">Details</button>
+        <div class="card-detail" hidden><h4>Capabilities</h4><ul>
+          <li>Widget testing with flutter_test; integration testing</li>
+          <li>Mocking with mocktail/mockito</li>
+          <li>Golden tests for visual regression</li>
+        </ul><a class="src" href="https://github.com/zekiyugnak/telar-framework/blob/main/skills/flutter-testing.md">Source ↗</a></div>
+      </article>
+      <article class="card" data-search="flutter-packages pub-dev packages plugins dependencies versioning">
+        <div class="card-head"><h3>flutter-packages</h3></div>
+        <p class="desc">Package development and publishing for Flutter.</p>
+        <div class="chips"><span class="chip">pub-dev</span><span class="chip">plugins</span></div>
+        <button class="card-toggle" aria-expanded="false">Details</button>
+        <div class="card-detail" hidden><h4>Capabilities</h4><ul>
+          <li>Finding and evaluating packages</li>
+          <li>Popular package recommendations</li>
+          <li>Creating and publishing packages; dependency management</li>
+        </ul><a class="src" href="https://github.com/zekiyugnak/telar-framework/blob/main/skills/flutter-packages.md">Source ↗</a></div>
+      </article>
+      <article class="card" data-search="flutter-audio just-audio audio-service background-playback playlist streaming">
+        <div class="card-head"><h3>flutter-audio</h3></div>
+        <p class="desc">Audio playback — just_audio, background playback, playlists, streaming.</p>
+        <div class="chips"><span class="chip">just-audio</span><span class="chip">background-playback</span></div>
+        <button class="card-toggle" aria-expanded="false">Details</button>
+        <div class="card-detail" hidden><h4>Capabilities</h4><ul>
+          <li>just_audio playback with play/pause/seek/stop</li>
+          <li>Playlist and queue management</li>
+          <li>Background playback via audio_service; focus/interruption handling</li>
+          <li>Streaming from URL with caching; testable audio logic</li>
+        </ul><a class="src" href="https://github.com/zekiyugnak/telar-framework/blob/main/skills/flutter-audio.md">Source ↗</a></div>
+      </article>
+      <article class="card" data-search="flutter-device-plugins image-picker camera gallery file-picker share-plus permissions">
+        <div class="card-head"><h3>flutter-device-plugins</h3></div>
+        <p class="desc">Device plugins — image_picker, file_picker, share_plus, permissions.</p>
+        <div class="chips"><span class="chip">image-picker</span><span class="chip">file-picker</span><span class="chip">share-plus</span></div>
+        <button class="card-toggle" aria-expanded="false">Details</button>
+        <div class="card-detail" hidden><h4>Capabilities</h4><ul>
+          <li>image_picker for camera and gallery capture</li>
+          <li>Platform permission wiring (Info.plist, manifest)</li>
+          <li>Image size/quality control; image_cropper edit flows</li>
+          <li>file_picker for documents; share_plus for sharing</li>
+        </ul><a class="src" href="https://github.com/zekiyugnak/telar-framework/blob/main/skills/flutter-device-plugins.md">Source ↗</a></div>
+      </article>
+      <article class="card" data-search="flutter-firebase-setup firebase firebase-core flutterfire app-check flavors">
+        <div class="card-head"><h3>flutter-firebase-setup</h3></div>
+        <p class="desc">FlutterFire setup — initialization, per-flavor config, App Check.</p>
+        <div class="chips"><span class="chip">firebase</span><span class="chip">flutterfire</span><span class="chip">app-check</span></div>
+        <button class="card-toggle" aria-expanded="false">Details</button>
+        <div class="card-detail" hidden><h4>Capabilities</h4><ul>
+          <li>FlutterFire CLI project configuration</li>
+          <li>Per-flavor Firebase project wiring (dev/staging/prod)</li>
+          <li>App Check debug and production providers</li>
+          <li>Platform config file placement</li>
+        </ul><a class="src" href="https://github.com/zekiyugnak/telar-framework/blob/main/skills/flutter-firebase-setup.md">Source ↗</a></div>
+      </article>
+      <article class="card" data-search="flutter-local-storage sqflite path-provider drift hive isar sqlite migrations">
+        <div class="card-head"><h3>flutter-local-storage</h3></div>
+        <p class="desc">Local storage — sqflite, path_provider, and drift/hive/isar decisions.</p>
+        <div class="chips"><span class="chip">sqflite</span><span class="chip">drift</span><span class="chip">isar</span></div>
+        <button class="card-toggle" aria-expanded="false">Details</button>
+        <div class="card-detail" hidden><h4>Capabilities</h4><ul>
+          <li>sqflite schema, migrations, transactions, parameterized queries</li>
+          <li>path_provider directory selection matrix</li>
+          <li>Decision framework: sqflite vs drift vs hive vs isar</li>
+          <li>In-memory testing; FTS5 full-text search</li>
+        </ul><a class="src" href="https://github.com/zekiyugnak/telar-framework/blob/main/skills/flutter-local-storage.md">Source ↗</a></div>
+      </article>
+      <article class="card" data-search="flutter-networking http dio rest interceptors retry multipart cancellation">
+        <div class="card-head"><h3>flutter-networking</h3></div>
+        <p class="desc">Networking — http vs dio, interceptors, retry, multipart, cancellation.</p>
+        <div class="chips"><span class="chip">dio</span><span class="chip">interceptors</span><span class="chip">retry</span></div>
+        <button class="card-toggle" aria-expanded="false">Details</button>
+        <div class="card-detail" hidden><h4>Capabilities</h4><ul>
+          <li>http vs dio decision framework; typed REST client</li>
+          <li>Auth interceptor with token-refresh race protection</li>
+          <li>Exponential-backoff retry; multipart upload with progress</li>
+          <li>Request cancellation; testing with MockClient/DioAdapter</li>
+        </ul><a class="src" href="https://github.com/zekiyugnak/telar-framework/blob/main/skills/flutter-networking.md">Source ↗</a></div>
+      </article>
+    </div>
+  </section>
+
+  <!-- CROSS-PLATFORM -->
+  <section class="group">
+    <h2 id="xplat">Cross-Platform <span class="gc">10</span></h2>
+    <div class="cards">
+      <article class="card" data-search="responsive-design responsive adaptive breakpoints safe-areas orientation tablets">
+        <div class="card-head"><h3>responsive-design</h3></div>
+        <p class="desc">Responsive layouts across devices — phones, tablets, safe areas, orientation.</p>
+        <div class="chips"><span class="chip">breakpoints</span><span class="chip">safe-areas</span></div>
+        <button class="card-toggle" aria-expanded="false">Details</button>
+        <div class="card-detail" hidden><h4>Capabilities</h4><ul>
+          <li>Responsive layouts for phones and tablets</li>
+          <li>Safe area handling; orientation changes; breakpoint systems</li>
+        </ul><a class="src" href="https://github.com/zekiyugnak/telar-framework/blob/main/skills/responsive-design.md">Source ↗</a></div>
+      </article>
+      <article class="card" data-search="platform-adaptive-ui ios-hig material-design adaptive platform-specific native feel">
+        <div class="card-head"><h3>platform-adaptive-ui</h3></div>
+        <p class="desc">Platform-adaptive UI — components that feel native on iOS and Android.</p>
+        <div class="chips"><span class="chip">ios-hig</span><span class="chip">material-design</span></div>
+        <button class="card-toggle" aria-expanded="false">Details</button>
+        <div class="card-detail" hidden><h4>Capabilities</h4><ul>
+          <li>iOS Human Interface Guidelines patterns</li>
+          <li>Material Design components; platform-adaptive components</li>
+        </ul><a class="src" href="https://github.com/zekiyugnak/telar-framework/blob/main/skills/platform-adaptive-ui.md">Source ↗</a></div>
+      </article>
+      <article class="card" data-search="theming-dark-mode theming dark-mode colors design-system dynamic-theme">
+        <div class="card-head"><h3>theming-dark-mode</h3></div>
+        <p class="desc">Theming and dark mode — system detection, dynamic theming, color schemes.</p>
+        <div class="chips"><span class="chip">dark-mode</span><span class="chip">dynamic-theme</span></div>
+        <button class="card-toggle" aria-expanded="false">Details</button>
+        <div class="card-detail" hidden><h4>Capabilities</h4><ul>
+          <li>System theme detection; custom theme implementation</li>
+          <li>Dynamic theming; color scheme management</li>
+        </ul><a class="src" href="https://github.com/zekiyugnak/telar-framework/blob/main/skills/theming-dark-mode.md">Source ↗</a></div>
+      </article>
+      <article class="card" data-search="internationalization i18n localization rtl translations formatting pluralization">
+        <div class="card-head"><h3>internationalization</h3></div>
+        <p class="desc">i18n and l10n — multi-language, RTL, date/number formatting, pluralization.</p>
+        <div class="chips"><span class="chip">i18n</span><span class="chip">rtl</span></div>
+        <button class="card-toggle" aria-expanded="false">Details</button>
+        <div class="card-detail" hidden><h4>Capabilities</h4><ul>
+          <li>Multi-language support; RTL layout handling</li>
+          <li>Date and number formatting; pluralization</li>
+        </ul><a class="src" href="https://github.com/zekiyugnak/telar-framework/blob/main/skills/internationalization.md">Source ↗</a></div>
+      </article>
+      <article class="card" data-search="accessibility-patterns a11y voiceover talkback wcag screen-reader focus">
+        <div class="card-head"><h3>accessibility-patterns</h3></div>
+        <p class="desc">A11y compliance patterns — VoiceOver/TalkBack, labels, focus, WCAG.</p>
+        <div class="chips"><span class="chip">a11y</span><span class="chip">wcag</span></div>
+        <button class="card-toggle" aria-expanded="false">Details</button>
+        <div class="card-detail" hidden><h4>Capabilities</h4><ul>
+          <li>VoiceOver/TalkBack support; accessibility labels and hints</li>
+          <li>Focus management; WCAG compliance</li>
+        </ul><a class="src" href="https://github.com/zekiyugnak/telar-framework/blob/main/skills/accessibility-patterns.md">Source ↗</a></div>
+      </article>
+      <article class="card" data-search="error-handling-mobile error-boundaries crash-reporting graceful-degradation sentry crashlytics">
+        <div class="card-head"><h3>error-handling-mobile</h3></div>
+        <p class="desc">Prevent crashes from reaching users; convert unhandled exceptions into recoverable states.</p>
+        <div class="chips"><span class="chip">error-boundaries</span><span class="chip">sentry</span></div>
+        <button class="card-toggle" aria-expanded="false">Details</button>
+        <div class="card-detail" hidden><h4>Capabilities</h4><ul>
+          <li>React Native Error Boundaries with fallback UI</li>
+          <li>Flutter error handling (FlutterError.onError, PlatformDispatcher)</li>
+          <li>Crash reporting integration; user-friendly error classification</li>
+          <li>Graceful degradation for partial failures</li>
+        </ul><a class="src" href="https://github.com/zekiyugnak/telar-framework/blob/main/skills/error-handling-mobile.md">Source ↗</a></div>
+      </article>
+      <article class="card" data-search="networking-patterns retry deduplication optimistic-update offline-queue certificate-pinning caching">
+        <div class="card-head"><h3>networking-patterns</h3></div>
+        <p class="desc">Eliminate race conditions, duplicate calls, and network crashes with production patterns.</p>
+        <div class="chips"><span class="chip">retry</span><span class="chip">offline-queue</span><span class="chip">caching</span></div>
+        <button class="card-toggle" aria-expanded="false">Details</button>
+        <div class="card-detail" hidden><h4>Capabilities</h4><ul>
+          <li>Retry with exponential backoff and jitter</li>
+          <li>Deduplicate concurrent identical requests</li>
+          <li>Optimistic updates with rollback; offline queue + sync</li>
+          <li>Certificate pinning; response caching strategies</li>
+        </ul><a class="src" href="https://github.com/zekiyugnak/telar-framework/blob/main/skills/networking-patterns.md">Source ↗</a></div>
+      </article>
+      <article class="card" data-search="offline-sync-patterns offline sync conflict-resolution local-first watermelondb sqlite queue">
+        <div class="card-head"><h3>offline-sync-patterns</h3></div>
+        <p class="desc">Prevents data loss when users edit offline; correct conflict resolution preserves all changes.</p>
+        <div class="chips"><span class="chip">conflict-resolution</span><span class="chip">local-first</span></div>
+        <button class="card-toggle" aria-expanded="false">Details</button>
+        <div class="card-detail" hidden><h4>Capabilities</h4><ul>
+          <li>Conflict resolution (last-write-wins, field-merge, manual)</li>
+          <li>Queue-based sync with retry and backoff</li>
+          <li>Local-first architecture with WatermelonDB or SQLite</li>
+          <li>Sync status indicators for user feedback</li>
+        </ul><a class="src" href="https://github.com/zekiyugnak/telar-framework/blob/main/skills/offline-sync-patterns.md">Source ↗</a></div>
+      </article>
+      <article class="card" data-search="secure-storage keychain keystore mmkv encryption biometric credentials">
+        <div class="card-head"><h3>secure-storage</h3></div>
+        <p class="desc">Unencrypted token storage lets any rooted/jailbroken device steal credentials — this prevents that.</p>
+        <div class="chips"><span class="chip">keychain</span><span class="chip">keystore</span><span class="chip">encryption</span></div>
+        <button class="card-toggle" aria-expanded="false">Details</button>
+        <div class="card-detail" hidden><h4>Capabilities</h4><ul>
+          <li>Choose correct storage backend per platform</li>
+          <li>Biometric gating for sensitive data access</li>
+          <li>expo-secure-store vs react-native-keychain vs flutter_secure_storage</li>
+          <li>Encrypt data at rest with hardware-backed keys</li>
+        </ul><a class="src" href="https://github.com/zekiyugnak/telar-framework/blob/main/skills/secure-storage.md">Source ↗</a></div>
+      </article>
+      <article class="card" data-search="biometric-auth biometric face-id touch-id fingerprint authentication">
+        <div class="card-head"><h3>biometric-auth</h3></div>
+        <p class="desc">Biometric authentication — Face ID, Touch ID, fingerprint, with fallbacks.</p>
+        <div class="chips"><span class="chip">face-id</span><span class="chip">fingerprint</span></div>
+        <button class="card-toggle" aria-expanded="false">Details</button>
+        <div class="card-detail" hidden><h4>Capabilities</h4><ul>
+          <li>Face ID / Touch ID implementation; fingerprint auth</li>
+          <li>Fallback strategies; biometric enrollment detection</li>
+        </ul><a class="src" href="https://github.com/zekiyugnak/telar-framework/blob/main/skills/biometric-auth.md">Source ↗</a></div>
+      </article>
+    </div>
+  </section>
+
+  <!-- UI & DESIGN -->
+  <section class="group">
+    <h2 id="design">UI &amp; Design <span class="gc">5</span></h2>
+    <div class="cards">
+      <article class="card" data-search="component-scaffolding components scaffolding react-native flutter accessibility typed-props storybook">
+        <div class="card-head"><h3>component-scaffolding</h3></div>
+        <p class="desc">Generate fully typed, accessible, tested component packages from design specs in seconds.</p>
+        <div class="chips"><span class="chip">scaffolding</span><span class="chip">typed-props</span></div>
+        <button class="card-toggle" aria-expanded="false">Details</button>
+        <div class="card-detail" hidden><h4>Capabilities</h4><ul>
+          <li>Convert design specs into typed RN or Flutter components</li>
+          <li>Auto-generate prop interfaces with defaults</li>
+          <li>Companion hook, test, and story files</li>
+          <li>Enforce no inline styles; auto a11y labels and roles</li>
+        </ul><a class="src" href="https://github.com/zekiyugnak/telar-framework/blob/main/skills/component-scaffolding.md">Source ↗</a></div>
+      </article>
+      <article class="card" data-search="prompt-to-screen screen-spec requirements wireframe layout navigation figma">
+        <div class="card-head"><h3>prompt-to-screen</h3></div>
+        <p class="desc">Converts vague feature requests into precise, buildable screen specifications.</p>
+        <div class="chips"><span class="chip">screen-spec</span><span class="chip">figma</span></div>
+        <button class="card-toggle" aria-expanded="false">Details</button>
+        <div class="card-detail" hidden><h4>Capabilities</h4><ul>
+          <li>Transform rough descriptions into structured screen specs</li>
+          <li>Read Figma designs via Figma MCP; hybrid REQUIREMENTS + Figma</li>
+          <li>Layout hierarchy with component trees; state requirements</li>
+          <li>Navigation flows; platform conventions (iOS vs Android)</li>
+        </ul><a class="src" href="https://github.com/zekiyugnak/telar-framework/blob/main/skills/prompt-to-screen.md">Source ↗</a></div>
+      </article>
+      <article class="card" data-search="design-system-persistence design-system tokens theming hig material-design master">
+        <div class="card-head"><h3>design-system-persistence</h3></div>
+        <p class="desc">Hierarchical design tokens — global MASTER.md plus per-screen overrides.</p>
+        <div class="chips"><span class="chip">tokens</span><span class="chip">hig</span><span class="chip">material-design</span></div>
+        <button class="card-toggle" aria-expanded="false">Details</button>
+        <div class="card-detail" hidden><h4>Capabilities</h4><ul>
+          <li>Global design token definition in MASTER.md</li>
+          <li>Per-screen override pattern with precedence</li>
+          <li>Apple HIG and Material Design 3 token mapping</li>
+          <li>Dark mode variants; design-to-code translation</li>
+        </ul><a class="src" href="https://github.com/zekiyugnak/telar-framework/blob/main/skills/design-system-persistence.md">Source ↗</a></div>
+      </article>
+      <article class="card" data-search="mobile-design-system design-tokens figma ios-hig material-design dark-mode accessibility">
+        <div class="card-head"><h3>mobile-design-system</h3></div>
+        <p class="desc">A single source of truth for design tokens across iOS and Android.</p>
+        <div class="chips"><span class="chip">design-tokens</span><span class="chip">figma</span></div>
+        <button class="card-toggle" aria-expanded="false">Details</button>
+        <div class="card-detail" hidden><h4>Capabilities</h4><ul>
+          <li>Extract tokens from Figma exports or existing code</li>
+          <li>Platform-adaptive token sets (iOS HIG + Material 3)</li>
+          <li>Light/dark tokens with semantic naming</li>
+          <li>Contrast and touch-target validation; DESIGN.md output</li>
+        </ul><a class="src" href="https://github.com/zekiyugnak/telar-framework/blob/main/skills/mobile-design-system.md">Source ↗</a></div>
+      </article>
+      <article class="card" data-search="ui-library-integration ui-library tamagui gluestack react-native-paper material-3 cupertino">
+        <div class="card-head"><h3>ui-library-integration</h3></div>
+        <p class="desc">Guides library selection to avoid costly mid-project rewrites.</p>
+        <div class="chips"><span class="chip">tamagui</span><span class="chip">gluestack</span></div>
+        <button class="card-toggle" aria-expanded="false">Details</button>
+        <div class="card-detail" hidden><h4>Capabilities</h4><ul>
+          <li>Decision tree for RN UI library selection</li>
+          <li>Decision tree for Flutter UI library selection</li>
+          <li>Theme/token integration per library; migration patterns</li>
+          <li>Performance comparison and trade-off analysis</li>
+        </ul><a class="src" href="https://github.com/zekiyugnak/telar-framework/blob/main/skills/ui-library-integration.md">Source ↗</a></div>
+      </article>
+    </div>
+  </section>
+
+  <!-- PERFORMANCE -->
+  <section class="group">
+    <h2 id="perf">Performance <span class="gc">6</span></h2>
+    <div class="cards">
+      <article class="card" data-search="list-optimization flatlist flashlist virtualization recycling scrolling images">
+        <div class="card-head"><h3>list-optimization</h3></div>
+        <p class="desc">Eliminates frame drops from 15fps to a consistent 60fps with 1000+ items.</p>
+        <div class="chips"><span class="chip">flashlist</span><span class="chip">virtualization</span></div>
+        <button class="card-toggle" aria-expanded="false">Details</button>
+        <div class="card-detail" hidden><h4>Capabilities</h4><ul>
+          <li>Migrate from FlatList to FlashList</li>
+          <li>Cell recycling and recycler view patterns</li>
+          <li>getItemLayout for fixed-height items</li>
+          <li>Tune windowSize/maxToRenderPerBatch; list image loading</li>
+        </ul><a class="src" href="https://github.com/zekiyugnak/telar-framework/blob/main/skills/list-optimization.md">Source ↗</a></div>
+      </article>
+      <article class="card" data-search="image-optimization images caching webp lazy-loading progressive">
+        <div class="card-head"><h3>image-optimization</h3></div>
+        <p class="desc">Image loading and caching — progressive loading, WebP, lazy loading.</p>
+        <div class="chips"><span class="chip">caching</span><span class="chip">webp</span></div>
+        <button class="card-toggle" aria-expanded="false">Details</button>
+        <div class="card-detail" hidden><h4>Capabilities</h4><ul>
+          <li>Image caching strategies; progressive loading</li>
+          <li>WebP optimization; lazy loading implementation</li>
+        </ul><a class="src" href="https://github.com/zekiyugnak/telar-framework/blob/main/skills/image-optimization.md">Source ↗</a></div>
+      </article>
+      <article class="card" data-search="bundle-optimization bundle-size code-splitting tree-shaking lazy-loading metro assets">
+        <div class="card-head"><h3>bundle-optimization</h3></div>
+        <p class="desc">Reduce bundle size 40–70%, cutting download time and avoiding size warnings.</p>
+        <div class="chips"><span class="chip">code-splitting</span><span class="chip">tree-shaking</span></div>
+        <button class="card-toggle" aria-expanded="false">Details</button>
+        <div class="card-detail" hidden><h4>Capabilities</h4><ul>
+          <li>Configure Metro for tree shaking and code splitting</li>
+          <li>Lazy loading with React.lazy and dynamic imports</li>
+          <li>Analyze bundle contents; optimize image assets</li>
+          <li>Identify and remove unused dependencies</li>
+        </ul><a class="src" href="https://github.com/zekiyugnak/telar-framework/blob/main/skills/bundle-optimization.md">Source ↗</a></div>
+      </article>
+      <article class="card" data-search="startup-optimization startup-time cold-start hermes tree-shaking splash-screen">
+        <div class="card-head"><h3>startup-optimization</h3></div>
+        <p class="desc">Reduces cold start from 4+ s to under 1.5 s; each second loses ~10% of users.</p>
+        <div class="chips"><span class="chip">cold-start</span><span class="chip">hermes</span></div>
+        <button class="card-toggle" aria-expanded="false">Details</button>
+        <div class="card-detail" hidden><h4>Capabilities</h4><ul>
+          <li>Profile cold start before and after</li>
+          <li>Optimize Hermes bytecode bundle size</li>
+          <li>Tree shaking and dead code elimination; lazy load screens</li>
+          <li>Bridge splash to app-ready without white flash</li>
+        </ul><a class="src" href="https://github.com/zekiyugnak/telar-framework/blob/main/skills/startup-optimization.md">Source ↗</a></div>
+      </article>
+      <article class="card" data-search="memory-management memory-leaks garbage-collection object-pooling profiling">
+        <div class="card-head"><h3>memory-management</h3></div>
+        <p class="desc">Memory profiling and optimization — leak detection, pooling, GC tuning.</p>
+        <div class="chips"><span class="chip">memory-leaks</span><span class="chip">profiling</span></div>
+        <button class="card-toggle" aria-expanded="false">Details</button>
+        <div class="card-detail" hidden><h4>Capabilities</h4><ul>
+          <li>Memory leak detection; object pooling</li>
+          <li>GC optimization; memory profiling</li>
+        </ul><a class="src" href="https://github.com/zekiyugnak/telar-framework/blob/main/skills/memory-management.md">Source ↗</a></div>
+      </article>
+      <article class="card" data-search="render-optimization re-renders memoization profiling 60fps">
+        <div class="card-head"><h3>render-optimization</h3></div>
+        <p class="desc">Render performance tuning — prevent re-renders, memoization, 60fps.</p>
+        <div class="chips"><span class="chip">memoization</span><span class="chip">60fps</span></div>
+        <button class="card-toggle" aria-expanded="false">Details</button>
+        <div class="card-detail" hidden><h4>Capabilities</h4><ul>
+          <li>Preventing unnecessary re-renders; memoization techniques</li>
+          <li>Render profiling; 60fps optimization</li>
+        </ul><a class="src" href="https://github.com/zekiyugnak/telar-framework/blob/main/skills/render-optimization.md">Source ↗</a></div>
+      </article>
+    </div>
+  </section>
+
+  <!-- DEPLOYMENT -->
+  <section class="group">
+    <h2 id="deploy">Deployment &amp; Release <span class="gc">7</span></h2>
+    <div class="cards">
+      <article class="card" data-search="ios-provisioning certificates provisioning-profiles entitlements fastlane-match">
+        <div class="card-head"><h3>ios-provisioning</h3></div>
+        <p class="desc">iOS certificates and provisioning — profiles, entitlements, Fastlane Match.</p>
+        <div class="chips"><span class="chip">certificates</span><span class="chip">fastlane-match</span></div>
+        <button class="card-toggle" aria-expanded="false">Details</button>
+        <div class="card-detail" hidden><h4>Capabilities</h4><ul>
+          <li>Certificate management; provisioning profile setup</li>
+          <li>Entitlements configuration; Fastlane Match automation</li>
+        </ul><a class="src" href="https://github.com/zekiyugnak/telar-framework/blob/main/skills/ios-provisioning.md">Source ↗</a></div>
+      </article>
+      <article class="card" data-search="android-signing keystore signing-config play-app-signing gradle">
+        <div class="card-head"><h3>android-signing</h3></div>
+        <p class="desc">Android keystore and signing — config, Play App Signing, Gradle.</p>
+        <div class="chips"><span class="chip">keystore</span><span class="chip">play-app-signing</span></div>
+        <button class="card-toggle" aria-expanded="false">Details</button>
+        <div class="card-detail" hidden><h4>Capabilities</h4><ul>
+          <li>Keystore management; signing configuration</li>
+          <li>Play App Signing setup; Gradle signing config</li>
+        </ul><a class="src" href="https://github.com/zekiyugnak/telar-framework/blob/main/skills/android-signing.md">Source ↗</a></div>
+      </article>
+      <article class="card" data-search="app-store-guidelines app-store apple-review guidelines rejection testflight privacy-labels iap">
+        <div class="card-head"><h3>app-store-guidelines</h3></div>
+        <p class="desc">Avoid 1–2 week rejection delays by addressing the top 20 reasons before submission.</p>
+        <div class="chips"><span class="chip">apple-review</span><span class="chip">privacy-labels</span></div>
+        <button class="card-toggle" aria-expanded="false">Details</button>
+        <div class="card-detail" hidden><h4>Capabilities</h4><ul>
+          <li>Prevent top 20 App Store rejection reasons</li>
+          <li>Configure privacy nutrition labels correctly</li>
+          <li>Screenshot and metadata requirements; IAP compliance</li>
+          <li>Optimize TestFlight beta workflow</li>
+        </ul><a class="src" href="https://github.com/zekiyugnak/telar-framework/blob/main/skills/app-store-guidelines.md">Source ↗</a></div>
+      </article>
+      <article class="card" data-search="play-store-policies play-store google-policies data-safety target-api content-rating billing suspension">
+        <div class="card-head"><h3>play-store-policies</h3></div>
+        <p class="desc">Prevent app suspension by addressing the top 20 policy violations proactively.</p>
+        <div class="chips"><span class="chip">data-safety</span><span class="chip">target-api</span></div>
+        <button class="card-toggle" aria-expanded="false">Details</button>
+        <div class="card-detail" hidden><h4>Capabilities</h4><ul>
+          <li>Prevent top 20 Play Store rejection/suspension reasons</li>
+          <li>Complete Data Safety form accurately for all SDKs</li>
+          <li>Meet target API level requirements; content rating</li>
+          <li>Comply with Google Play billing policies</li>
+        </ul><a class="src" href="https://github.com/zekiyugnak/telar-framework/blob/main/skills/play-store-policies.md">Source ↗</a></div>
+      </article>
+      <article class="card" data-search="staged-rollouts phased-release rollouts rollback monitoring">
+        <div class="card-head"><h3>staged-rollouts</h3></div>
+        <p class="desc">Phased rollout strategies — percentage rollouts, rollback, monitoring.</p>
+        <div class="chips"><span class="chip">phased-release</span><span class="chip">rollback</span></div>
+        <button class="card-toggle" aria-expanded="false">Details</button>
+        <div class="card-detail" hidden><h4>Capabilities</h4><ul>
+          <li>Phased release setup; percentage rollouts</li>
+          <li>Rollback strategies; release monitoring</li>
+        </ul><a class="src" href="https://github.com/zekiyugnak/telar-framework/blob/main/skills/staged-rollouts.md">Source ↗</a></div>
+      </article>
+      <article class="card" data-search="crash-reporting crashlytics sentry bugsnag symbolication">
+        <div class="card-head"><h3>crash-reporting</h3></div>
+        <p class="desc">Crash reporting setup — Crashlytics, Sentry, Bugsnag, symbolication.</p>
+        <div class="chips"><span class="chip">crashlytics</span><span class="chip">sentry</span></div>
+        <button class="card-toggle" aria-expanded="false">Details</button>
+        <div class="card-detail" hidden><h4>Capabilities</h4><ul>
+          <li>Crash reporting setup; symbolication configuration</li>
+          <li>Error tracking; crash analysis</li>
+        </ul><a class="src" href="https://github.com/zekiyugnak/telar-framework/blob/main/skills/crash-reporting.md">Source ↗</a></div>
+      </article>
+      <article class="card" data-search="app-demo-video screenshots recording demo app-store simulator device-frames">
+        <div class="card-head"><h3>app-demo-video</h3></div>
+        <p class="desc">Automate screenshot and recording capture for store listings and demos.</p>
+        <div class="chips"><span class="chip">screenshots</span><span class="chip">recording</span></div>
+        <button class="card-toggle" aria-expanded="false">Details</button>
+        <div class="card-detail" hidden><h4>Capabilities</h4><ul>
+          <li>Automate simulator screenshots (simctl, adb)</li>
+          <li>Record screen sessions; generate framed store screenshots</li>
+          <li>Script demo flows for reproducible walkthroughs</li>
+        </ul><a class="src" href="https://github.com/zekiyugnak/telar-framework/blob/main/skills/app-demo-video.md">Source ↗</a></div>
+      </article>
+    </div>
+  </section>
+
+  <!-- TESTING -->
+  <section class="group">
+    <h2 id="test">Testing <span class="gc">4</span></h2>
+    <div class="cards">
+      <article class="card" data-search="testing-pyramid-mobile testing-strategy test-pyramid coverage test-types">
+        <div class="card-head"><h3>testing-pyramid-mobile</h3></div>
+        <p class="desc">Mobile testing strategy — distribution, coverage, and test-type selection.</p>
+        <div class="chips"><span class="chip">test-pyramid</span><span class="chip">coverage</span></div>
+        <button class="card-toggle" aria-expanded="false">Details</button>
+        <div class="card-detail" hidden><h4>Capabilities</h4><ul>
+          <li>Test distribution strategy; coverage guidelines</li>
+          <li>Test type selection; mobile testing approach</li>
+        </ul><a class="src" href="https://github.com/zekiyugnak/telar-framework/blob/main/skills/testing-pyramid-mobile.md">Source ↗</a></div>
+      </article>
+      <article class="card" data-search="mock-strategies mocking test-doubles native-modules api-mocking">
+        <div class="card-head"><h3>mock-strategies</h3></div>
+        <p class="desc">Mocking for mobile tests — native modules, APIs, test doubles.</p>
+        <div class="chips"><span class="chip">mocking</span><span class="chip">test-doubles</span></div>
+        <button class="card-toggle" aria-expanded="false">Details</button>
+        <div class="card-detail" hidden><h4>Capabilities</h4><ul>
+          <li>Native module mocking; API mocking strategies</li>
+          <li>Test double patterns; mock implementation</li>
+        </ul><a class="src" href="https://github.com/zekiyugnak/telar-framework/blob/main/skills/mock-strategies.md">Source ↗</a></div>
+      </article>
+      <article class="card" data-search="snapshot-testing snapshots golden-tests visual-regression component-testing">
+        <div class="card-head"><h3>snapshot-testing</h3></div>
+        <p class="desc">UI snapshot testing — component snapshots, golden images, visual regression.</p>
+        <div class="chips"><span class="chip">golden-tests</span><span class="chip">visual-regression</span></div>
+        <button class="card-toggle" aria-expanded="false">Details</button>
+        <div class="card-detail" hidden><h4>Capabilities</h4><ul>
+          <li>Component snapshot testing; golden image tests</li>
+          <li>Visual regression testing; snapshot maintenance</li>
+        </ul><a class="src" href="https://github.com/zekiyugnak/telar-framework/blob/main/skills/snapshot-testing.md">Source ↗</a></div>
+      </article>
+      <article class="card" data-search="ci-testing-integration ci-cd github-actions test-reporting parallel-testing">
+        <div class="card-head"><h3>ci-testing-integration</h3></div>
+        <p class="desc">CI testing pipelines — configuration, reporting, parallelization, coverage.</p>
+        <div class="chips"><span class="chip">github-actions</span><span class="chip">parallel</span></div>
+        <button class="card-toggle" aria-expanded="false">Details</button>
+        <div class="card-detail" hidden><h4>Capabilities</h4><ul>
+          <li>CI test configuration; test reporting setup</li>
+          <li>Parallel test execution; coverage reporting</li>
+        </ul><a class="src" href="https://github.com/zekiyugnak/telar-framework/blob/main/skills/ci-testing-integration.md">Source ↗</a></div>
+      </article>
+    </div>
+  </section>
+
+  <!-- SUPABASE & BACKEND -->
+  <section class="group">
+    <h2 id="backend">Supabase &amp; Backend <span class="gc">6</span></h2>
+    <div class="cards">
+      <article class="card" data-search="supabase-auth supabase authentication pkce social-auth token-refresh session oauth">
+        <div class="card-head"><h3>supabase-auth</h3></div>
+        <p class="desc">Prevents random logouts from token-refresh race conditions in production.</p>
+        <div class="chips"><span class="chip">pkce</span><span class="chip">social-auth</span></div>
+        <button class="card-toggle" aria-expanded="false">Details</button>
+        <div class="card-detail" hidden><h4>Capabilities</h4><ul>
+          <li>PKCE flow for React Native and Flutter</li>
+          <li>Token refresh race condition prevention</li>
+          <li>Social auth (Google, Apple, GitHub)</li>
+          <li>Session persistence; auth state change handling</li>
+        </ul><a class="src" href="https://github.com/zekiyugnak/telar-framework/blob/main/skills/supabase-auth.md">Source ↗</a></div>
+      </article>
+      <article class="card" data-search="supabase-database supabase postgresql rls realtime optimistic-updates pagination">
+        <div class="card-head"><h3>supabase-database</h3></div>
+        <p class="desc">Missing RLS policies expose all user data — this prevents full data breaches.</p>
+        <div class="chips"><span class="chip">rls</span><span class="chip">postgresql</span></div>
+        <button class="card-toggle" aria-expanded="false">Details</button>
+        <div class="card-detail" hidden><h4>Capabilities</h4><ul>
+          <li>RLS policies for user, team, and public data</li>
+          <li>Optimistic update patterns with rollback</li>
+          <li>Real-time subscriptions with lifecycle cleanup</li>
+          <li>Efficient paginated queries; selective columns</li>
+        </ul><a class="src" href="https://github.com/zekiyugnak/telar-framework/blob/main/skills/supabase-database.md">Source ↗</a></div>
+      </article>
+      <article class="card" data-search="supabase-storage storage file-upload buckets signed-urls image-optimization">
+        <div class="card-head"><h3>supabase-storage</h3></div>
+        <p class="desc">File storage patterns — buckets, upload/download, signed URLs.</p>
+        <div class="chips"><span class="chip">buckets</span><span class="chip">signed-urls</span></div>
+        <button class="card-toggle" aria-expanded="false">Details</button>
+        <div class="card-detail" hidden><h4>Capabilities</h4><ul>
+          <li>Storage bucket setup; file upload/download</li>
+          <li>Signed URLs; image optimization</li>
+        </ul><a class="src" href="https://github.com/zekiyugnak/telar-framework/blob/main/skills/supabase-storage.md">Source ↗</a></div>
+      </article>
+      <article class="card" data-search="supabase-realtime realtime subscriptions presence broadcast">
+        <div class="card-head"><h3>supabase-realtime</h3></div>
+        <p class="desc">Real-time subscriptions — presence, broadcast, change streaming.</p>
+        <div class="chips"><span class="chip">subscriptions</span><span class="chip">presence</span></div>
+        <button class="card-toggle" aria-expanded="false">Details</button>
+        <div class="card-detail" hidden><h4>Capabilities</h4><ul>
+          <li>Realtime subscriptions; presence tracking</li>
+          <li>Broadcast channels; database change streaming</li>
+        </ul><a class="src" href="https://github.com/zekiyugnak/telar-framework/blob/main/skills/supabase-realtime.md">Source ↗</a></div>
+      </article>
+      <article class="card" data-search="supabase-edge-functions edge-functions deno serverless secrets">
+        <div class="card-head"><h3>supabase-edge-functions</h3></div>
+        <p class="desc">Edge function development — Deno/TypeScript, secrets, deployment.</p>
+        <div class="chips"><span class="chip">deno</span><span class="chip">serverless</span></div>
+        <button class="card-toggle" aria-expanded="false">Details</button>
+        <div class="card-detail" hidden><h4>Capabilities</h4><ul>
+          <li>Edge Function creation; TypeScript/Deno patterns</li>
+          <li>Secrets management; deployment</li>
+        </ul><a class="src" href="https://github.com/zekiyugnak/telar-framework/blob/main/skills/supabase-edge-functions.md">Source ↗</a></div>
+      </article>
+      <article class="card" data-search="graphql-mobile-patterns graphql apollo-client codegen caching subscriptions">
+        <div class="card-head"><h3>graphql-mobile-patterns</h3></div>
+        <p class="desc">GraphQL client patterns — Apollo, codegen, normalized caching, subscriptions.</p>
+        <div class="chips"><span class="chip">apollo-client</span><span class="chip">codegen</span></div>
+        <button class="card-toggle" aria-expanded="false">Details</button>
+        <div class="card-detail" hidden><h4>Capabilities</h4><ul>
+          <li>Apollo Client setup; code generation</li>
+          <li>Normalized caching; subscriptions</li>
+        </ul><a class="src" href="https://github.com/zekiyugnak/telar-framework/blob/main/skills/graphql-mobile-patterns.md">Source ↗</a></div>
+      </article>
+    </div>
+  </section>
+
+  <!-- PAYMENTS -->
+  <section class="group">
+    <h2 id="pay">Payments &amp; Monetization <span class="gc">4</span></h2>
+    <div class="cards">
+      <article class="card" data-search="in-app-purchases storekit play-billing subscriptions consumables receipt">
+        <div class="card-head"><h3>in-app-purchases</h3></div>
+        <p class="desc">IAP implementation — StoreKit 2, Play Billing, subscriptions, receipt validation.</p>
+        <div class="chips"><span class="chip">storekit</span><span class="chip">play-billing</span></div>
+        <button class="card-toggle" aria-expanded="false">Details</button>
+        <div class="card-detail" hidden><h4>Capabilities</h4><ul>
+          <li>StoreKit 2 implementation; Google Play Billing</li>
+          <li>Subscription management; receipt validation</li>
+        </ul><a class="src" href="https://github.com/zekiyugnak/telar-framework/blob/main/skills/in-app-purchases.md">Source ↗</a></div>
+      </article>
+      <article class="card" data-search="revenucat-integration revenucat subscriptions entitlements paywalls">
+        <div class="card-head"><h3>revenucat-integration</h3></div>
+        <p class="desc">RevenueCat subscription management — entitlements, analytics, paywalls.</p>
+        <div class="chips"><span class="chip">subscriptions</span><span class="chip">paywalls</span></div>
+        <button class="card-toggle" aria-expanded="false">Details</button>
+        <div class="card-detail" hidden><h4>Capabilities</h4><ul>
+          <li>RevenueCat SDK setup; entitlement management</li>
+          <li>Subscription analytics; paywall implementation</li>
+        </ul><a class="src" href="https://github.com/zekiyugnak/telar-framework/blob/main/skills/revenucat-integration.md">Source ↗</a></div>
+      </article>
+      <article class="card" data-search="stripe-mobile stripe payments apple-pay google-pay subscriptions">
+        <div class="card-head"><h3>stripe-mobile</h3></div>
+        <p class="desc">Stripe mobile integration — payment sheet, Apple/Google Pay, subscriptions.</p>
+        <div class="chips"><span class="chip">stripe</span><span class="chip">apple-pay</span></div>
+        <button class="card-toggle" aria-expanded="false">Details</button>
+        <div class="card-detail" hidden><h4>Capabilities</h4><ul>
+          <li>Stripe SDK setup; payment sheet</li>
+          <li>Apple Pay / Google Pay; subscription billing</li>
+        </ul><a class="src" href="https://github.com/zekiyugnak/telar-framework/blob/main/skills/stripe-mobile.md">Source ↗</a></div>
+      </article>
+      <article class="card" data-search="mobile-ads-integration admob ads rewarded-ads interstitials banners">
+        <div class="card-head"><h3>mobile-ads-integration</h3></div>
+        <p class="desc">Ad SDK integration — AdMob rewarded, interstitial, and banner ads.</p>
+        <div class="chips"><span class="chip">admob</span><span class="chip">rewarded-ads</span></div>
+        <button class="card-toggle" aria-expanded="false">Details</button>
+        <div class="card-detail" hidden><h4>Capabilities</h4><ul>
+          <li>AdMob integration; rewarded ads</li>
+          <li>Interstitial ads; banner ads</li>
+        </ul><a class="src" href="https://github.com/zekiyugnak/telar-framework/blob/main/skills/mobile-ads-integration.md">Source ↗</a></div>
+      </article>
+    </div>
+  </section>
+
+  <!-- MAPS & LOCATION -->
+  <section class="group">
+    <h2 id="maps">Maps &amp; Location <span class="gc">3</span></h2>
+    <div class="cards">
+      <article class="card" data-search="maps-integration maps google-maps mapbox markers geocoding clustering">
+        <div class="card-head"><h3>maps-integration</h3></div>
+        <p class="desc">Google Maps and MapKit integration — markers, clustering, custom styling.</p>
+        <div class="chips"><span class="chip">google-maps</span><span class="chip">mapbox</span></div>
+        <button class="card-toggle" aria-expanded="false">Details</button>
+        <div class="card-detail" hidden><h4>Capabilities</h4><ul>
+          <li>Google Maps integration; MapBox setup</li>
+          <li>Markers and clustering; custom map styling</li>
+        </ul><a class="src" href="https://github.com/zekiyugnak/telar-framework/blob/main/skills/maps-integration.md">Source ↗</a></div>
+      </article>
+      <article class="card" data-search="location-services location geofencing background-location permissions geolocator">
+        <div class="card-head"><h3>location-services</h3></div>
+        <p class="desc">Location tracking and geofencing — background location, permissions.</p>
+        <div class="chips"><span class="chip">geofencing</span><span class="chip">background-location</span></div>
+        <button class="card-toggle" aria-expanded="false">Details</button>
+        <div class="card-detail" hidden><h4>Capabilities</h4><ul>
+          <li>Location tracking; geofencing</li>
+          <li>Background location; permission handling</li>
+        </ul><a class="src" href="https://github.com/zekiyugnak/telar-framework/blob/main/skills/location-services.md">Source ↗</a></div>
+      </article>
+      <article class="card" data-search="geospatial-features postgis spatial-queries distance nearby-search">
+        <div class="card-head"><h3>geospatial-features</h3></div>
+        <p class="desc">Geospatial data handling — PostGIS, spatial queries, nearby search.</p>
+        <div class="chips"><span class="chip">postgis</span><span class="chip">spatial-queries</span></div>
+        <button class="card-toggle" aria-expanded="false">Details</button>
+        <div class="card-detail" hidden><h4>Capabilities</h4><ul>
+          <li>PostGIS with Supabase; spatial queries</li>
+          <li>Distance calculations; nearby search</li>
+        </ul><a class="src" href="https://github.com/zekiyugnak/telar-framework/blob/main/skills/geospatial-features.md">Source ↗</a></div>
+      </article>
+    </div>
+  </section>
+
+  <!-- AI & ADVANCED -->
+  <section class="group">
+    <h2 id="ai">AI &amp; Advanced <span class="gc">3</span></h2>
+    <div class="cards">
+      <article class="card" data-search="ai-api-integration openai claude gemini streaming function-calling">
+        <div class="card-head"><h3>ai-api-integration</h3></div>
+        <p class="desc">AI API integration patterns — streaming, function calling, token management.</p>
+        <div class="chips"><span class="chip">streaming</span><span class="chip">function-calling</span></div>
+        <button class="card-toggle" aria-expanded="false">Details</button>
+        <div class="card-detail" hidden><h4>Capabilities</h4><ul>
+          <li>AI API integration; streaming responses</li>
+          <li>Function calling; token management</li>
+        </ul><a class="src" href="https://github.com/zekiyugnak/telar-framework/blob/main/skills/ai-api-integration.md">Source ↗</a></div>
+      </article>
+      <article class="card" data-search="image-video-generation dalle stable-diffusion image-generation video media">
+        <div class="card-head"><h3>image-video-generation</h3></div>
+        <p class="desc">AI image/video features — DALL-E, Stable Diffusion, media processing.</p>
+        <div class="chips"><span class="chip">dalle</span><span class="chip">stable-diffusion</span></div>
+        <button class="card-toggle" aria-expanded="false">Details</button>
+        <div class="card-detail" hidden><h4>Capabilities</h4><ul>
+          <li>DALL-E integration; image manipulation</li>
+          <li>Video generation APIs; media processing</li>
+        </ul><a class="src" href="https://github.com/zekiyugnak/telar-framework/blob/main/skills/image-video-generation.md">Source ↗</a></div>
+      </article>
+      <article class="card" data-search="ar-mobile-patterns arkit arcore augmented-reality 3d spatial">
+        <div class="card-head"><h3>ar-mobile-patterns</h3></div>
+        <p class="desc">ARKit/ARCore patterns — plane detection, 3D placement, image tracking.</p>
+        <div class="chips"><span class="chip">arkit</span><span class="chip">arcore</span></div>
+        <button class="card-toggle" aria-expanded="false">Details</button>
+        <div class="card-detail" hidden><h4>Capabilities</h4><ul>
+          <li>ARKit/ARCore setup; plane detection</li>
+          <li>3D object placement; image tracking</li>
+        </ul><a class="src" href="https://github.com/zekiyugnak/telar-framework/blob/main/skills/ar-mobile-patterns.md">Source ↗</a></div>
+      </article>
+    </div>
+  </section>
+
+  <!-- WORKFLOW -->
+  <section class="group">
+    <h2 id="workflow">Workflow &amp; Meta <span class="gc">11</span></h2>
+    <div class="cards">
+      <article class="card" data-search="requirements-gather requirements discovery figma document-driven gap-analysis product">
+        <div class="card-head"><h3>requirements-gather</h3></div>
+        <p class="desc">Establishes the single source of truth for what the app must do.</p>
+        <div class="chips"><span class="chip">requirements</span><span class="chip">discovery</span></div>
+        <button class="card-toggle" aria-expanded="false">Details</button>
+        <div class="card-detail" hidden><h4>Capabilities</h4><ul>
+          <li>Gather requirements interactively or from a document</li>
+          <li>Extract decisions without overriding user choices</li>
+          <li>Gap analysis; capture Figma/design references</li>
+          <li>Produce REQUIREMENTS.md as the single source of truth</li>
+        </ul><a class="src" href="https://github.com/zekiyugnak/telar-framework/blob/main/skills/requirements-gather.md">Source ↗</a></div>
+      </article>
+      <article class="card" data-search="brainstorm-first research discovery architecture planning pre-implementation">
+        <div class="card-head"><h3>brainstorm-first</h3></div>
+        <p class="desc">Prevents architectural rework by enforcing research before implementation.</p>
+        <div class="chips"><span class="chip">research</span><span class="chip">architecture</span></div>
+        <button class="card-toggle" aria-expanded="false">Details</button>
+        <div class="card-detail" hidden><h4>Capabilities</h4><ul>
+          <li>Enforce a discovery phase before code generation</li>
+          <li>Produce RESEARCH.md with structured analysis</li>
+          <li>Platform/architecture option comparison; risk assessment</li>
+          <li>Quality gate ensuring RESEARCH.md exists</li>
+        </ul><a class="src" href="https://github.com/zekiyugnak/telar-framework/blob/main/skills/brainstorm-first.md">Source ↗</a></div>
+      </article>
+      <article class="card" data-search="plan-and-track planning tracking progress tasks decomposition traceability">
+        <div class="card-head"><h3>plan-and-track</h3></div>
+        <p class="desc">Bridges brainstorming to execution with atomic task decomposition and tracking.</p>
+        <div class="chips"><span class="chip">planning</span><span class="chip">traceability</span></div>
+        <button class="card-toggle" aria-expanded="false">Details</button>
+        <div class="card-detail" hidden><h4>Capabilities</h4><ul>
+          <li>Decompose features into 2–5 minute atomic tasks</li>
+          <li>Reference F-x / UI-x requirements in every task</li>
+          <li>Produce PLAN.md (dependency graph) and PROGRESS.md</li>
+          <li>Mid-project amendments; rework on requirement changes</li>
+        </ul><a class="src" href="https://github.com/zekiyugnak/telar-framework/blob/main/skills/plan-and-track.md">Source ↗</a></div>
+      </article>
+      <article class="card" data-search="requirements-traceability traceability rtm coverage testing change-management">
+        <div class="card-head"><h3>requirements-traceability</h3></div>
+        <p class="desc">Links every requirement to its tasks, tests, and files — preventing coverage gaps.</p>
+        <div class="chips"><span class="chip">rtm</span><span class="chip">coverage</span></div>
+        <button class="card-toggle" aria-expanded="false">Details</button>
+        <div class="card-detail" hidden><h4>Capabilities</h4><ul>
+          <li>Build a Requirements Traceability Matrix (RTM)</li>
+          <li>Forward and backward traceability</li>
+          <li>Coverage gap detection; change impact analysis</li>
+        </ul><a class="src" href="https://github.com/zekiyugnak/telar-framework/blob/main/skills/requirements-traceability.md">Source ↗</a></div>
+      </article>
+      <article class="card" data-search="review-gates review quality gates spec-compliance code-quality verification">
+        <div class="card-head"><h3>review-gates</h3></div>
+        <p class="desc">Two-stage review ensuring requirement compliance and code quality before merge.</p>
+        <div class="chips"><span class="chip">spec-compliance</span><span class="chip">code-quality</span></div>
+        <button class="card-toggle" aria-expanded="false">Details</button>
+        <div class="card-detail" hidden><h4>Capabilities</h4><ul>
+          <li>Stage 1: requirement compliance vs REQUIREMENTS.md</li>
+          <li>Stage 1: PLAN.md acceptance criteria verification</li>
+          <li>Stage 2: code quality + mobile-specific checks</li>
+          <li>Priority-ranked findings</li>
+        </ul><a class="src" href="https://github.com/zekiyugnak/telar-framework/blob/main/skills/review-gates.md">Source ↗</a></div>
+      </article>
+      <article class="card" data-search="iterative-build-loop baton iterative build-loop next-step progress multi-session">
+        <div class="card-head"><h3>iterative-build-loop</h3></div>
+        <p class="desc">Multi-session feature builds with progress persistence and baton handoff.</p>
+        <div class="chips"><span class="chip">baton</span><span class="chip">multi-session</span></div>
+        <button class="card-toggle" aria-expanded="false">Details</button>
+        <div class="card-detail" hidden><h4>Capabilities</h4><ul>
+          <li>Multi-step building with baton file handoffs</li>
+          <li>Progress tracking with completion percentage</li>
+          <li>Build-verify-document cycle; simulator verification</li>
+          <li>Context preservation across sessions</li>
+        </ul><a class="src" href="https://github.com/zekiyugnak/telar-framework/blob/main/skills/iterative-build-loop.md">Source ↗</a></div>
+      </article>
+      <article class="card" data-search="systematic-debugging root-cause investigation troubleshooting error-analysis">
+        <div class="card-head"><h3>systematic-debugging</h3></div>
+        <p class="desc">Prevents fix-churn by enforcing root-cause investigation before any change.</p>
+        <div class="chips"><span class="chip">root-cause</span><span class="chip">investigation</span></div>
+        <button class="card-toggle" aria-expanded="false">Details</button>
+        <div class="card-detail" hidden><h4>Capabilities</h4><ul>
+          <li>4-phase root cause investigation methodology</li>
+          <li>Platform-specific log gathering (Metro, Xcode, logcat)</li>
+          <li>Pattern analysis; single-variable hypothesis testing</li>
+          <li>Escalation protocol after repeated failures</li>
+        </ul><a class="src" href="https://github.com/zekiyugnak/telar-framework/blob/main/skills/systematic-debugging.md">Source ↗</a></div>
+      </article>
+      <article class="card" data-search="verification-before-completion verification evidence completion quality simulator done-criteria">
+        <div class="card-head"><h3>verification-before-completion</h3></div>
+        <p class="desc">Prevents false completion claims by requiring fresh evidence before "done".</p>
+        <div class="chips"><span class="chip">evidence</span><span class="chip">done-criteria</span></div>
+        <button class="card-toggle" aria-expanded="false">Details</button>
+        <div class="card-detail" hidden><h4>Capabilities</h4><ul>
+          <li>Hard gate on completion claims without evidence</li>
+          <li>Fresh evidence requirement (no stale results)</li>
+          <li>Command output and simulator behavior verification</li>
+        </ul><a class="src" href="https://github.com/zekiyugnak/telar-framework/blob/main/skills/verification-before-completion.md">Source ↗</a></div>
+      </article>
+      <article class="card" data-search="mobile-commit-convention git commit convention changelog versioning release">
+        <div class="card-head"><h3>mobile-commit-convention</h3></div>
+        <p class="desc">Standardizes commit messages with platform-specific scopes and breaking-change rules.</p>
+        <div class="chips"><span class="chip">commit</span><span class="chip">changelog</span></div>
+        <button class="card-toggle" aria-expanded="false">Details</button>
+        <div class="card-detail" hidden><h4>Capabilities</h4><ul>
+          <li>Mobile-specific conventional commit format</li>
+          <li>Platform scopes (iOS, Android, RN, Flutter)</li>
+          <li>Breaking change rules; changelog generation</li>
+        </ul><a class="src" href="https://github.com/zekiyugnak/telar-framework/blob/main/skills/mobile-commit-convention.md">Source ↗</a></div>
+      </article>
+      <article class="card" data-search="learn-pattern meta knowledge-capture learning debugging patterns deprecated-wrapper">
+        <div class="card-head"><h3>learn-pattern</h3></div>
+        <p class="desc">Captures hard-won debugging knowledge; now delegates to /tl-telar:self-reflect.</p>
+        <div class="chips"><span class="chip">knowledge-capture</span><span class="chip">meta</span></div>
+        <button class="card-toggle" aria-expanded="false">Details</button>
+        <div class="card-detail" hidden><h4>Capabilities</h4><ul>
+          <li>Point users at /tl-telar:self-reflect for KB capture</li>
+          <li>Document migration from learned/*.md to knowledge/*.jsonl</li>
+        </ul><a class="src" href="https://github.com/zekiyugnak/telar-framework/blob/main/skills/learn-pattern.md">Source ↗</a></div>
+      </article>
+      <article class="card" data-search="create-skill meta skill-creation plugin-development template contributing">
+        <div class="card-head"><h3>create-skill</h3></div>
+        <p class="desc">Meta-skill for creating new skills with proper structure, validation, and frontmatter.</p>
+        <div class="chips"><span class="chip">meta</span><span class="chip">template</span></div>
+        <button class="card-toggle" aria-expanded="false">Details</button>
+        <div class="card-detail" hidden><h4>Capabilities</h4><ul>
+          <li>Create new skills with proper frontmatter</li>
+          <li>Complexity tiers from simple to full agent+skill+command</li>
+          <li>Validate with validate-skills.js; promote learned patterns</li>
+        </ul><a class="src" href="https://github.com/zekiyugnak/telar-framework/blob/main/skills/create-skill.md">Source ↗</a></div>
+      </article>
+    </div>
+  </section>
+
+  <!-- BLUEPRINTS -->
+  <section class="group">
+    <h2 id="blueprints">Blueprints <span class="gc">6</span></h2>
+    <p class="gdesc">Complete, ready-to-use feature implementations for both React Native and Flutter.</p>
+    <div class="cards">
+      <article class="card" data-search="blueprints-index blueprint index discovery scaffolding feature">
+        <div class="card-head"><h3>blueprints/README</h3></div>
+        <p class="desc">Index of all available feature blueprints and how to use them.</p>
+        <div class="chips"><span class="chip">index</span><span class="chip">scaffolding</span></div>
+        <button class="card-toggle" aria-expanded="false">Details</button>
+        <div class="card-detail" hidden><h4>Capabilities</h4><ul>
+          <li>Blueprint discovery and selection</li>
+        </ul><a class="src" href="https://github.com/zekiyugnak/telar-framework/blob/main/skills/blueprints/README.md">Source ↗</a></div>
+      </article>
+      <article class="card" data-search="blueprint-auth-flow auth login signup social-auth forgot-password authentication">
+        <div class="card-head"><h3>blueprints/auth-flow</h3></div>
+        <p class="desc">Complete auth flow — login, signup, forgot password, and social auth.</p>
+        <div class="chips"><span class="chip">login</span><span class="chip">social-auth</span></div>
+        <button class="card-toggle" aria-expanded="false">Details</button>
+        <div class="card-detail" hidden><h4>Capabilities</h4><ul>
+          <li>Complete authentication flow with all screens</li>
+          <li>Social auth (Google, Apple, Facebook); biometric support</li>
+          <li>Supabase backend auth; secure token storage</li>
+        </ul><a class="src" href="https://github.com/zekiyugnak/telar-framework/blob/main/skills/blueprints/auth-flow.md">Source ↗</a></div>
+      </article>
+      <article class="card" data-search="blueprint-crud-list crud list master-detail pagination pull-to-refresh swipe-actions">
+        <div class="card-head"><h3>blueprints/crud-list</h3></div>
+        <p class="desc">Master-detail CRUD — pull-to-refresh, pagination, swipe actions, optimistic updates.</p>
+        <div class="chips"><span class="chip">master-detail</span><span class="chip">pagination</span></div>
+        <button class="card-toggle" aria-expanded="false">Details</button>
+        <div class="card-detail" hidden><h4>Capabilities</h4><ul>
+          <li>Master-detail list with CRUD operations</li>
+          <li>Pull-to-refresh and infinite scroll pagination</li>
+          <li>Swipe actions; optimistic updates with rollback</li>
+          <li>Empty states and error handling</li>
+        </ul><a class="src" href="https://github.com/zekiyugnak/telar-framework/blob/main/skills/blueprints/crud-list.md">Source ↗</a></div>
+      </article>
+      <article class="card" data-search="blueprint-chat-feature chat realtime messaging websocket supabase-realtime">
+        <div class="card-head"><h3>blueprints/chat-feature</h3></div>
+        <p class="desc">Real-time chat — message list, input, typing indicators, read receipts.</p>
+        <div class="chips"><span class="chip">realtime</span><span class="chip">messaging</span></div>
+        <button class="card-toggle" aria-expanded="false">Details</button>
+        <div class="card-detail" hidden><h4>Capabilities</h4><ul>
+          <li>Real-time message list with auto-scroll</li>
+          <li>Chat input with attachment support</li>
+          <li>Typing indicators via presence; read receipts</li>
+          <li>Supabase Realtime backend integration</li>
+        </ul><a class="src" href="https://github.com/zekiyugnak/telar-framework/blob/main/skills/blueprints/chat-feature.md">Source ↗</a></div>
+      </article>
+      <article class="card" data-search="blueprint-settings-screen settings preferences account notifications toggles">
+        <div class="card-head"><h3>blueprints/settings-screen</h3></div>
+        <p class="desc">Settings screen — sections, toggles, account management, notification prefs.</p>
+        <div class="chips"><span class="chip">preferences</span><span class="chip">account</span></div>
+        <button class="card-toggle" aria-expanded="false">Details</button>
+        <div class="card-detail" hidden><h4>Capabilities</h4><ul>
+          <li>Grouped settings with sections; persistent toggles</li>
+          <li>Account management (edit profile, password, delete)</li>
+          <li>Notification preferences; theme selection</li>
+        </ul><a class="src" href="https://github.com/zekiyugnak/telar-framework/blob/main/skills/blueprints/settings-screen.md">Source ↗</a></div>
+      </article>
+      <article class="card" data-search="blueprint-onboarding-flow onboarding intro welcome permissions first-launch">
+        <div class="card-head"><h3>blueprints/onboarding-flow</h3></div>
+        <p class="desc">Multi-step onboarding — pagination, skip, permission requests, completion tracking.</p>
+        <div class="chips"><span class="chip">onboarding</span><span class="chip">permissions</span></div>
+        <button class="card-toggle" aria-expanded="false">Details</button>
+        <div class="card-detail" hidden><h4>Capabilities</h4><ul>
+          <li>Multi-step onboarding with swipeable pages</li>
+          <li>Skip with completion tracking; permission requests</li>
+          <li>Animated illustrations with reduced-motion support</li>
+          <li>Persistent completion state</li>
+        </ul><a class="src" href="https://github.com/zekiyugnak/telar-framework/blob/main/skills/blueprints/onboarding-flow.md">Source ↗</a></div>
+      </article>
+    </div>
+  </section>
+
+  <!-- ORCHESTRATION -->
+  <section class="group">
+    <h2 id="orch">Orchestration <span class="gc">9</span></h2>
+    <p class="gdesc">The skills behind orchestrated mode. See the <a href="orchestration.html">Orchestration</a> page for the full pipeline.</p>
+    <div class="cards">
+      <article class="card" data-search="plan-review-gate orchestration review-gate plan-review adversarial multi-agent">
+        <div class="card-head"><h3>plan-review-gate</h3></div>
+        <p class="desc">Catches plan-level defects (feasibility, completeness, scope) before implementation.</p>
+        <div class="chips"><span class="chip">adversarial</span><span class="chip">3-reviewers</span></div>
+        <button class="card-toggle" aria-expanded="false">Details</button>
+        <div class="card-detail" hidden><h4>Capabilities</h4><ul>
+          <li>Spawn 3 fresh-instance adversarial reviewers in parallel</li>
+          <li>Aggregate per-reviewer verdicts into PASS/FAIL</li>
+          <li>Max-3-iteration limit with structured escalation</li>
+          <li>Cite blockers with file:line and rubric IDs</li>
+        </ul><a class="src" href="https://github.com/zekiyugnak/telar-framework/blob/main/skills/orchestration/plan-review-gate/SKILL.md">Source ↗</a></div>
+      </article>
+      <article class="card" data-search="design-review-gate orchestration review-gate collaborative multi-agent design-stage">
+        <div class="card-head"><h3>design-review-gate</h3></div>
+        <p class="desc">Pre-implementation collaborative review by 6 specialist reviewers.</p>
+        <div class="chips"><span class="chip">collaborative</span><span class="chip">6-reviewers</span></div>
+        <button class="card-toggle" aria-expanded="false">Details</button>
+        <div class="card-detail" hidden><h4>Capabilities</h4><ul>
+          <li>Spawn 6 fresh-instance collaborative reviewers</li>
+          <li>Aggregate into APPROVED/NEEDS_REVISION</li>
+          <li>Max-3-iteration limit with escalation</li>
+          <li>Produce use-case analysis (PM) and threat model</li>
+        </ul><a class="src" href="https://github.com/zekiyugnak/telar-framework/blob/main/skills/orchestration/design-review-gate/SKILL.md">Source ↗</a></div>
+      </article>
+      <article class="card" data-search="orchestrated-execution orchestration execution-loop 4-phase quality-gate multi-agent">
+        <div class="card-head"><h3>orchestrated-execution</h3></div>
+        <p class="desc">The 4-phase IMPLEMENT / VALIDATE / REVIEW / COMMIT loop.</p>
+        <div class="chips"><span class="chip">4-phase</span><span class="chip">quality-gate</span></div>
+        <button class="card-toggle" aria-expanded="false">Details</button>
+        <div class="card-detail" hidden><h4>Capabilities</h4><ul>
+          <li>Drive one Work Unit through all four phases</li>
+          <li>Orchestrator-run validation (never delegated)</li>
+          <li>Fresh adversarial reviewers per pass</li>
+          <li>Track transitions; escalate after 3 retries</li>
+        </ul><a class="src" href="https://github.com/zekiyugnak/telar-framework/blob/main/skills/orchestration/orchestrated-execution/SKILL.md">Source ↗</a></div>
+      </article>
+      <article class="card" data-search="adversarial-code-review orchestration review-gate adversarial sidecar multi-agent">
+        <div class="card-head"><h3>adversarial-code-review</h3></div>
+        <p class="desc">Spawns 2–4 fresh adversarial reviewers in Phase 3; any FAIL blocks COMMIT.</p>
+        <div class="chips"><span class="chip">sidecar</span><span class="chip">adversarial</span></div>
+        <button class="card-toggle" aria-expanded="false">Details</button>
+        <div class="card-detail" hidden><h4>Capabilities</h4><ul>
+          <li>Always-on reviewers (Adversarial Code, Mobile Security)</li>
+          <li>Conditional specialists (UX/A11y, Performance) by file scope</li>
+          <li>Aggregate JSON verdicts; any FAIL → overall FAIL</li>
+          <li>Block COMMIT until PASS or escalation</li>
+        </ul><a class="src" href="https://github.com/zekiyugnak/telar-framework/blob/main/skills/orchestration/adversarial-code-review.md">Source ↗</a></div>
+      </article>
+      <article class="card" data-search="mobile-adversarial-review orchestration review-gate adversarial mobile-specialist template">
+        <div class="card-head"><h3>mobile-adversarial-review</h3></div>
+        <p class="desc">Spawn template for firing mobile specialist agents in adversarial mode.</p>
+        <div class="chips"><span class="chip">template</span><span class="chip">specialist</span></div>
+        <button class="card-toggle" aria-expanded="false">Details</button>
+        <div class="card-detail" hidden><h4>Capabilities</h4><ul>
+          <li>Uniform spawn prompt for any specialist in adversarial mode</li>
+          <li>Inject the appropriate per-domain rubric path</li>
+          <li>Return a JSON verdict matching the schema</li>
+        </ul><a class="src" href="https://github.com/zekiyugnak/telar-framework/blob/main/skills/orchestration/mobile-adversarial-review.md">Source ↗</a></div>
+      </article>
+      <article class="card" data-search="prime orchestration knowledge-base retrieval priming facts context">
+        <div class="card-head"><h3>prime</h3></div>
+        <p class="desc">Injects relevant KB facts into the current task's context.</p>
+        <div class="chips"><span class="chip">knowledge-base</span><span class="chip">retrieval</span></div>
+        <button class="card-toggle" aria-expanded="false">Details</button>
+        <div class="card-detail" hidden><h4>Capabilities</h4><ul>
+          <li>Wrap the prime CLI for slash-command invocation</li>
+          <li>Resolve globs/keywords/work-type into KB queries</li>
+          <li>Emit 5 fixed categories; --json mode for hooks</li>
+        </ul><a class="src" href="https://github.com/zekiyugnak/telar-framework/blob/main/skills/orchestration/prime/SKILL.md">Source ↗</a></div>
+      </article>
+      <article class="card" data-search="self-reflect orchestration knowledge-base capture self-improvement pr comments">
+        <div class="card-head"><h3>self-reflect</h3></div>
+        <p class="desc">Captures durable learnings from PR comments and conversation context.</p>
+        <div class="chips"><span class="chip">capture</span><span class="chip">self-improvement</span></div>
+        <button class="card-toggle" aria-expanded="false">Details</button>
+        <div class="card-detail" hidden><h4>Capabilities</h4><ul>
+          <li>Phase A: harvest PR comments (CodeRabbit/Bugbot/etc.)</li>
+          <li>Phase B: mine conversation for insights</li>
+          <li>Phase C: audit config files</li>
+          <li>User-approval gate; append to knowledge/*.jsonl</li>
+        </ul><a class="src" href="https://github.com/zekiyugnak/telar-framework/blob/main/skills/orchestration/self-reflect/SKILL.md">Source ↗</a></div>
+      </article>
+      <article class="card" data-search="recovery orchestration recovery state-machine resilience compaction resume">
+        <div class="card-head"><h3>recovery</h3></div>
+        <p class="desc">Restores orchestrator state after compaction or cross-session resume.</p>
+        <div class="chips"><span class="chip">resilience</span><span class="chip">resume</span></div>
+        <button class="card-toggle" aria-expanded="false">Details</button>
+        <div class="card-detail" hidden><h4>Capabilities</h4><ul>
+          <li>Detect the in-progress sentinel in active-plan.md</li>
+          <li>Reconstruct in-flight state from the 3 state files</li>
+          <li>Re-prime KB; announce resume position and await confirm</li>
+          <li>Hand control back at the recorded phase</li>
+        </ul><a class="src" href="https://github.com/zekiyugnak/telar-framework/blob/main/skills/orchestration/recovery/SKILL.md">Source ↗</a></div>
+      </article>
+      <article class="card" data-search="external-tools orchestration external-ai multi-model dispatcher phase-beta codex gemini">
+        <div class="card-head"><h3>external-tools</h3></div>
+        <p class="desc">Layer-B dispatcher for Codex/Gemini delegation (disabled by default).</p>
+        <div class="chips"><span class="chip">multi-model</span><span class="chip">dispatcher</span></div>
+        <button class="card-toggle" aria-expanded="false">Details</button>
+        <div class="card-detail" hidden><h4>Capabilities</h4><ul>
+          <li>Document the Layer A adapter contract (vendored)</li>
+          <li>Document the Layer B dispatcher (routing/budget/parsing)</li>
+          <li>Health check and budget reporting</li>
+          <li>Reserved cross-model review integration point</li>
+        </ul><a class="src" href="https://github.com/zekiyugnak/telar-framework/blob/main/skills/orchestration/external-tools/SKILL.md">Source ↗</a></div>
+      </article>
+    </div>
+  </section>
+
+  <!-- ASTRO -->
+  <section class="group">
+    <h2 id="astro">Astro <span class="gc">2</span></h2>
+    <p class="gdesc">SEO/OG correctness and hydration performance for public marketing and careers sites.</p>
+    <div class="cards">
+      <article class="card" data-search="astro-seo-og astro seo open-graph meta-tags sitemap structured-data jsonld">
+        <div class="card-head"><h3>astro-seo-og</h3></div>
+        <p class="desc">Missing/inconsistent SEO/OG tags silently kill organic visibility and break social link previews.</p>
+        <div class="chips"><span class="chip">seo</span><span class="chip">open-graph</span><span class="chip">json-ld</span></div>
+        <button class="card-toggle" aria-expanded="false">Details</button>
+        <div class="card-detail" hidden><h4>Capabilities</h4><ul>
+          <li>Reusable SEO/Layout component: title, description, canonical tags</li>
+          <li>Open Graph and Twitter Card metadata from a single source of truth</li>
+          <li>JSON-LD structured data for Organization and JobPosting schema</li>
+          <li>Dynamic/static OG image generation; sitemap and robots.txt setup</li>
+        </ul><a class="src" href="https://github.com/zekiyugnak/telar-framework/blob/main/skills/astro-seo-og.md">Source ↗</a></div>
+      </article>
+      <article class="card" data-search="astro-content-performance astro islands performance hydration core-web-vitals image-optimization">
+        <div class="card-head"><h3>astro-content-performance</h3></div>
+        <p class="desc">Unnecessary hydration and unoptimized hero images are the top cause of poor LCP/CLS on marketing sites.</p>
+        <div class="chips"><span class="chip">islands</span><span class="chip">core-web-vitals</span><span class="chip">hydration</span></div>
+        <button class="card-toggle" aria-expanded="false">Details</button>
+        <div class="card-detail" hidden><h4>Capabilities</h4><ul>
+          <li>Choosing the correct client: hydration directive per component</li>
+          <li>Responsive, format-aware image optimization with astro:assets</li>
+          <li>Type-safe structured content via Content Collections and Zod</li>
+          <li>Diagnosing Core Web Vitals regressions (LCP, CLS) on Astro sites</li>
+        </ul><a class="src" href="https://github.com/zekiyugnak/telar-framework/blob/main/skills/astro-content-performance.md">Source ↗</a></div>
+      </article>
+    </div>
+  </section>
+
+  <!-- NEXT.JS WEB -->
+  <section class="group">
+    <h2 id="nextweb">Next.js Web <span class="gc">3</span></h2>
+    <p class="gdesc">Tailwind/shadcn design systems and cookie-session auth for an authenticated Next.js console.</p>
+    <div class="cards">
+      <article class="card" data-search="shadcn-component-patterns shadcn ui radix tailwind components design-system">
+        <div class="card-head"><h3>shadcn-component-patterns</h3></div>
+        <p class="desc">Cuts custom interactive-component build time and eliminates a class of keyboard/focus/ARIA bugs.</p>
+        <div class="chips"><span class="chip">shadcn</span><span class="chip">radix</span><span class="chip">cva</span></div>
+        <button class="card-toggle" aria-expanded="false">Details</button>
+        <div class="card-detail" hidden><h4>Capabilities</h4><ul>
+          <li>Adding/owning shadcn/ui components via the CLI, not an installed library</li>
+          <li>Composing Radix-based primitives into compound components</li>
+          <li>cn() and class-variance-authority (cva) for variant styling</li>
+          <li>Theming via CSS variables shared with Tailwind's token system</li>
+        </ul><a class="src" href="https://github.com/zekiyugnak/telar-framework/blob/main/skills/shadcn-component-patterns.md">Source ↗</a></div>
+      </article>
+      <article class="card" data-search="tailwind-v4-design-tokens tailwind tailwind-v4 css design-tokens theming oklch">
+        <div class="card-head"><h3>tailwind-v4-design-tokens</h3></div>
+        <p class="desc">Removes the duplicate theme-definition problem and prevents silent v3→v4 build breakage.</p>
+        <div class="chips"><span class="chip">tailwind-v4</span><span class="chip">theme</span><span class="chip">oklch</span></div>
+        <button class="card-toggle" aria-expanded="false">Details</button>
+        <div class="card-detail" hidden><h4>Capabilities</h4><ul>
+          <li>Design tokens via Tailwind v4's CSS-first @theme directive</li>
+          <li>Migrating from v3 @tailwind directives to the v4 @import entry point</li>
+          <li>Native oklch colors and container queries introduced in v4</li>
+          <li>Aligning tokens with shadcn/ui's CSS-variable-based theming</li>
+        </ul><a class="src" href="https://github.com/zekiyugnak/telar-framework/blob/main/skills/tailwind-v4-design-tokens.md">Source ↗</a></div>
+      </article>
+      <article class="card" data-search="nextjs-auth-app-router nextjs app-router authentication session middleware supabase ssr">
+        <div class="card-head"><h3>nextjs-auth-app-router</h3></div>
+        <p class="desc">Prevents unauthorized data access from stale-cookie/session-desync bugs a middleware-only check can't catch.</p>
+        <div class="chips"><span class="chip">app-router</span><span class="chip">middleware</span><span class="chip">supabase-ssr</span></div>
+        <button class="card-toggle" aria-expanded="false">Details</button>
+        <div class="card-detail" hidden><h4>Capabilities</h4><ul>
+          <li>Fast, edge-level session check in middleware.ts</li>
+          <li>Re-verifying sessions as the true authz boundary in Server Components</li>
+          <li>Passing authenticated user context down without client-side Context</li>
+          <li>@supabase/ssr cookie-based session helpers for browser/server/middleware</li>
+        </ul><a class="src" href="https://github.com/zekiyugnak/telar-framework/blob/main/skills/nextjs-auth-app-router.md">Source ↗</a></div>
+      </article>
+    </div>
+  </section>
+
+  <!-- ADMIN PANEL -->
+  <section class="group">
+    <h2 id="adminpanel">Admin Panel (Vite + TanStack) <span class="gc">8</span></h2>
+    <p class="gdesc">Vite + React 19 + TanStack + Supabase (anon key + RLS only) stack for internal operator panels.</p>
+    <div class="cards">
+      <article class="card" data-search="tanstack-router-patterns tanstack-router react routing type-safety code-splitting admin-panel">
+        <div class="card-head"><h3>tanstack-router-patterns</h3></div>
+        <p class="desc">Eliminates a class of route/query waterfalls and unguarded-route bugs via end-to-end type safety.</p>
+        <div class="chips"><span class="chip">tanstack-router</span><span class="chip">type-safety</span></div>
+        <button class="card-toggle" aria-expanded="false">Details</button>
+        <div class="card-detail" hidden><h4>Capabilities</h4><ul>
+          <li>File-based routes with generated, fully type-safe route trees</li>
+          <li>Type-safe search params with runtime validation</li>
+          <li>Route loaders combined with pending/error boundary components</li>
+          <li>Protected-route guards via beforeLoad that run before any UI renders</li>
+        </ul><a class="src" href="https://github.com/zekiyugnak/telar-framework/blob/main/skills/tanstack-router-patterns.md">Source ↗</a></div>
+      </article>
+      <article class="card" data-search="tanstack-query-patterns tanstack-query react-query supabase caching realtime admin-panel">
+        <div class="card-head"><h3>tanstack-query-patterns</h3></div>
+        <p class="desc">Removes duplicate/stale-data bugs from ad hoc cache keys; closes the loader-to-component gap.</p>
+        <div class="chips"><span class="chip">react-query</span><span class="chip">caching</span></div>
+        <button class="card-toggle" aria-expanded="false">Details</button>
+        <div class="card-detail" hidden><h4>Capabilities</h4><ul>
+          <li>Query key factories for addressable, precise cache invalidation</li>
+          <li>Wiring TanStack Query into router loaders via ensureQueryData</li>
+          <li>Optimistic updates with correct rollback on mutation failure</li>
+          <li>Supabase Realtime subscriptions to invalidate/patch the cache</li>
+        </ul><a class="src" href="https://github.com/zekiyugnak/telar-framework/blob/main/skills/tanstack-query-patterns.md">Source ↗</a></div>
+      </article>
+      <article class="card" data-search="tanstack-table-patterns tanstack-table react-table supabase pagination virtualization admin-panel">
+        <div class="card-head"><h3>tanstack-table-patterns</h3></div>
+        <p class="desc">Keeps operator tables responsive from 100 to 500k+ rows by moving work to Postgres, not the browser.</p>
+        <div class="chips"><span class="chip">tanstack-table</span><span class="chip">pagination</span></div>
+        <button class="card-toggle" aria-expanded="false">Details</button>
+        <div class="card-detail" hidden><h4>Capabilities</h4><ul>
+          <li>Headless table setup with column definitions and a typed row model</li>
+          <li>Server-side sorting, filtering, pagination against Supabase range queries</li>
+          <li>Row virtualization for large in-memory datasets without jank</li>
+          <li>Row selection state and bulk-action patterns</li>
+        </ul><a class="src" href="https://github.com/zekiyugnak/telar-framework/blob/main/skills/tanstack-table-patterns.md">Source ↗</a></div>
+      </article>
+      <article class="card" data-search="supabase-rls-client-patterns supabase rls postgres security anon-key admin-panel">
+        <div class="card-head"><h3>supabase-rls-client-patterns</h3></div>
+        <p class="desc">Prevents full-database exposure through the anon key — the top failure mode of a service-role-free client.</p>
+        <div class="chips"><span class="chip">rls</span><span class="chip">security</span><span class="chip">anon-key</span></div>
+        <button class="card-toggle" aria-expanded="false">Details</button>
+        <div class="card-detail" hidden><h4>Capabilities</h4><ul>
+          <li>RLS policies as the sole authorization boundary for an anon-key-only client</li>
+          <li>Structuring SELECT/INSERT/UPDATE/DELETE as separate, minimal grants</li>
+          <li>Testing RLS policies against roles other than the table owner</li>
+          <li>security_invoker views to avoid accidental RLS bypass</li>
+        </ul><a class="src" href="https://github.com/zekiyugnak/telar-framework/blob/main/skills/supabase-rls-client-patterns.md">Source ↗</a></div>
+      </article>
+      <article class="card" data-search="supabase-tus-resumable-upload supabase storage tus resumable-upload tus-js-client uppy admin-panel">
+        <div class="card-head"><h3>supabase-tus-resumable-upload</h3></div>
+        <p class="desc">Turns large-file uploads from a single point of failure on flaky networks into a resumable operation.</p>
+        <div class="chips"><span class="chip">tus</span><span class="chip">uppy</span><span class="chip">storage</span></div>
+        <button class="card-toggle" aria-expanded="false">Details</button>
+        <div class="card-detail" hidden><h4>Capabilities</h4><ul>
+          <li>Resumable large-file uploads to Supabase Storage via the TUS protocol</li>
+          <li>Configuring tus-js-client or Uppy's Tus plugin with the required chunk size</li>
+          <li>Authenticating TUS uploads with the operator's session access token</li>
+          <li>Resuming an interrupted upload after a network drop or tab reload</li>
+        </ul><a class="src" href="https://github.com/zekiyugnak/telar-framework/blob/main/skills/supabase-tus-resumable-upload.md">Source ↗</a></div>
+      </article>
+      <article class="card" data-search="command-palette-cmdk cmdk command-palette keyboard-navigation accessibility admin-panel">
+        <div class="card-head"><h3>command-palette-cmdk</h3></div>
+        <p class="desc">Cuts navigation and repeat-action time for power-user operators who default to keyboard over mouse.</p>
+        <div class="chips"><span class="chip">cmdk</span><span class="chip">keyboard</span></div>
+        <button class="card-toggle" aria-expanded="false">Details</button>
+        <div class="card-detail" hidden><h4>Capabilities</h4><ul>
+          <li>Building a cmd-k style command palette with global keyboard activation</li>
+          <li>Guarding the global shortcut so it doesn't fire while typing in a field</li>
+          <li>Fuzzy search and grouped results (navigation vs actions)</li>
+          <li>Wiring palette navigation commands into TanStack Router</li>
+        </ul><a class="src" href="https://github.com/zekiyugnak/telar-framework/blob/main/skills/command-palette-cmdk.md">Source ↗</a></div>
+      </article>
+      <article class="card" data-search="tremor-dashboard-charts tremor charts dashboard kpi data-visualization admin-panel">
+        <div class="card-head"><h3>tremor-dashboard-charts</h3></div>
+        <p class="desc">Cuts dashboard build time by reusing pre-built, accessible chart primitives instead of hand-rolling SVG.</p>
+        <div class="chips"><span class="chip">tremor</span><span class="chip">charts</span></div>
+        <button class="card-toggle" aria-expanded="false">Details</button>
+        <div class="card-detail" hidden><h4>Capabilities</h4><ul>
+          <li>Choosing Tremor for standard admin-dashboard chart/KPI-card needs</li>
+          <li>Recognizing when a custom charting approach is actually warranted</li>
+          <li>Aligning Tremor's visual output with shadcn/ui design tokens</li>
+          <li>Shaping Supabase query results into Tremor's expected data formats</li>
+        </ul><a class="src" href="https://github.com/zekiyugnak/telar-framework/blob/main/skills/tremor-dashboard-charts.md">Source ↗</a></div>
+      </article>
+      <article class="card" data-search="i18n-rtl-formatjs-lingui i18n formatjs react-intl lingui rtl tailwind icu admin-panel">
+        <div class="card-head"><h3>i18n-rtl-formatjs-lingui</h3></div>
+        <p class="desc">Prevents a costly full-UI re-audit later by building bilingual + RTL-ready layout discipline in from day one.</p>
+        <div class="chips"><span class="chip">i18n</span><span class="chip">rtl</span><span class="chip">icu</span></div>
+        <button class="card-toggle" aria-expanded="false">Details</button>
+        <div class="card-detail" hidden><h4>Capabilities</h4><ul>
+          <li>Choosing between FormatJS (react-intl) and Lingui for a TR/EN panel</li>
+          <li>Message extraction workflow and ICU pluralization/formatting</li>
+          <li>RTL-readiness via CSS logical properties instead of physical left/right</li>
+          <li>Icon mirroring rules — which icons must flip for RTL and which must not</li>
+        </ul><a class="src" href="https://github.com/zekiyugnak/telar-framework/blob/main/skills/i18n-rtl-formatjs-lingui.md">Source ↗</a></div>
+      </article>
+    </div>
+  </section>
+
+  <!-- RUST SERVICE -->
+  <section class="group">
+    <h2 id="rustsvc">Rust Service <span class="gc">5</span></h2>
+    <p class="gdesc">A narrow-topic breakdown for axum/tokio/sqlx backend services, mirroring the depth of the mobile skill set.</p>
+    <div class="cards">
+      <article class="card" data-search="rust-axum-routing rust axum routing extractors middleware tower error-handling">
+        <div class="card-head"><h3>rust-axum-routing</h3></div>
+        <p class="desc">Eliminates duplicated auth/validation code across handlers and prevents silent CORS misconfiguration.</p>
+        <div class="chips"><span class="chip">axum</span><span class="chip">extractors</span><span class="chip">tower</span></div>
+        <button class="card-toggle" aria-expanded="false">Details</button>
+        <div class="card-detail" hidden><h4>Capabilities</h4><ul>
+          <li>Composing axum routers with nested routes and .merge()</li>
+          <li>Built-in extractors (Path, Query, Json, State) in the right order</li>
+          <li>Custom extractors via FromRequestParts for auth</li>
+          <li>tower::Layer middleware for logging, CORS, rate limiting; a single AppError</li>
+        </ul><a class="src" href="https://github.com/zekiyugnak/telar-framework/blob/main/skills/rust-axum-routing.md">Source ↗</a></div>
+      </article>
+      <article class="card" data-search="rust-sqlx-patterns rust sqlx postgres connection-pool migrations transactions multi-tenant">
+        <div class="card-head"><h3>rust-sqlx-patterns</h3></div>
+        <p class="desc">Prevents connection-pool exhaustion outages and N+1 storms; catches SQL drift at compile time.</p>
+        <div class="chips"><span class="chip">sqlx</span><span class="chip">postgres</span><span class="chip">migrations</span></div>
+        <button class="card-toggle" aria-expanded="false">Details</button>
+        <div class="card-detail" hidden><h4>Capabilities</h4><ul>
+          <li>Compile-time verified queries with query!/query_as!</li>
+          <li>Sizing and configuring a PgPool for production load</li>
+          <li>Schema changes with sqlx migrate; correct transaction usage</li>
+          <li>Avoiding N+1 patterns; CI without a live DB via .sqlx offline mode</li>
+        </ul><a class="src" href="https://github.com/zekiyugnak/telar-framework/blob/main/skills/rust-sqlx-patterns.md">Source ↗</a></div>
+      </article>
+      <article class="card" data-search="rust-service-architecture rust architecture layering dependency-injection config error-handling workspace">
+        <div class="card-head"><h3>rust-service-architecture</h3></div>
+        <p class="desc">Keeps services testable and mergeable as they grow; prevents config/secrets sprawl and breaking API changes.</p>
+        <div class="chips"><span class="chip">layering</span><span class="chip">appstate</span></div>
+        <button class="card-toggle" aria-expanded="false">Details</button>
+        <div class="card-detail" hidden><h4>Capabilities</h4><ul>
+          <li>Layering into handler, service, and repository responsibilities</li>
+          <li>Sharing dependencies via AppState and Arc&lt;T&gt; without over-engineering DI</li>
+          <li>Configuration via config/envy crates plus .env for local dev</li>
+          <li>Structured error hierarchy with thiserror; API versioning strategy</li>
+        </ul><a class="src" href="https://github.com/zekiyugnak/telar-framework/blob/main/skills/rust-service-architecture.md">Source ↗</a></div>
+      </article>
+      <article class="card" data-search="rust-testing-pyramid rust testing axum sqlx tower mocking property-testing ci">
+        <div class="card-head"><h3>rust-testing-pyramid</h3></div>
+        <p class="desc">Catches routing/auth/query regressions before deploy without a full staging environment per PR.</p>
+        <div class="chips"><span class="chip">testing</span><span class="chip">sqlx-test</span></div>
+        <button class="card-toggle" aria-expanded="false">Details</button>
+        <div class="card-detail" hidden><h4>Capabilities</h4><ul>
+          <li>Fast unit tests for pure business logic with no I/O</li>
+          <li>Testing an axum Router in-process with tower::ServiceExt::oneshot</li>
+          <li>#[sqlx::test] for isolated, auto-provisioned integration tests</li>
+          <li>Mocking outbound HTTP calls; when property-based testing pays off</li>
+        </ul><a class="src" href="https://github.com/zekiyugnak/telar-framework/blob/main/skills/rust-testing-pyramid.md">Source ↗</a></div>
+      </article>
+      <article class="card" data-search="rust-deployment rust docker deployment graceful-shutdown health-check tracing cargo-chef">
+        <div class="card-head"><h3>rust-deployment</h3></div>
+        <p class="desc">Cuts Docker image size dramatically and CI build times via layer caching; no dropped in-flight requests.</p>
+        <div class="chips"><span class="chip">docker</span><span class="chip">cargo-chef</span></div>
+        <button class="card-toggle" aria-expanded="false">Details</button>
+        <div class="card-detail" hidden><h4>Capabilities</h4><ul>
+          <li>Multi-stage Dockerfile producing a small release binary</li>
+          <li>Caching dependency compilation with cargo-chef</li>
+          <li>Liveness/readiness health check endpoints for orchestrators</li>
+          <li>SIGTERM handling and draining in-flight requests before exit</li>
+        </ul><a class="src" href="https://github.com/zekiyugnak/telar-framework/blob/main/skills/rust-deployment.md">Source ↗</a></div>
+      </article>
+    </div>
+  </section>
+
+  <p class="empty" id="empty" hidden>No skills match your filter.</p>
+</main>
+
+<footer><div class="wrap fl">
+  <span>Telar v0.5.0 — MIT © 2026 Zeki Yugnak</span>
+  <span><a href="https://github.com/zekiyugnak/telar-framework/tree/main/skills">All skills on GitHub</a> · <a href="index.html">Docs home</a></span>
+</div></footer>
+
+<script src="assets/telar.js"></script>
+</body>
+</html>
