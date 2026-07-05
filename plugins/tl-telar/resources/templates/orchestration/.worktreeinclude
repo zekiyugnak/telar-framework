@@ -1,0 +1,13 @@
+# Files copied into each git worktree Claude Code creates for an isolated Work Unit.
+# .gitignore syntax; only files that match AND are gitignored are copied (tracked
+# files are never duplicated). Used when cc_features.worktree_isolation is active.
+#
+# Env files an isolated WU implementer needs (a worktree is a fresh checkout, so
+# untracked .env* are absent unless listed here):
+.env
+.env.local
+.env.*.local
+
+# Cross-WU coherence context the orchestrator writes and subsequent WU
+# implementers read (git-ignored per §2.7a, so it needs explicit copy-in):
+.tl-telar/context/project-context.md
