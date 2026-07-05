@@ -1,0 +1,20 @@
+{
+  "name": "telar",
+  "interface": {
+    "displayName": "Telar"
+  },
+  "plugins": [
+    {
+      "name": "tl-telar",
+      "source": {
+        "source": "local",
+        "path": "./plugins/tl-telar"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Developer Tools"
+    }
+  ]
+}
