@@ -37,6 +37,11 @@
   <div class="prose">
     <div class="callout"><strong>Opt-in &amp; git-safe.</strong> Run <code>/tl-telar:setup-orchestration</code> once to enable it. The orchestrator never auto-commits — it emits a COMMIT-READY signal and leaves the commit to you.</div>
 
+    <h2>Supported agent surfaces</h2>
+    <p>Telar v0.6.0 supports both Claude Code and Codex from the same source repository. In Claude Code, workflows are exposed as slash commands such as <code>/tl-telar:orchestrate</code>. In Codex, the generated plugin exposes equivalent skills such as <code>$orchestrate</code>, <code>$review-plan</code>, and <code>$external-tools-health</code>, preferably invoked under the <code>@tl-telar</code> plugin context when names could collide.</p>
+    <p>The Codex package includes the generated skills, custom-agent TOML files, source agents, commands, scripts, resources, rules, hooks, templates, and original orchestration skill sources required by the gates. Claude-specific <code>Task()</code> instructions map to fresh Codex subagent workflows when the current Codex surface exposes subagent tools; if a required multi-reviewer gate cannot spawn subagents, the gate stops instead of silently replacing it with a single inline review.</p>
+    <div class="callout"><strong>Worktree behavior differs by runtime.</strong> Claude Code worktree isolation remains capability-gated through <code>cc_features.worktree_isolation</code>. Codex does not assume worktree isolation just because it is running; Telar keeps shared-tree serialization unless a concrete Codex worktree isolation and merge-back mechanism is positively verified for that run.</div>
+
     <h2>The pipeline</h2>
     <div class="flow">
       <span class="node">Design gate</span><span class="arrow">→</span>
@@ -147,6 +152,7 @@ node scripts/tl-telar-wu-scheduler.js \
 
     <h2>External AI delegation <span style="color:var(--text-faint);font-weight:400">(Phase β/γ — disabled by default)</span></h2>
     <p>Optional adapters can delegate implementation or review to external models (Codex, Gemini) with a budget circuit breaker ($1/task, $10/session) and fail-closed behavior. Cross-model review enforces that the model which wrote a diff never reviews it. Enable per-adapter in <code>.tl-telar/external-tools.yaml</code>; check status with <code>/tl-telar:external-tools-health</code>.</p>
+    <p>This is separate from the Codex plugin surface. You can run Telar inside Codex with <code>@tl-telar</code> while external adapters remain disabled, and you can enable the external Codex adapter only when you explicitly want delegation to a Codex CLI subprocess.</p>
 
     <h2>Authoring inputs for orchestrate</h2>
     <p><code>/tl-telar:orchestrate</code> accepts three input modes:</p>

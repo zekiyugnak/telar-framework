@@ -1,6 +1,6 @@
 # Configuration Reference
 
-Telar Framework'ün orchestrasyon sistemini yöneten iki ayrı config dosyası vardır:
+Telar Framework'ün orchestrasyon sistemini yöneten iki ayrı config dosyası vardır. Bu dosyalar Claude Code ve Codex plugin yüzeyleri tarafından ortak kullanılır:
 
 | Dosya | Amaç | Oluşturulma |
 |-------|------|-------------|
@@ -286,6 +286,8 @@ Bu alanlar orchestratörün gate başarısız olduğunda PR oluşturma ve task c
 ## `.tl-telar/external-tools.yaml`
 
 Harici AI adapter'larını (Codex, Gemini) ve çapraz-model review özelliğini yapılandırır. Bu özellik **Phase β** durumundadır — default olarak `enabled: false`'dur.
+
+> **Codex plugin ile Codex adapter aynı şey değildir.** v0.6.0 ile Telar, Codex içinde çalışan generated plugin/skill paketi de üretir (`@tl-telar`, `$orchestrate`, `$review-plan`, vb.). Aşağıdaki `adapters.codex` bloğu ise ayrı bir opt-in mekanizmadır: orchestration sırasında harici bir Codex CLI subprocess'ine implement/review işi delege etmek içindir. Codex plugin'i kurmak bu adapter'ı otomatik açmaz.
 
 ### Dosya konumu
 

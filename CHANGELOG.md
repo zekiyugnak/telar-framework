@@ -12,7 +12,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 - Codex-compatible plugin distribution generated from the same Telar source files as the Claude plugin.
 - Codex marketplace metadata, installable plugin manifest, generated skills, and generated custom-agent TOML files.
-- README installation guidance for both Claude Code and Codex.
+- README and documentation-site installation guidance for both Claude Code and Codex.
 
 ### Fixed
 

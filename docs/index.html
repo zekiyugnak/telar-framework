@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Telar — the agentic engineering framework</title>
-<meta name="description" content="Telar is a multi-agent engineering framework for Claude Code: plan, build, review, and ship, with agents. Cross-platform mobile (React Native & Flutter), a companion web stack (Astro, Next.js, Vite/TanStack), and Rust services.">
+<meta name="description" content="Telar is a multi-agent engineering framework for Claude Code and Codex: plan, build, review, and ship, with agents. Cross-platform mobile (React Native & Flutter), a companion web stack (Astro, Next.js, Vite/TanStack), and Rust services.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;650;800;850&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="assets/telar.css">
@@ -32,7 +32,7 @@
     <span class="eyebrow">v0.6.0 · plugin for Claude Code + Codex</span>
     <h1>Telar</h1>
     <p class="tagline">plan · build · review · ship — with agents</p>
-    <p class="lead">A multi-agent engineering framework that takes a feature from idea to production: orchestrated planning, adversarial review gates, a persistent knowledge base, and cross-model verification. Its first edition targets <strong>cross-platform mobile</strong> — React Native &amp; Flutter — with deep native integration, plus a companion <strong>web stack</strong> (Astro, Next.js/shadcn, Vite/TanStack admin panels) and a <strong>Rust</strong> service layer.</p>
+    <p class="lead">A multi-agent engineering framework for <strong>Claude Code and Codex</strong> that takes a feature from idea to production: orchestrated planning, adversarial review gates, a persistent knowledge base, and cross-model verification. Its first edition targets <strong>cross-platform mobile</strong> — React Native &amp; Flutter — with deep native integration, plus a companion <strong>web stack</strong> (Astro, Next.js/shadcn, Vite/TanStack admin panels) and a <strong>Rust</strong> service layer.</p>
     <div class="cta">
       <a class="btn primary" href="getting-started.html">Get started →</a>
       <a class="btn ghost" href="https://github.com/zekiyugnak/telar-framework">View on GitHub</a>
@@ -46,7 +46,7 @@
       <div class="stat"><div class="n">23</div><div class="l">Commands</div></div>
       <div class="stat"><div class="n">4</div><div class="l">Hooks</div></div>
       <div class="stat"><div class="n">7</div><div class="l">Rules</div></div>
-      <div class="stat"><div class="n">26</div><div class="l">Scripts</div></div>
+      <div class="stat"><div class="n">27</div><div class="l">Scripts</div></div>
     </div>
   </section>
 
@@ -102,12 +102,15 @@
 
   <section class="wrap block">
     <div class="section-head"><h2>Install</h2></div>
+    <h3>Claude Code</h3>
     <pre class="prose"><code># Add the marketplace
 claude plugin marketplace add zekiyugnak/telar-framework
 
 # Install the plugin
 claude plugin install tl-telar@telar</code></pre>
-    <p class="prose">Then restart Claude Code. See <a href="getting-started.html">Getting Started</a> for the full guide.</p>
+    <h3>Codex</h3>
+    <p class="prose">Telar also ships a generated Codex plugin from the same source files. Open Codex from this repository root, run <code>/plugins</code>, choose the <code>Telar</code> marketplace, and install <code>tl-telar</code>. Invoke it with <code>@tl-telar</code> or bundled skills such as <code>$create-app</code>.</p>
+    <p class="prose">See <a href="getting-started.html">Getting Started</a> for the full guide.</p>
   </section>
 </main>
 

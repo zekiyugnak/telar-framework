@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Getting Started — Telar</title>
-<meta name="description" content="Install Telar and run your first workflow in Claude Code.">
+<meta name="description" content="Install Telar and run your first workflow in Claude Code or Codex.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;650;800;850&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="assets/telar.css">
@@ -37,18 +37,30 @@
   <div class="prose">
     <h2>Requirements</h2>
     <ul>
-      <li><a href="https://www.anthropic.com/claude-code">Claude Code</a> installed and authenticated.</li>
+      <li><a href="https://www.anthropic.com/claude-code">Claude Code</a> or Codex installed and authenticated.</li>
       <li>A React Native or Flutter project (or start a new one with <code>/tl-telar:create-app</code>).</li>
       <li>For simulator automation: Xcode (iOS) and/or Android SDK with an emulator.</li>
     </ul>
 
     <h2>Installation</h2>
+    <h3>Claude Code</h3>
     <pre><code># Add the marketplace
 claude plugin marketplace add zekiyugnak/telar-framework
 
 # Install the plugin
 claude plugin install tl-telar@telar</code></pre>
     <p>After installation, <strong>restart Claude Code</strong> to load the plugin. All commands are namespaced under <code>/tl-telar:</code>.</p>
+
+    <h3>Codex</h3>
+    <p>Telar also ships a generated Codex plugin from the same source files as the Claude plugin.</p>
+    <ol>
+      <li>Open Codex from this repository root.</li>
+      <li>Run <code>/plugins</code>.</li>
+      <li>Choose the <code>Telar</code> marketplace.</li>
+      <li>Install <code>tl-telar</code>.</li>
+      <li>Start a new thread and invoke Telar with <code>@tl-telar</code> or bundled skills such as <code>$create-app</code>, <code>$review-plan</code>, or <code>$orchestrate</code>.</li>
+    </ol>
+    <div class="callout"><strong>Codex command shape.</strong> Claude uses slash commands such as <code>/tl-telar:create-app</code>. Codex uses generated plugin skills such as <code>$create-app</code>, preferably under the <code>@tl-telar</code> plugin context when another user-level skill has the same name.</div>
 
     <h2>Quick start</h2>
     <table class="t">
