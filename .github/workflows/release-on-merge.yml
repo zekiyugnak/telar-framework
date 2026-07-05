@@ -99,10 +99,14 @@ jobs:
           # Regenerate AGENTS.md so it reflects current agent set + compile date.
           node scripts/compile-agents-md.js
 
+          # Regenerate Codex-compatible plugin, repo marketplace, and custom agents.
+          node scripts/generate-codex-plugin.js
+
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add .claude-plugin/plugin.json .claude-plugin/marketplace.json \
-                  README.md CLAUDE.md AGENTS.md
+                  README.md CLAUDE.md AGENTS.md \
+                  .agents/plugins/marketplace.json .codex/agents plugins/tl-telar
           if git diff --cached --quiet; then
             echo "No changes to commit"
           else

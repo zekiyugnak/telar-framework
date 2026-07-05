@@ -6,6 +6,19 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+## [0.6.0] - 2026-07-05
+
+### Added
+
+- Codex-compatible plugin distribution generated from the same Telar source files as the Claude plugin.
+- Codex marketplace metadata, installable plugin manifest, generated skills, and generated custom-agent TOML files.
+- README installation guidance for both Claude Code and Codex.
+
+### Fixed
+
+- External-tools health now works in Codex read-only sandbox mode without creating temporary project files.
+- Codex orchestration packaging now includes the source agents, commands, scripts, resources, rules, hooks, templates, and original Telar orchestration skill sources needed by workflow gates.
+
 ## [0.5.0] - 2026-07-03
 
 Adds opt-in adoption of newer Claude Code native capabilities (Dynamic Workflows for the plan-review gate, git-worktree isolation for parallel Work Units), all capability-gated and fail-closed so older Claude Code degrades to the current behavior with no change.
