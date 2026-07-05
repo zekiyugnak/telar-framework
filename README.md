@@ -1,9 +1,9 @@
 # Telar
 
 > **The agentic engineering framework** — plan, build, review, and ship, with agents.
-> By Zeki Yugnak · v0.5.0 — 41 agents, 113 skills, 23 commands, 4 hooks, 7 rules, 26 scripts
+> By Zeki Yugnak · v0.6.0 — 41 agents, 113 skills, 23 commands, 4 hooks, 7 rules, 27 scripts
 
-Telar is a multi-agent engineering framework for Claude Code that takes a feature from idea to production — orchestrated planning, adversarial review gates, a persistent knowledge base, and cross-model verification. Its first edition targets **cross-platform mobile** (**React Native** & **Flutter**) with deep native integration, plus a companion web stack (**Astro**, **Next.js**/Tailwind/shadcn, **Vite**/TanStack admin panels) and a **Rust** service layer.
+Telar is a multi-agent engineering framework for Claude Code and Codex that takes a feature from idea to production — orchestrated planning, adversarial review gates, a persistent knowledge base, and cross-model verification. Its first edition targets **cross-platform mobile** (**React Native** & **Flutter**) with deep native integration, plus a companion web stack (**Astro**, **Next.js**/Tailwind/shadcn, **Vite**/TanStack admin panels) and a **Rust** service layer.
 
 ## 📖 Full documentation
 
@@ -24,6 +24,8 @@ The full reference — every agent, skill, command, and rule, plus the orchestra
 
 ## Installation
 
+### Claude Code
+
 ```bash
 # Add the marketplace
 claude plugin marketplace add zekiyugnak/telar-framework
@@ -33,6 +35,18 @@ claude plugin install tl-telar@telar
 ```
 
 After installation, restart Claude Code to load the plugin. All commands are namespaced under `/tl-telar:`.
+
+### Codex
+
+Telar also ships a generated Codex plugin from the same source files:
+
+1. Open Codex from this repository root.
+2. Run `/plugins`.
+3. Choose the `Telar` marketplace.
+4. Install `tl-telar`.
+5. Start a new thread and invoke Telar with `@tl-telar` or specific bundled skills such as `$create-app`.
+
+If you already have a user-level Codex skill with the same name, prefer `@tl-telar` so Codex resolves the Telar plugin context.
 
 ## Quick start
 

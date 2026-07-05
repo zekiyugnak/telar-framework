@@ -31,7 +31,7 @@
   <div class="page-title">
     <span class="eyebrow">Reference</span>
     <h1>Configuration</h1>
-    <p>Every knob Telar exposes, in two files: <code>.tl-telar-thresholds.json</code> (quality gates, autonomy, parallelism) and <code>.tl-telar/external-tools.yaml</code> (external AI adapters, cross-model review, and opt-in Claude Code native features). Both are created by <code>/tl-telar:setup-orchestration</code>; edit them by hand afterward.</p>
+    <p>Every knob Telar exposes, in two files: <code>.tl-telar-thresholds.json</code> (quality gates, autonomy, parallelism) and <code>.tl-telar/external-tools.yaml</code> (external AI adapters, cross-model review, and opt-in Claude Code native features). Both are created by <code>/tl-telar:setup-orchestration</code>; edit them by hand afterward. These project-level files are shared by the Claude and Codex plugin surfaces.</p>
   </div>
 
   <div class="prose">
@@ -115,6 +115,7 @@
 
     <h2 id="external-tools"><code>.tl-telar/external-tools.yaml</code></h2>
     <p>External AI adapters (Codex, Gemini), cross-model review, and opt-in Claude Code native features. Git-ignored; created only by <code>/tl-telar:setup-orchestration</code>. Adapters are <strong>disabled by default</strong>.</p>
+    <div class="callout"><strong>Codex plugin vs Codex adapter.</strong> The v0.6.0 Codex plugin lets Telar run inside Codex through generated skills such as <code>$orchestrate</code>. The <code>adapters.codex</code> block below is separate: it lets an orchestration run delegate implementation or review to an external Codex CLI process. Installing the Codex plugin does not enable that adapter; you must opt in explicitly here.</div>
 
     <h3>adapters</h3>
     <table class="t">
@@ -207,7 +208,7 @@
 </main>
 
 <footer><div class="wrap fl">
-  <span>Telar v0.5.0 — MIT © 2026 Zeki Yugnak</span>
+  <span>Telar v0.6.0 — MIT © 2026 Zeki Yugnak</span>
   <span><a href="https://github.com/zekiyugnak/telar-framework">GitHub</a> · <a href="index.html">Docs home</a></span>
 </div></footer>
 
