@@ -1,5 +1,6 @@
 ---
 id: mobile-animations-specialist
+model: sonnet
 category: agent
 tags: [animations, reanimated, lottie, transitions, gestures, spring-physics, flutter-animations]
 capabilities:

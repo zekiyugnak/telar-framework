@@ -32,6 +32,7 @@
     <span class="eyebrow">Reference</span>
     <h1>Commands</h1>
     <p>23 slash-command workflows, all namespaced under <code>/tl-telar:</code>. Expand a card for an example and a link to its source.</p>
+    <div class="callout"><strong>Codex usage.</strong> In Codex, install from <code>zekiyugnak/telar-framework</code> and invoke Telar through <code>@tl-telar</code> or bundled skill names such as <code>$create-app</code>, <code>$review-plan</code>, and <code>$orchestrate</code>. The slash-command names below are the Claude Code form.</div>
   </div>
 
   <div class="filter-bar">
@@ -269,7 +270,6 @@
   <section class="group">
     <h2 id="orch">Orchestration <span class="gc">3</span></h2>
     <p><code>orchestrate</code> is the entry point — it drives the whole pipeline (gates → parallel Work Unit execution → final review) from one command. <code>setup-orchestration</code> enables it once per project; <code>resume</code> recovers an interrupted run. The plan/design gates (<a href="#review">Review &amp; Quality</a>) and the knowledge loop (<a href="#knowledge">Knowledge &amp; Tools</a>) plug into the same workflow. See <a href="orchestration.html#commands">Orchestration → how the commands wire together</a>.</p>
-    <div class="callout"><strong>Claude and Codex surfaces.</strong> This reference names the Claude slash commands (<code>/tl-telar:create-app</code>, <code>/tl-telar:orchestrate</code>). The Codex plugin ships generated equivalents as skills (<code>$create-app</code>, <code>$orchestrate</code>, <code>$review-plan</code>) and should be invoked under <code>@tl-telar</code> when skill names could collide.</div>
     <div class="cards">
 
       <article class="card" data-search="orchestrate orchestrator full pipeline plan review work-unit 4-phase parallel workflow scheduler concurrent">
@@ -362,7 +362,7 @@
 </main>
 
 <footer><div class="wrap fl">
-  <span>Telar v0.6.0 — MIT © 2026 Zeki Yugnak</span>
+  <span>Telar v0.7.0 — MIT © 2026 Zeki Yugnak</span>
   <span><a href="https://github.com/zekiyugnak/telar-framework/tree/main/commands">All commands on GitHub</a> · <a href="index.html">Docs home</a></span>
 </div></footer>
 

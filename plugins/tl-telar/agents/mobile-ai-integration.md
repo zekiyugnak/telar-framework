@@ -1,5 +1,6 @@
 ---
 id: mobile-ai-integration
+model: sonnet
 category: agent
 tags: [ai, openai, claude, gemini, ml, text-to-speech, speech-to-text, coreml, ml-kit]
 capabilities:

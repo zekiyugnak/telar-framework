@@ -1,5 +1,6 @@
 ---
 id: mobile-offline-architect
+model: sonnet
 category: agent
 tags: [offline, sync, local-database, conflict-resolution, optimistic-updates, background-sync]
 capabilities:

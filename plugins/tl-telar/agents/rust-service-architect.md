@@ -1,5 +1,6 @@
 ---
 id: rust-service-architect
+model: opus
 category: agent
 tags: [rust, axum, tokio, sqlx, backend, service, api, postgres]
 capabilities:

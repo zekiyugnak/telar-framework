@@ -1,5 +1,6 @@
 ---
 id: admin-panel-architect
+model: opus
 category: agent
 tags: [vite, react, tanstack-router, tanstack-query, supabase, admin-panel, rtl, i18n, web]
 capabilities:

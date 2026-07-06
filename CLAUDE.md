@@ -1,6 +1,6 @@
-# Telar v0.6.0
+# Telar v0.7.0
 
-Cross-platform mobile development plugin for Claude Code — React Native, Flutter, and native platform integration. Also covers a companion web stack (Astro, Next.js/Tailwind/shadcn, Vite/TanStack admin panels) and a Rust service layer.
+Agentic engineering framework for Claude Code, spanning cross-platform apps end to end: mobile (React Native, Flutter, native bridges), web (Astro, Next.js/Tailwind/shadcn, Vite/TanStack admin panels), Rust service layers, and desktop. Not mobile-only — the orchestration, reviewer roster, and rubrics are stack-aware across every domain.
 
 ## Quick Start
 
@@ -52,7 +52,7 @@ The recommended workflow for building features:
 - **Web platform experts**: `astro-web-expert` (SEO/OG marketing sites), `nextjs-web-expert` (authenticated Next.js/Tailwind/shadcn consoles), `admin-panel-architect` (Vite + TanStack Router/Query/Table admin panels)
 - **Service layer**: `rust-service-architect` (axum/tokio/sqlx backend services)
 - **Native bridges**: `ios-native-bridge`, `android-native-bridge`
-- **Architecture**: `mobile-navigation-architect`, `mobile-state-management`, `mobile-backend-architect`, `mobile-architect-adversarial`
+- **Architecture**: `mobile-navigation-architect`, `mobile-state-management`, `mobile-backend-architect`, `architect-adversarial`
 - **UI/UX**: `mobile-ui-ux-specialist`, `mobile-accessibility-expert`, `mobile-animations-specialist`, `mobile-design-system-architect`, `mobile-screen-builder`
 - **Security**: `mobile-security-specialist`, `mobile-security-architect`
 - **Performance**: `mobile-performance-optimizer`
@@ -62,8 +62,8 @@ The recommended workflow for building features:
 - **Testing**: `mobile-unit-testing-expert`, `mobile-e2e-testing-expert`, `mobile-device-testing`, `mobile-performance-testing`
 - **Backend**: `supabase-expert`, `mobile-api-integration`, `mobile-push-notifications`, `mobile-auth-specialist`, `mobile-storage-specialist`
 - **Advanced**: `mobile-ai-integration`, `mobile-ar-vr-specialist`, `mobile-realtime-specialist`
-- **Orchestration**: `mobile-orchestrator`
-- **Knowledge**: `mobile-knowledge-curator`
+- **Orchestration**: `orchestrator`
+- **Knowledge**: `knowledge-curator`
 
 ## Skill Discovery
 

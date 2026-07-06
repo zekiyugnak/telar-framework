@@ -1,5 +1,6 @@
 ---
 id: mobile-backend-architect
+model: opus
 category: agent
 tags: [backend, architecture, postgresql, microservices, api-design, redis, serverless]
 capabilities:

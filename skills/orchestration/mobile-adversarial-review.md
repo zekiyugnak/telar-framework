@@ -28,7 +28,7 @@ This skill is NEVER auto-triggered from legacy mobile commands. The mobile speci
 
 Takes a `role` ∈ {accessibility, performance, store-compliance} and a WU context (spec, DoD, fileScope, diff) and produces a `Task()` spawn prompt that instructs a fresh subagent to apply the corresponding per-domain rubric in Adversarial mode.
 
-> This template is consumed by `adversarial-code-review`, which does the actual `Task()` spawn — so it inherits that skill's **top-level (main-session) caller** requirement (a subagent has no `Task` tool; see `agents/mobile-orchestrator.md` → "Execution context").
+> This template is consumed by `adversarial-code-review`, which does the actual `Task()` spawn — so it inherits that skill's **top-level (main-session) caller** requirement (a subagent has no `Task` tool; see `agents/orchestrator.md` → "Execution context").
 
 ## Spawn prompt template
 

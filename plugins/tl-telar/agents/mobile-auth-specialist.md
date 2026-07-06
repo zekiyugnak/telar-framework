@@ -1,5 +1,6 @@
 ---
 id: mobile-auth-specialist
+model: sonnet
 category: agent
 tags: [authentication, oauth, oidc, social-login, biometric, jwt, sso, webauthn]
 capabilities:

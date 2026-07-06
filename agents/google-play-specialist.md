@@ -1,5 +1,6 @@
 ---
 id: google-play-specialist
+model: sonnet
 category: agent
 tags: [google-play, play-console, android, testing-tracks, data-safety, app-bundle, play-integrity]
 capabilities:

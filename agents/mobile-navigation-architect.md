@@ -1,5 +1,6 @@
 ---
 id: mobile-navigation-architect
+model: sonnet
 category: agent
 tags: [navigation, deep-linking, universal-links, app-links, routing, react-navigation, gorouter]
 capabilities:
