@@ -446,7 +446,7 @@ function buildPluginJson(sourceManifest) {
   return {
     name: PLUGIN_NAME,
     version: sourceManifest.version,
-    description: `Cross-platform mobile application development with React Native and Flutter - ${liveSummary()}`,
+    description: `Agentic engineering framework for cross-platform apps: mobile (React Native, Flutter), web (Astro, Next.js, TanStack), Rust services, and desktop - ${liveSummary()}`,
     author: sourceManifest.author,
     homepage: 'https://zekiyugnak.github.io/telar-framework/',
     repository: 'https://github.com/zekiyugnak/telar-framework',
