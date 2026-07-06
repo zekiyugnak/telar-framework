@@ -1,5 +1,6 @@
 ---
 id: flutter-expert
+model: sonnet
 category: agent
 tags: [flutter, dart, riverpod, bloc, material3, cupertino, impeller, cross-platform]
 capabilities:

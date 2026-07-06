@@ -58,7 +58,7 @@ Append-only JSONL knowledge files. Each line is one knowledge fact.
 - `medium`: single source, clear evidence
 - `low`: suspected, needs confirmation
 
-The `mobile-knowledge-curator` agent promotes confidence on source accumulation.
+The `knowledge-curator` agent promotes confidence on source accumulation.
 
 ## Append protocol
 

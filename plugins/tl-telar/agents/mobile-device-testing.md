@@ -1,5 +1,6 @@
 ---
 id: mobile-device-testing
+model: sonnet
 category: agent
 tags: [device-testing, device-farm, firebase-test-lab, browserstack, real-devices, parallel-testing]
 capabilities:

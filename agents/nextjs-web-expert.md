@@ -1,5 +1,6 @@
 ---
 id: nextjs-web-expert
+model: sonnet
 category: agent
 tags: [nextjs, react, tailwind, shadcn, app-router, server-actions, web]
 capabilities:

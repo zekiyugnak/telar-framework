@@ -1,5 +1,6 @@
 ---
 id: mobile-code-signing-expert
+model: sonnet
 category: agent
 tags: [code-signing, certificates, provisioning-profiles, keystore, fastlane-match, entitlements]
 capabilities:

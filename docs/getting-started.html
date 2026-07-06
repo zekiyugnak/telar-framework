@@ -52,17 +52,15 @@ claude plugin install tl-telar@telar</code></pre>
     <p>After installation, <strong>restart Claude Code</strong> to load the plugin. All commands are namespaced under <code>/tl-telar:</code>.</p>
 
     <h3>Codex</h3>
-    <p>Telar also ships a generated Codex plugin from the same source files as the Claude plugin.</p>
-    <ol>
-      <li>Open Codex from this repository root.</li>
-      <li>Run <code>/plugins</code>.</li>
-      <li>Choose the <code>Telar</code> marketplace.</li>
-      <li>Install <code>tl-telar</code>.</li>
-      <li>Start a new thread and invoke Telar with <code>@tl-telar</code> or bundled skills such as <code>$create-app</code>, <code>$review-plan</code>, or <code>$orchestrate</code>.</li>
-    </ol>
-    <div class="callout"><strong>Codex command shape.</strong> Claude uses slash commands such as <code>/tl-telar:create-app</code>. Codex uses generated plugin skills such as <code>$create-app</code>, preferably under the <code>@tl-telar</code> plugin context when another user-level skill has the same name.</div>
+    <pre><code># Latest development build
+codex plugin marketplace add zekiyugnak/telar-framework --ref develop
+codex plugin add tl-telar@telar
+codex plugin list --marketplace telar</code></pre>
+    <p>For the stable <code>main</code> branch, replace <code>--ref develop</code> with <code>--ref main</code>. If the marketplace was already added with another ref, remove <code>tl-telar@telar</code> and the <code>telar</code> marketplace, then add it again with the ref you want.</p>
+    <p>Start a new Codex thread and invoke Telar with <code>@tl-telar</code> or bundled skills such as <code>$create-app</code>, <code>$review-plan</code>, and <code>$orchestrate</code>. Plugin installation is separate from the optional <code>adapters.codex</code> setting used for external orchestration delegation.</p>
 
     <h2>Quick start</h2>
+    <p>In Claude Code, use the slash-command form below. In Codex, use the plugin context with <code>@tl-telar</code> or call the bundled skill names directly, for example <code>$orchestrate</code>.</p>
     <table class="t">
       <thead><tr><th>Goal</th><th>Command</th></tr></thead>
       <tbody>
@@ -110,7 +108,7 @@ claude plugin install tl-telar@telar</code></pre>
 </main>
 
 <footer><div class="wrap fl">
-  <span>Telar v0.6.0 — MIT © 2026 Zeki Yugnak</span>
+  <span>Telar v0.7.0 — MIT © 2026 Zeki Yugnak</span>
   <span><a href="https://github.com/zekiyugnak/telar-framework">GitHub</a> · <a href="index.html">Docs home</a></span>
 </div></footer>
 

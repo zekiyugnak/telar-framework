@@ -1,6 +1,6 @@
 # Configuration Reference
 
-Telar Framework'ün orchestrasyon sistemini yöneten iki ayrı config dosyası vardır. Bu dosyalar Claude Code ve Codex plugin yüzeyleri tarafından ortak kullanılır:
+Telar Framework'ün orchestrasyon sistemini yöneten iki ayrı config dosyası vardır:
 
 | Dosya | Amaç | Oluşturulma |
 |-------|------|-------------|
@@ -10,6 +10,10 @@ Telar Framework'ün orchestrasyon sistemini yöneten iki ayrı config dosyası v
 Her iki dosya da consumer projenizin kökünde (veya `.tl-telar/` altında) yer alır ve `.gitignore`'a eklenir — bu sayede commit geçmişini kirletmez.
 
 ---
+
+## Oturum modeli ve maliyet (önemli)
+
+`/tl-telar:orchestrate` **ana oturumda** çalışan bir orkestratördür. Spawn edilen agent'lar kendi model tier'larını (`agents/*.md` frontmatter `model:`) ve reviewer'lar sabit Opus kullanır — ama **orkestratörün kendi turları senin `/model` seçimini** kullanır ve bunu agent frontmatter'ı **override edemez**. Uzun bir orchestrate koşusunu en pahalı modelde (ör. Fable) çalıştırmak maliyetin büyük kısmını oradan üretir. **Öneri:** `orchestrate`'i **Sonnet veya Opus** oturumunda çalıştır; en yüksek-maliyet modeli yalnızca gerçekten gerektiğinde seç.
 
 ## `.tl-telar-thresholds.json`
 
@@ -287,8 +291,6 @@ Bu alanlar orchestratörün gate başarısız olduğunda PR oluşturma ve task c
 
 Harici AI adapter'larını (Codex, Gemini) ve çapraz-model review özelliğini yapılandırır. Bu özellik **Phase β** durumundadır — default olarak `enabled: false`'dur.
 
-> **Codex plugin ile Codex adapter aynı şey değildir.** v0.6.0 ile Telar, Codex içinde çalışan generated plugin/skill paketi de üretir (`@tl-telar`, `$orchestrate`, `$review-plan`, vb.). Aşağıdaki `adapters.codex` bloğu ise ayrı bir opt-in mekanizmadır: orchestration sırasında harici bir Codex CLI subprocess'ine implement/review işi delege etmek içindir. Codex plugin'i kurmak bu adapter'ı otomatik açmaz.
-
 ### Dosya konumu
 
 `.tl-telar/external-tools.yaml` — `.gitignore`'da. Yalnızca `/tl-telar:setup-orchestration` ile oluşturulur.
@@ -328,6 +330,8 @@ export OPENAI_API_KEY="sk-..."
 # .tl-telar/external-tools.yaml içinde:
 # adapters.codex.enabled: true
 ```
+
+> **Codex plugin ile Codex adapter farklıdır.** `codex plugin marketplace add zekiyugnak/telar-framework --ref develop` ve `codex plugin add tl-telar@telar` Telar'ı Codex içinde kullanılabilir yapar. Buradaki `adapters.codex.enabled: true` ise Telar'ın orchestrated mode sırasında bazı işleri harici Codex CLI'a delege etmesi içindir ve default olarak kapalıdır.
 
 ### Routing
 
@@ -434,7 +438,7 @@ Bunlar kaynak kodda sabit olup `.tl-telar-thresholds.json` veya `external-tools.
 | Phase 3 adversarial reviewer (conditional) | +2 (A11y, Perf — file_scope'a göre) | Aynı skill |
 | Gate başarısız olduğunda maksimum retry | 3 | `skills/orchestration/orchestrated-execution/SKILL.md` |
 | 3 retry sonrası | Kullanıcıya eskalasyon | Aynı skill |
-| WU checkpoint (unattended modda) | Plan-readiness'a çekilir, mid-cycle pause yok | `agents/mobile-orchestrator.md` |
+| WU checkpoint (unattended modda) | Plan-readiness'a çekilir, mid-cycle pause yok | `agents/orchestrator.md` |
 | Commit ve push | Asla otomatik değil — `ben yapacagim` politikası | `commands/orchestrate.md` |
 
 ---

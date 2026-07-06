@@ -1,6 +1,6 @@
 ---
 name: "orchestration-adversarial-code-review"
-description: "**EVERY review pass spawns NEW `Task()` instances. Reviewers MUST be fresh — never reuse a prior reviewer's `Task()` handle, never paste in another reviewer's verdict, never include earlier iteration findings. A reviewer"
+description: "`--default-domain` comes from the project-detect framework signal (orchestrator Step 5b / project-context); it only decides how UI files with no strong path marker are classified. The resolver returns JSON `{ domains, re"
 source_type: "orchestration"
 source_file: "skills/orchestration/adversarial-code-review.md"
 ---
@@ -14,11 +14,10 @@ Migrated from `skills/orchestration/adversarial-code-review.md`.
 - Claude/Telar source files remain the source of truth; this file is the generated Codex adapter.
 - Skill-local support files from the original Telar skill, such as `references/...` or `workflow/...`, are packaged beside this `SKILL.md`.
 - Repo-root references from the original Telar file, such as `agents/...`, `commands/...`, `scripts/...`, `resources/...`, `rules/...`, `hooks/...`, or `templates/...`, are packaged at this plugin root.
-- Original Telar `skills/...` source paths are packaged under `source/skills/...` because the plugin-root `skills/` directory is reserved for generated Codex skill adapters.
+- The original Telar orchestration source (`skills/orchestration/...`) is packaged under `source/skills/orchestration/...` for exact-reference lookups; all other Telar skills exist here only as the generated adapters under the plugin-root `skills/` directory.
 - Resolve plugin-root paths from this generated skill directory via `../..` when reading support files or running packaged scripts.
-- Codex compatibility override: references to Claude `Task()` mean Codex subagent workflows. Spawn fresh Codex subagents in parallel when the current Codex surface exposes subagent tools; preserve the same reviewer roles, inputs, and freshness rules.
-- If the current Codex surface cannot spawn subagents, stop and report that the full orchestration gate is unavailable in this surface. Do not replace a required multi-reviewer gate with a single inline self-review.
-- After each Codex subagent batch returns, close completed subagent handles before starting any retry iteration or later gate; otherwise long orchestration runs can exhaust the local subagent thread limit.
+- **Codex subagent gate — probe, then use or degrade (fail-closed; never fake).** Claude `Task()` calls map to Codex subagent spawns. Before EVERY multi-reviewer gate: (1) PROBE whether the current Codex surface exposes an agent-spawn tool. (2) If YES → spawn the resolver-selected reviewers as fresh, parallel Codex agent roles; preserve each role, its own rubric, and the freshness rule (no reviewer sees another's verdict or a prior iteration), then close each subagent handle before the next iteration so long runs do not exhaust the local subagent thread limit. (3) If NO → emit a literal `DEGRADED: full multi-reviewer gate unavailable on this Codex surface` line and STOP the gate. Recommend re-running on a Claude Code host or a Codex build that exposes subagent spawning. NEVER substitute a single inline self-review for the independent multi-reviewer gate, and never silently continue as if the gate passed.
+- **Stack-aware roster (parity with the Claude path).** Derive the reviewer roster from `scripts/tl-telar-reviewer-roster.js` (packaged at this plugin root) against the WU `file_scope` — do NOT hardcode a mobile roster. It returns the domain-correct Security/BackendCorrectness/FrontendUX/Accessibility/Performance reviewers, each with its own rubric path, for mobile, web, backend-data, and rust changes alike.
 - Treat Claude `Workflow` tool references as unavailable in Codex unless an explicit equivalent tool is present. Use the documented prose fallback path by default.
 - Treat `TL_TELAR_ORCHESTRATED=1` as a workflow mode marker in Codex. Do not require a literal Claude slash command to set it.
 - Do not pass scheduler `--isolate` merely because Codex is running. Use `--isolate` only after a concrete Codex worktree isolation and merge-back mechanism has been verified for the run; otherwise keep disjoint file-scope serialization.
@@ -31,7 +30,7 @@ Migrated from `skills/orchestration/adversarial-code-review.md`.
 This skill is loaded only via:
 
 1. `skills/orchestration/orchestrated-execution` Phase 3 (the 4-phase loop dispatches this).
-2. The `mobile-orchestrator` agent's workflow when Phase 3 is reached.
+2. The `orchestrator` agent's workflow when Phase 3 is reached.
 3. Explicit user request such as "run adversarial code review on this diff".
 
 This skill is NEVER auto-triggered from legacy mobile commands. `/tl-telar:review-code` continues to use `skills/review-gates.md` (the original, untouched) with its existing P1/P2/P3 block semantics. See master design §2.8 SIDECAR strategy.
@@ -40,11 +39,21 @@ This skill is NEVER auto-triggered from legacy mobile commands. `/tl-telar:revie
 
 For a given Work Unit (with declared `fileScope`, `dod`, and `diff`):
 
-1. **Determine reviewer roster** by file-scope intersection:
-   - **Always present (2)**: Adversarial Code Reviewer, Adversarial Mobile Security Reviewer.
-   - **Conditional (Mobile UX/A11y)**: activate if any path in `fileScope` matches: `screens/`, `components/`, `app/`, `lib/widgets/`, `lib/ui/`, or any `.tsx`/`.dart` UI-class file.
-   - **Conditional (Mobile Performance)**: activate if any path matches list/animation/render-heavy code (`*List*`, `*Animation*`, `*Render*`, plus screens flagged in WU `Checkpoint: yes`).
-   - Store Compliance is NOT spawned by this skill; it's reserved for `/tl-telar:release-app`-bound work.
+1. **Determine reviewer roster** with the stack-aware resolver — do NOT hardcode a mobile roster:
+
+   ```bash
+   node scripts/tl-telar-reviewer-roster.js --default-domain <mobile|web> <every path in fileScope>
+   ```
+
+   `--default-domain` comes from the project-detect framework signal (orchestrator Step 5b / project-context); it only decides how UI files with no strong path marker are classified. The resolver returns JSON `{ domains, reviewers: [{ role, reviewer_key, rubric, model, reason }] }`. Spawn EXACTLY that set — it is stack-aware, so a web/admin or backend WU never gets a mobile rubric:
+   - Always: **Code** (generic rubric) + one **Security** reviewer per in-scope domain (`mobile-security` | `web-security` | `backend-data-security` | `rust-safety`).
+   - Backend/service in scope → **BackendCorrectness** (data-integrity + reliability + API-contract).
+   - UI in scope → **FrontendUX** (states + i18n) + **Accessibility** (per UI domain).
+   - Perf-sensitive paths → **Performance** (per UI domain).
+   - Every reviewer carries `model: opus` (gate-quality pin) and its own `rubric` path — use those verbatim.
+   - Store Compliance is NOT spawned here; it's reserved for `/tl-telar:release-app`-bound work.
+
+   A WU whose fileScope spans many domains (e.g. backend + web) yields a large roster — that is a signal the WU is doing too much and should have been split, not a resolver bug.
 2. **Spawn N fresh `Task()` subagents in parallel**, one per active reviewer role. Each gets the corresponding rubric path and the WU context. See `./references/spawn-prompts.md` if you create one; otherwise inline the prompt skeleton below.
 3. **Aggregate verdicts**. Any single FAIL → overall FAIL.
 4. **Return** to caller (the orchestrator) with the aggregated verdict.
@@ -53,7 +62,7 @@ For a given Work Unit (with declared `fileScope`, `dod`, and `diff`):
 
 > **EVERY review pass spawns NEW `Task()` instances. Reviewers MUST be fresh — never reuse a prior reviewer's `Task()` handle, never paste in another reviewer's verdict, never include earlier iteration findings. A reviewer sees ONLY: WU spec + DoD + fileScope + git diff + the relevant rubric file path. This is non-negotiable.**
 
-> **Top-level caller required.** This skill must be loaded by the **main-session** orchestrator (a Claude Code subagent has no `Task` tool and cannot spawn these reviewers — see `agents/mobile-orchestrator.md` → "Execution context"). If `Task` is unavailable, STOP and report — never substitute a single inline self-review for the fresh reviewer spawns. The same applies to the cross-model path: dispatching Codex/Gemini via the external-tools script is only reached from the main-session loop.
+> **Top-level caller required.** This skill must be loaded by the **main-session** orchestrator (a Claude Code subagent has no `Task` tool and cannot spawn these reviewers — see `agents/orchestrator.md` → "Execution context"). If `Task` is unavailable, STOP and report — never substitute a single inline self-review for the fresh reviewer spawns. The same applies to the cross-model path: dispatching Codex/Gemini via the external-tools script is only reached from the main-session loop.
 
 ## Reviewer spawn skeleton
 
@@ -62,17 +71,22 @@ For each active role, dispatch a `Task()`:
 ```text
 Description: "Adversarial review — <role>"
 Subagent type: general-purpose
+Model: opus   # binding: EVERY adversarial reviewer runs on Opus regardless of the
+              # session model. This gate is the last line of defense — it is pinned
+              # to the highest-reasoning tier, never left to inherit a cheaper
+              # session model (e.g. Fable/Sonnet). If the running Claude Code build
+              # cannot set a per-Task model, STOP and report; do not silently let
+              # reviewers inherit the session model.
 Prompt:
   You are the <ROLE> ADVERSARIAL REVIEWER of a software change.
 
   Mode: Adversarial. Your job is to FIND FAILURES, not to approve, not to
   suggest improvements. You have NO context from previous reviews.
 
-  Read the rubric at: <rubric-path>
-  (Generic: resources/rubrics/orchestration/adversarial-review-rubric.md)
-  (Mobile Security: resources/rubrics/orchestration/mobile-security-adversarial-rubric.md)
-  (Mobile A11y: resources/rubrics/orchestration/mobile-accessibility-adversarial-rubric.md)
-  (Mobile Perf: resources/rubrics/orchestration/mobile-performance-adversarial-rubric.md)
+  Read the rubric at: <rubric-path from the resolver's `rubric` field for this reviewer>
+  (The resolver selects the domain-correct rubric — generic code, {mobile|web|backend-data|rust}
+  security, backend-correctness, frontend-ux, {mobile|web} accessibility, or {mobile|web}
+  performance. Never substitute a mobile rubric on a web/backend reviewer.)
 
   Apply the criteria. Cite findings with rule IDs.
 

@@ -1,5 +1,6 @@
 ---
 id: mobile-push-notifications
+model: sonnet
 category: agent
 tags: [push-notifications, apns, fcm, onesignal, expo-notifications, deep-linking, rich-notifications]
 capabilities:

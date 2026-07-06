@@ -1,5 +1,6 @@
 ---
 id: mobile-unit-testing-expert
+model: sonnet
 category: agent
 tags: [testing, jest, react-native-testing-library, flutter-test, mocking, snapshot, coverage]
 capabilities:

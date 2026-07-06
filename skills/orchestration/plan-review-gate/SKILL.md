@@ -24,7 +24,7 @@ useWhen:
 This skill is invoked only via:
 
 1. `/tl-telar:review-plan [--latest | --plan-file <path>]` (the slash command sets `TL_TELAR_ORCHESTRATED=1`).
-2. The `mobile-orchestrator` agent's workflow after plan drafting (sub-spec 2; not yet present at sub-spec 1 ship).
+2. The `orchestrator` agent's workflow after plan drafting (sub-spec 2; not yet present at sub-spec 1 ship).
 3. Explicit user request such as "run the plan review gate on this plan".
 
 This skill is NEVER auto-triggered from legacy mobile commands (`/tl-telar:create-app`, `/tl-telar:add-feature`, `/tl-telar:review-code`). See master design §1.1.
@@ -91,7 +91,7 @@ Everything from Step 1 to Step 3 below is the **prose fallback**. Steps 4a/4b/4c
 
 ### Step 1: Spawn 3 fresh Task() subagents IN PARALLEL
 
-> Requires a **top-level caller** — `/tl-telar:review-plan` or the main-session orchestrator (see `agents/mobile-orchestrator.md` → "Execution context"). A Claude Code subagent has no `Task` tool and cannot run this gate; never let a spawned subagent invoke this skill, and never substitute a single inline review pass for the 3 fresh reviewers.
+> Requires a **top-level caller** — `/tl-telar:review-plan` or the main-session orchestrator (see `agents/orchestrator.md` → "Execution context"). A Claude Code subagent has no `Task` tool and cannot run this gate; never let a spawned subagent invoke this skill, and never substitute a single inline review pass for the 3 fresh reviewers.
 
 Use the Task tool three times in a single response (parallel dispatch). For each:
 

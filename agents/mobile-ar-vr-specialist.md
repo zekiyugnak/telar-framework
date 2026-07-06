@@ -1,5 +1,6 @@
 ---
 id: mobile-ar-vr-specialist
+model: sonnet
 category: agent
 tags: [ar, vr, arkit, arcore, reality-kit, webxr, 3d, spatial-tracking]
 capabilities:

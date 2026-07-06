@@ -1,5 +1,6 @@
 ---
 id: react-native-expert
+model: sonnet
 category: agent
 tags: [react-native, mobile, typescript, expo, hermes, turbomodules, cross-platform]
 capabilities:

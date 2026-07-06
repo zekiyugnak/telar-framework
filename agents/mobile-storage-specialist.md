@@ -1,5 +1,6 @@
 ---
 id: mobile-storage-specialist
+model: sonnet
 category: agent
 tags: [storage, asyncstorage, mmkv, sqlite, realm, hive, watermelondb, encryption]
 capabilities:

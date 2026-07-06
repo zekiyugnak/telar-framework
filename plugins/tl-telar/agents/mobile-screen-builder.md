@@ -1,5 +1,6 @@
 ---
 id: mobile-screen-builder
+model: sonnet
 category: agent
 tags: [screen-builder, iterative, scaffolding, navigation, baton, design-tokens, verification, figma, requirements]
 capabilities:
