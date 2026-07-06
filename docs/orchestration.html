@@ -84,12 +84,15 @@
     <h3>Plan review gate — adversarial, 3 reviewers</h3>
     <p>Three fresh-instance adversarial reviewers inspect the implementation plan. <strong>PASS</strong> means it's fit to execute; <strong>FAIL</strong> means blocking defects, cited with file:line evidence and rubric rule IDs. Fresh instances each iteration prevent anchoring bias. Max 3 iterations, then human escalation.</p>
 
+    <h3>Stack-aware reviewer roster &amp; model tiering</h3>
+    <p>The per-Work-Unit code-review roster is not hardcoded. A pure resolver (<code>scripts/tl-telar-reviewer-roster.js</code>) selects reviewers from the Work Unit's file scope, so a web, backend, Rust, or desktop change gets the domain-correct rubric instead of a mobile one. Domain rubrics cover security (mobile / web / backend-data / Rust / desktop), accessibility, performance, backend correctness (data-integrity + reliability + API-contract), and frontend UX (interaction states + i18n). Agents are model-tiered through frontmatter (<code>opus</code> / <code>sonnet</code> / <code>haiku</code>), and every adversarial reviewer is pinned to <strong>Opus</strong> as the last line of defense.</p>
+
     <h2>The 4-phase execution loop</h2>
     <p>Each Work Unit runs through the same loop — and, when Work Units are independent, several of these loops run <strong>concurrently</strong> (see <a href="#parallel">Parallel dispatch</a> below). Validation is run by the orchestrator itself (never delegated); reviewers are fresh each pass.</p>
     <ol class="steps">
       <li><strong>IMPLEMENT</strong> — make the change for this Work Unit.</li>
       <li><strong>VALIDATE</strong> — run validation commands directly; output is redirected to logs to keep the terminal quiet.</li>
-      <li><strong>REVIEW</strong> — spawn 2–4 fresh adversarial reviewers (always-on: Adversarial Code + Mobile Security; conditional: UX/A11y, Performance). Any FAIL blocks COMMIT.</li>
+      <li><strong>REVIEW</strong> — spawn fresh adversarial reviewers chosen by the stack-aware resolver from the Work Unit's file scope (Code + domain Security, plus Backend-Correctness, Frontend-UX, Accessibility, or Performance as the scope warrants). Every reviewer runs on Opus. Any FAIL blocks COMMIT.</li>
       <li><strong>COMMIT</strong> — on PASS, emit COMMIT-READY. After 3 failed retries, escalate with the full failure history.</li>
     </ol>
 

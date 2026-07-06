@@ -37,6 +37,8 @@
   <div class="prose">
     <div class="callout"><strong>Where these live.</strong> <code>.tl-telar-thresholds.json</code> sits at the project root and is committed. <code>.tl-telar/external-tools.yaml</code> lives under the git-ignored <code>.tl-telar/</code> state directory. Missing files fall back to safe defaults — nothing hard-fails on absence.</div>
 
+    <div class="callout"><strong>Session model &amp; cost.</strong> <code>/tl-telar:orchestrate</code> is a conductor that runs in your main session. Spawned agents carry their own model tier (frontmatter <code>model:</code>) and reviewers are pinned to Opus, but the orchestrator's own turns use whatever model <code>/model</code> is set to — agent frontmatter cannot override the session model. Running a long orchestrate on the most expensive model is where most of the cost comes from. Recommendation: run <code>orchestrate</code> on <strong>Sonnet or Opus</strong>, not the top-tier model.</div>
+
     <h2 id="thresholds"><code>.tl-telar-thresholds.json</code></h2>
     <p>The quality-gate contract. Framework-aware defaults are written at setup based on the detected stack (React Native / Expo / Flutter).</p>
 
