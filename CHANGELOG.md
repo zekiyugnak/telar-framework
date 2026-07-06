@@ -6,13 +6,23 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+## [0.7.0] - 2026-07-06
+
+### Added
+
+- CI workflow (`.github/workflows/ci.yml`) running on pull requests to `main`/`develop`: a Codex artifact drift guard that regenerates `.agents/`, `.codex/`, and `plugins/tl-telar/` and fails if they diverge from source, plus agent/skill/blueprint validation.
+
+### Changed
+
+- Finalized Codex install guidance across the README and documentation site (marketplace ref commands; plugin install distinguished from the optional `adapters.codex` delegation).
+
 ## [0.6.0] - 2026-07-05
 
 ### Added
 
 - Codex-compatible plugin distribution generated from the same Telar source files as the Claude plugin.
 - Codex marketplace metadata, installable plugin manifest, generated skills, and generated custom-agent TOML files.
-- README installation guidance for both Claude Code and Codex.
+- README and documentation-site installation guidance for both Claude Code and Codex, including repository-based Codex marketplace commands.
 
 ### Fixed
 

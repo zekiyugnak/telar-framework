@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Getting Started — Telar</title>
-<meta name="description" content="Install Telar and run your first workflow in Claude Code.">
+<meta name="description" content="Install Telar and run your first workflow in Claude Code or Codex.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;650;800;850&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="assets/telar.css">
@@ -37,12 +37,13 @@
   <div class="prose">
     <h2>Requirements</h2>
     <ul>
-      <li><a href="https://www.anthropic.com/claude-code">Claude Code</a> installed and authenticated.</li>
+      <li><a href="https://www.anthropic.com/claude-code">Claude Code</a> or Codex installed and authenticated.</li>
       <li>A React Native or Flutter project (or start a new one with <code>/tl-telar:create-app</code>).</li>
       <li>For simulator automation: Xcode (iOS) and/or Android SDK with an emulator.</li>
     </ul>
 
     <h2>Installation</h2>
+    <h3>Claude Code</h3>
     <pre><code># Add the marketplace
 claude plugin marketplace add zekiyugnak/telar-framework
 
@@ -50,7 +51,16 @@ claude plugin marketplace add zekiyugnak/telar-framework
 claude plugin install tl-telar@telar</code></pre>
     <p>After installation, <strong>restart Claude Code</strong> to load the plugin. All commands are namespaced under <code>/tl-telar:</code>.</p>
 
+    <h3>Codex</h3>
+    <pre><code># Latest development build
+codex plugin marketplace add zekiyugnak/telar-framework --ref develop
+codex plugin add tl-telar@telar
+codex plugin list --marketplace telar</code></pre>
+    <p>For the stable <code>main</code> branch, replace <code>--ref develop</code> with <code>--ref main</code>. If the marketplace was already added with another ref, remove <code>tl-telar@telar</code> and the <code>telar</code> marketplace, then add it again with the ref you want.</p>
+    <p>Start a new Codex thread and invoke Telar with <code>@tl-telar</code> or bundled skills such as <code>$create-app</code>, <code>$review-plan</code>, and <code>$orchestrate</code>. Plugin installation is separate from the optional <code>adapters.codex</code> setting used for external orchestration delegation.</p>
+
     <h2>Quick start</h2>
+    <p>In Claude Code, use the slash-command form below. In Codex, use the plugin context with <code>@tl-telar</code> or call the bundled skill names directly, for example <code>$orchestrate</code>.</p>
     <table class="t">
       <thead><tr><th>Goal</th><th>Command</th></tr></thead>
       <tbody>
@@ -98,7 +108,7 @@ claude plugin install tl-telar@telar</code></pre>
 </main>
 
 <footer><div class="wrap fl">
-  <span>Telar v0.6.0 — MIT © 2026 Zeki Yugnak</span>
+  <span>Telar v0.7.0 — MIT © 2026 Zeki Yugnak</span>
   <span><a href="https://github.com/zekiyugnak/telar-framework">GitHub</a> · <a href="index.html">Docs home</a></span>
 </div></footer>
 

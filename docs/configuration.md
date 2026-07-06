@@ -327,6 +327,8 @@ export OPENAI_API_KEY="sk-..."
 # adapters.codex.enabled: true
 ```
 
+> **Codex plugin ile Codex adapter farklıdır.** `codex plugin marketplace add zekiyugnak/telar-framework --ref develop` ve `codex plugin add tl-telar@telar` Telar'ı Codex içinde kullanılabilir yapar. Buradaki `adapters.codex.enabled: true` ise Telar'ın orchestrated mode sırasında bazı işleri harici Codex CLI'a delege etmesi içindir ve default olarak kapalıdır.
+
 ### Routing
 
 ```yaml

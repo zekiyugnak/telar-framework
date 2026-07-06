@@ -1,0 +1,55 @@
+name: CI
+
+on:
+  pull_request:
+    branches: [main, develop]
+  push:
+    branches: [develop]
+
+permissions:
+  contents: read
+
+jobs:
+  codex-artifacts-drift:
+    name: Codex artifacts up-to-date
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Regenerate Codex plugin, marketplace, and agents
+        run: node scripts/generate-codex-plugin.js
+
+      - name: Fail if generated artifacts drifted from source
+        run: |
+          if ! git diff --exit-code -- .agents/plugins/marketplace.json .codex plugins/tl-telar; then
+            echo "::error::Generated Codex artifacts are stale. Run 'node scripts/generate-codex-plugin.js' and commit the result."
+            exit 1
+          fi
+          echo "Codex artifacts are in sync with source."
+
+  validate:
+    name: Validate agents, skills, blueprints
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Validate agents
+        run: node scripts/validate-agents.js
+
+      - name: Validate skills
+        run: node scripts/validate-skills.js
+
+      - name: Validate blueprints
+        run: node scripts/validate-blueprints.js

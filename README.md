@@ -1,7 +1,7 @@
 # Telar
 
 > **The agentic engineering framework** — plan, build, review, and ship, with agents.
-> By Zeki Yugnak · v0.6.0 — 41 agents, 113 skills, 23 commands, 4 hooks, 7 rules, 27 scripts
+> By Zeki Yugnak · v0.7.0 — 41 agents, 113 skills, 23 commands, 4 hooks, 7 rules, 27 scripts
 
 Telar is a multi-agent engineering framework for Claude Code and Codex that takes a feature from idea to production — orchestrated planning, adversarial review gates, a persistent knowledge base, and cross-model verification. Its first edition targets **cross-platform mobile** (**React Native** & **Flutter**) with deep native integration, plus a companion web stack (**Astro**, **Next.js**/Tailwind/shadcn, **Vite**/TanStack admin panels) and a **Rust** service layer.
 
@@ -38,15 +38,36 @@ After installation, restart Claude Code to load the plugin. All commands are nam
 
 ### Codex
 
-Telar also ships a generated Codex plugin from the same source files:
+Telar also ships a generated Codex plugin from the same repository. Install it from the GitHub marketplace source, not from a local checkout:
 
-1. Open Codex from this repository root.
-2. Run `/plugins`.
-3. Choose the `Telar` marketplace.
-4. Install `tl-telar`.
-5. Start a new thread and invoke Telar with `@tl-telar` or specific bundled skills such as `$create-app`.
+```bash
+# Latest development build
+codex plugin marketplace add zekiyugnak/telar-framework --ref develop
+codex plugin add tl-telar@telar
+codex plugin list --marketplace telar
+```
+
+For the stable `main` branch, use:
+
+```bash
+codex plugin marketplace add zekiyugnak/telar-framework --ref main
+codex plugin add tl-telar@telar
+```
+
+If you previously added the marketplace with another ref, refresh it before reinstalling:
+
+```bash
+codex plugin remove tl-telar@telar
+codex plugin marketplace remove telar
+codex plugin marketplace add zekiyugnak/telar-framework --ref develop
+codex plugin add tl-telar@telar
+```
+
+Start a new Codex thread and invoke Telar with `@tl-telar` or specific bundled skills such as `$create-app`, `$review-plan`, or `$orchestrate`.
 
 If you already have a user-level Codex skill with the same name, prefer `@tl-telar` so Codex resolves the Telar plugin context.
+
+Codex plugin installation is separate from the optional `adapters.codex` entry in `.tl-telar/external-tools.yaml`. The plugin loads Telar into Codex; the adapter lets Telar delegate selected orchestration work to the Codex CLI when explicitly enabled.
 
 ## Quick start
 
