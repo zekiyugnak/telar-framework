@@ -60,6 +60,19 @@ const keys = (r) => r.reviewers.map((x) => x.reviewer_key);
   assert.ok(r.reviewers.every((x) => x.model === 'opus'), 'all reviewers must be opus');
 }
 
+// Desktop (Electron/Tauri) WU: desktop-security lens.
+{
+  const r = resolveRoster(['electron/main.ts', 'electron/preload.ts'], null);
+  const k = keys(r);
+  assert.ok(k.includes('code') && k.includes('desktop-security'));
+}
+// Tauri WU (rust backend + tauri config): rust safety + backend correctness + desktop security.
+{
+  const r = resolveRoster(['src-tauri/src/main.rs', 'src-tauri/tauri.conf.json'], null);
+  const k = keys(r);
+  assert.ok(k.includes('rust-safety') && k.includes('backend-correctness') && k.includes('desktop-security'));
+}
+
 // Every emitted reviewer points at a rubric under the orchestration rubric dir.
 {
   const r = resolveRoster(['admin/Foo.tsx'], 'web');

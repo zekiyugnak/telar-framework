@@ -53,3 +53,10 @@ jobs:
 
       - name: Validate blueprints
         run: node scripts/validate-blueprints.js
+
+      - name: Run unit test suites
+        run: |
+          for t in $(find tests -name '*.test.js' | sort); do
+            echo "-- $t"
+            node "$t"
+          done

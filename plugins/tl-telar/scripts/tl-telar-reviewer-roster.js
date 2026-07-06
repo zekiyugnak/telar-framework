@@ -29,6 +29,7 @@ const RUBRIC_DIR = 'resources/rubrics/orchestration';
 const DOMAIN_RULES = [
   { domain: 'rust',         re: /(^|\/)cargo\.toml$|\.rs$|(^|\/)crates\//i },
   { domain: 'backend-data', re: /(^|\/)migrations?\/|\.sql$|(^|\/)supabase\/|(^|\/)db\//i },
+  { domain: 'desktop',      re: /(^|\/)(electron|src-tauri)\/|(^|\/)(main|preload)\.(ts|js)$|electron-builder|forge\.config|tauri\.conf\.json/i },
   { domain: 'mobile',       re: /(^|\/)screens\/|(^|\/)lib\/(widgets|ui)\/|\.dart$|(^|\/)(ios|android)\/|react-native|(^|\/)mobile\//i },
   { domain: 'web',          re: /\.astro$|\.vue$|(^|\/)admin\/|(^|\/)apps\/web\/|(^|\/)src\/app\/|(^|\/)web\//i },
 ];
@@ -57,6 +58,10 @@ const RUBRICS = {
   rust: {
     security: 'rust-safety-adversarial-rubric.md',
     securityKey: 'rust-safety',
+  },
+  desktop: {
+    security: 'desktop-security-adversarial-rubric.md',
+    securityKey: 'desktop-security',
   },
 };
 

@@ -41,6 +41,16 @@ const SUPPORT_DIRS = [
   'templates',
 ];
 
+// Phase 4 curation: orchestration-internal roles that are NOT user-invokable
+// specialists. They remain as spawnable `.codex/agents/*.toml` roles but are
+// excluded from the installable-plugin `$skill` channel (a plugin user would
+// never usefully type `$mobile-orchestrator`).
+const SKILL_EXCLUDED_AGENTS = new Set([
+  'mobile-orchestrator',
+  'mobile-architect-adversarial',
+  'mobile-knowledge-curator',
+]);
+
 function readText(file) {
   return fs.readFileSync(file, 'utf8');
 }
@@ -189,7 +199,7 @@ function collectMarkdownFiles(dir, predicate = () => true) {
 function collectSkillSources() {
   const sources = [];
 
-  for (const file of collectMarkdownFiles(path.join(ROOT, 'agents'), (name) => !name.startsWith('_'))) {
+  for (const file of collectMarkdownFiles(path.join(ROOT, 'agents'), (name) => !name.startsWith('_') && !SKILL_EXCLUDED_AGENTS.has(name.replace(/\.md$/, '')))) {
     sources.push({ file, sourceType: 'agent' });
   }
 
@@ -264,9 +274,12 @@ function copySupportDirectories() {
     fs.cpSync(from, path.join(CODEX_PLUGIN_ROOT, dir), { recursive: true });
   }
 
-  const sourceSkills = path.join(ROOT, 'skills');
-  if (fs.existsSync(sourceSkills)) {
-    fs.cpSync(sourceSkills, path.join(CODEX_PLUGIN_ROOT, 'source', 'skills'), { recursive: true });
+  // Phase 4: only the orchestration source subtree is referenced (generated command
+  // skills do exact `skills/orchestration/<name>` Telar-source lookups). Copying all
+  // of skills/ here duplicated ~100 files that nothing references.
+  const sourceOrchestration = path.join(ROOT, 'skills', 'orchestration');
+  if (fs.existsSync(sourceOrchestration)) {
+    fs.cpSync(sourceOrchestration, path.join(CODEX_PLUGIN_ROOT, 'source', 'skills', 'orchestration'), { recursive: true });
   }
 }
 
@@ -323,7 +336,7 @@ function codexCompatibilityNotes(source, skillName) {
     '- Claude/Telar source files remain the source of truth; this file is the generated Codex adapter.',
     '- Skill-local support files from the original Telar skill, such as `references/...` or `workflow/...`, are packaged beside this `SKILL.md`.',
     '- Repo-root references from the original Telar file, such as `agents/...`, `commands/...`, `scripts/...`, `resources/...`, `rules/...`, `hooks/...`, or `templates/...`, are packaged at this plugin root.',
-    '- Original Telar `skills/...` source paths are packaged under `source/skills/...` because the plugin-root `skills/` directory is reserved for generated Codex skill adapters.',
+    '- The original Telar orchestration source (`skills/orchestration/...`) is packaged under `source/skills/orchestration/...` for exact-reference lookups; all other Telar skills exist here only as the generated adapters under the plugin-root `skills/` directory.',
     '- Resolve plugin-root paths from this generated skill directory via `../..` when reading support files or running packaged scripts.',
   ];
 
