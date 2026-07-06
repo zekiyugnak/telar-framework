@@ -1,6 +1,6 @@
 ---
 name: "orchestration-design-review-gate"
-description: "Requires a **top-level caller** — `/tl-telar:review-design` or the main-session orchestrator (see `agents/mobile-orchestrator.md` → \"Execution context\"). A Claude Code subagent has no `Task` tool; never let a spawned sub"
+description: "Requires a **top-level caller** — `/tl-telar:review-design` or the main-session orchestrator (see `agents/orchestrator.md` → \"Execution context\"). A Claude Code subagent has no `Task` tool; never let a spawned subagent i"
 source_type: "orchestration"
 source_file: "skills/orchestration/design-review-gate/SKILL.md"
 ---
@@ -29,7 +29,7 @@ Migrated from `skills/orchestration/design-review-gate/SKILL.md`.
 
 This skill is loaded only via:
 
-1. The `mobile-orchestrator` agent's workflow after a RESEARCH.md or design doc commit.
+1. The `orchestrator` agent's workflow after a RESEARCH.md or design doc commit.
 2. `/tl-telar:review-design [--latest | --design-file <path>]` (sets TL_TELAR_ORCHESTRATED=1).
 3. `skills/brainstorm-first.md`'s Orchestrated Mode section (sub-spec 6 augmentation, §1.1-gated).
 4. Explicit user request such as "run the design review gate".
@@ -58,7 +58,7 @@ For a given design doc (typically `RESEARCH.md` or `docs/plans/*-design.md`):
 
 ### Step 1: Spawn 6 reviewers in parallel
 
-> Requires a **top-level caller** — `/tl-telar:review-design` or the main-session orchestrator (see `agents/mobile-orchestrator.md` → "Execution context"). A Claude Code subagent has no `Task` tool; never let a spawned subagent invoke this skill.
+> Requires a **top-level caller** — `/tl-telar:review-design` or the main-session orchestrator (see `agents/orchestrator.md` → "Execution context"). A Claude Code subagent has no `Task` tool; never let a spawned subagent invoke this skill.
 
 Single Task() batch call. Each:
 - subagent_type: `general-purpose`

@@ -1,7 +1,7 @@
 ---
-id: mobile-orchestrator
+id: orchestrator
 model: opus
-name: Mobile Orchestrator
+name: Orchestrator
 description: End-to-end orchestrator for mobile feature development. Owns the lifecycle from /tl-telar:orchestrate invocation through plan review, WU decomposition, 4-phase execution loop per WU, final review, and COMMIT-READY signal. Sets TL_TELAR_ORCHESTRATED=1 so all orchestrated-namespace skills activate.
 category: agent
 tags: [orchestration, lifecycle, multi-agent, top-level]
@@ -17,7 +17,7 @@ useWhen:
   - User explicitly requests "orchestrated mode" or "full pipeline"
 ---
 
-# Mobile Orchestrator
+# Orchestrator
 
 ## Operating mode
 
@@ -27,7 +27,7 @@ useWhen:
 
 This playbook is a **conductor** — every gate it runs spawns fresh `Task()` subagents (3 plan reviewers in Step 4, 6 design reviewers in Step 3-prime, per-WU implementers + 2–4 reviewers in Step 6). A Claude Code subagent has **no `Task` tool** (subagents cannot spawn subagents), so the conductor MUST run in the **main session**.
 
-- `/tl-telar:orchestrate` and `/tl-telar:resume` invoke this playbook by having the main session ADOPT it — they do NOT `Task(subagent_type=mobile-orchestrator)`.
+- `/tl-telar:orchestrate` and `/tl-telar:resume` invoke this playbook by having the main session ADOPT it — they do NOT `Task(subagent_type=orchestrator)`.
 - **Self-check before Step 4 / Step 6:** if you are executing this playbook and the `Task` tool is unavailable, you were wrongly spawned as a subagent. STOP. Do NOT fake the gates with a single inline review pass (that destroys the reviewer independence the gate exists for) and do NOT attempt per-WU execution. Tell the parent session verbatim: "The orchestrator cannot run as a subagent — re-run `/tl-telar:orchestrate` (or `/tl-telar:resume`) directly in the main session."
 
 ## Autonomy model (interactive vs unattended)
@@ -335,7 +335,7 @@ Print final summary with: "Plan status: completed. Execution state archived. To 
 5. **Leaving status: in-progress after a successful close.** Sub-spec 4 ships the recovery skill, which consumes the sentinel; a stale `in-progress` after a finished run causes recovery prompts on every subsequent SessionStart. Step 8 flips the sentinel to `completed` and archives execution-state.md.
 6. **Using a bare `git diff --name-only` for file-scope checks, or simplifying the check to path-only.** Always content-aware (per-WU baseline of path+state; attribute by hash difference and deleted-ness). A bare diff self-locks multi-WU runs; path-only subtraction misses edits and deletions to already-dirty files.
 
-## Tools allowed (mobile-orchestrator)
+## Tools allowed (orchestrator)
 
 - Read, Write, Edit (state files, plans)
 - Bash (validation commands; mkdir; git diff/log; NOT git add/commit/push)

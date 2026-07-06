@@ -13,7 +13,7 @@
  *   - haiku:  clearly-mechanical roles (dedup / tagging)
  *   - sonnet: everything else (default)
  *
- * NOTE on `mobile-orchestrator`: it is adopted by the main session, never spawned
+ * NOTE on `orchestrator`: it is adopted by the main session, never spawned
  * as a subagent, so its frontmatter `model:` is DOCUMENTARY only — the session's
  * `/model` governs its turns. It is tagged opus here to record intent.
  */
@@ -24,16 +24,16 @@ const path = require('path');
 const AGENTS_DIR = path.resolve(__dirname, '..', 'agents');
 
 const OPUS = new Set([
-  'mobile-architect-adversarial',
+  'architect-adversarial',
   'mobile-security-architect',
   'mobile-backend-architect',
   'rust-service-architect',
   'admin-panel-architect',
-  'mobile-orchestrator', // documentary — session-governed at runtime
+  'orchestrator', // documentary — session-governed at runtime
 ]);
 
 const HAIKU = new Set([
-  'mobile-knowledge-curator',
+  'knowledge-curator',
 ]);
 
 const VALID = new Set(['opus', 'sonnet', 'haiku']);

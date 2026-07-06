@@ -170,7 +170,7 @@ if [[ "$REPLACE" == "true" ]]; then
       accessibility: { required_audit_pass: false },
       autonomy: {
         cycle: "interactive",
-        description: "interactive (default) = orchestrator may pause mid-cycle at checkpoint:true WUs and at self-reflect. unattended = one human gate at plan-ready (Step 5): scope + approved UI ASCII drafts + all secrets/inputs collected up front, then the WU cycle runs to PR-ready with ZERO pauses. UI sign-off is hoisted into plan-readiness, never mid-cycle, and unattended never skips a decision, it makes it earlier. See agents/mobile-orchestrator.md Autonomy model section."
+        description: "interactive (default) = orchestrator may pause mid-cycle at checkpoint:true WUs and at self-reflect. unattended = one human gate at plan-ready (Step 5): scope + approved UI ASCII drafts + all secrets/inputs collected up front, then the WU cycle runs to PR-ready with ZERO pauses. UI sign-off is hoisted into plan-readiness, never mid-cycle, and unattended never skips a decision, it makes it earlier. See agents/orchestrator.md Autonomy model section."
       },
       execution: {
         max_parallel_wus: 3,

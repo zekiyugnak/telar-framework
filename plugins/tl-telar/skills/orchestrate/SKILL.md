@@ -28,24 +28,24 @@ Migrated from `commands/orchestrate.md`.
 
 # /tl-telar:orchestrate
 
-Runs the `mobile-orchestrator` playbook **in this (main) session**. Sets the orchestrated-mode trigger (`TL_TELAR_ORCHESTRATED=1`) so all orchestrated-namespace skills activate per master design §1.1.
+Runs the `orchestrator` playbook **in this (main) session**. Sets the orchestrated-mode trigger (`TL_TELAR_ORCHESTRATED=1`) so all orchestrated-namespace skills activate per master design §1.1.
 
 ## Execution context (binding — do NOT spawn the orchestrator as a subagent)
 
 The orchestrator is a **conductor**: its job is to spawn fresh `Task()` subagents — 3 plan reviewers, 6 design reviewers, per-WU implementers, and 2–4 per-WU adversarial reviewers (master design §2.6 Phase α: "All reviewers, implementers spawned as `Task()`"). A Claude Code subagent **cannot use the `Task` tool** — subagents cannot spawn subagents. Therefore the conductor MUST run at the top level.
 
-**So this command does NOT call `Task(subagent_type=mobile-orchestrator)`.** Instead, the main session itself adopts the orchestrator role: read `agents/mobile-orchestrator.md` and execute that playbook directly, in this session, keeping `Task` available for the reviewer/implementer spawns. Spawning the orchestrator as a subagent silently degrades every multi-reviewer gate to a single inline pass (destroying reviewer independence) and makes per-WU execution impossible.
+**So this command does NOT call `Task(subagent_type=orchestrator)`.** Instead, the main session itself adopts the orchestrator role: read `agents/orchestrator.md` and execute that playbook directly, in this session, keeping `Task` available for the reviewer/implementer spawns. Spawning the orchestrator as a subagent silently degrades every multi-reviewer gate to a single inline pass (destroying reviewer independence) and makes per-WU execution impossible.
 
 ## Behavior
 
 1. Set orchestrated mode (`TL_TELAR_ORCHESTRATED=1`).
 2. Capture the user's input verbatim — either the free-text task description, or the `--epic <path>` / `--plan-file <path>` argument (see "Input modes" below).
-3. **Load `agents/mobile-orchestrator.md` and follow it as the main-session conductor** (do NOT spawn it as a subagent). Acting as the orchestrator, you then:
+3. **Load `agents/orchestrator.md` and follow it as the main-session conductor** (do NOT spawn it as a subagent). Acting as the orchestrator, you then:
    - Run the boot probe (`.tl-telar/` skeleton, safe-default thresholds).
    - Wait for / produce an implementation plan — UNLESS `--epic`/`--plan-file` was given, in which case that file IS the plan (drafting is skipped).
    - Invoke `skills/orchestration/plan-review-gate` (sub-spec 1 deliverable) — spawning 3 fresh reviewer `Task()`s from this session.
    - On PASS: decompose into WUs, write `.tl-telar/plans/active-plan.md`, wait for user approval.
-   - Drive WUs through `skills/orchestration/orchestrated-execution` (4-phase loop) using the **continuous-frontier dispatch loop** (see `agents/mobile-orchestrator.md` → "WU execution — continuous-frontier dispatch"): `scripts/tl-telar-wu-scheduler.js` computes which WUs are ready (deps COMPLETE + `file_scope` disjoint from running WUs), bounded by `execution.max_parallel_wus` (default 3). Up to that many WUs run as concurrent background `Task()`s from this session; the frontier is recomputed on each WU completion.
+   - Drive WUs through `skills/orchestration/orchestrated-execution` (4-phase loop) using the **continuous-frontier dispatch loop** (see `agents/orchestrator.md` → "WU execution — continuous-frontier dispatch"): `scripts/tl-telar-wu-scheduler.js` computes which WUs are ready (deps COMPLETE + `file_scope` disjoint from running WUs), bounded by `execution.max_parallel_wus` (default 3). Up to that many WUs run as concurrent background `Task()`s from this session; the frontier is recomputed on each WU completion.
    - Emit a COMMIT-READY signal for each WU (DOES NOT commit on user's behalf).
    - Final review and "Ready for PR" summary.
    - **Spec Layer archive (conditional).** Run `node scripts/tl-telar-spec-archive.js <change-id>` ONLY if this run actually produced a Spec Layer change — i.e. a `tl-telar-spec/changes/<change-id>/` with a `REQUIREMENTS.delta.md` exists (created when requirements were gathered via `skills/requirements-gather.md` → "Step 0"). It merges the delta(s) into `tl-telar-spec/truth/` and moves the change folder to `tl-telar-spec/changes/archive/<date>-<id>/`. If no such change dir exists, SKIP this step — do not run the archive with an unbound/nonexistent `<change-id>` (it would abort with "change directory not found"). **Note:** the orchestrator's own working artifacts live under `.tl-telar/plans/active-plan.md`, which is NOT a Spec Layer change; automatic creation of a `tl-telar-spec/changes/<id>/` from within the orchestrator playbook is not yet wired (deferred — see `docs/superpowers/specs/2026-07-02-telar-spec-layer-design.md`). Today the Spec Layer is exercised through the legacy `/tl-telar:add-feature` / `/tl-telar:create-app` / `/tl-telar:update-requirement` commands, which invoke Step 0.
@@ -69,7 +69,7 @@ The orchestrator accepts the work to do in one of three forms. All three converg
 ## Autonomy (`autonomy.cycle` in `.tl-telar-thresholds.json`)
 
 - **`interactive`** (default) — the run may pause at `checkpoint: true` WUs and at self-reflect.
-- **`unattended`** — exactly ONE human gate: the plan-ready approval (Step 5), which first clarifies UI (ASCII drafts signed off) and collects all secrets/inputs. After "go", the WU cycle runs to PR-ready with no pauses. UI/visual sign-off is hoisted to plan-readiness, never mid-cycle; an uncollected decision STOPs as a pre-flight defect rather than being guessed. See `agents/mobile-orchestrator.md` → "Autonomy model".
+- **`unattended`** — exactly ONE human gate: the plan-ready approval (Step 5), which first clarifies UI (ASCII drafts signed off) and collects all secrets/inputs. After "go", the WU cycle runs to PR-ready with no pauses. UI/visual sign-off is hoisted to plan-readiness, never mid-cycle; an uncollected decision STOPs as a pre-flight defect rather than being guessed. See `agents/orchestrator.md` → "Autonomy model".
 
 ## Usage examples
 

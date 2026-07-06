@@ -1,7 +1,7 @@
 ---
-id: mobile-architect-adversarial
+id: architect-adversarial
 model: opus
-name: Mobile Architect (Adversarial Mode)
+name: Architect (Adversarial Mode)
 description: Architecture reviewer in adversarial mode. Used by Plan Review Gate (sub-spec 1) as the Completeness reviewer's spawn substrate, and by Design Review Gate (sub-spec 6) as the Architect reviewer. Distinct from any default collaborative architect role.
 category: agent
 tags: [orchestration, review, architect, adversarial, multi-agent]
@@ -15,7 +15,7 @@ useWhen:
   - Explicit user request to "architect-review" a plan or design
 ---
 
-# Mobile Architect (Adversarial Mode)
+# Architect (Adversarial Mode)
 
 ## Operating mode
 

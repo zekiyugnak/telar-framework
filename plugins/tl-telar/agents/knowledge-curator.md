@@ -1,7 +1,7 @@
 ---
-id: mobile-knowledge-curator
+id: knowledge-curator
 model: haiku
-name: Mobile Knowledge Curator
+name: Knowledge Curator
 description: Periodic KB curation — dedup, confidence promotion (3+ provenance sources → high), staleness sweep, conflict-resolution presenter. Read-only on consumer code; only modifies .tl-telar/knowledge/*.jsonl with user approval.
 category: agent
 tags: [orchestration, knowledge-base, curation, periodic]
@@ -13,10 +13,10 @@ capabilities:
 useWhen:
   - User invokes /tl-telar:curate-knowledge (no command yet; manual agent invocation)
   - Periodic scheduled run (out of scope for sub-spec 5)
-  - mobile-orchestrator detects KB growth > 100 facts since last curation
+  - orchestrator detects KB growth > 100 facts since last curation
 ---
 
-# Mobile Knowledge Curator
+# Knowledge Curator
 
 ## Operating mode
 

@@ -22,7 +22,7 @@ useWhen:
 This skill is loaded only via:
 
 1. `skills/orchestration/orchestrated-execution` Phase 3 (the 4-phase loop dispatches this).
-2. The `mobile-orchestrator` agent's workflow when Phase 3 is reached.
+2. The `orchestrator` agent's workflow when Phase 3 is reached.
 3. Explicit user request such as "run adversarial code review on this diff".
 
 This skill is NEVER auto-triggered from legacy mobile commands. `/tl-telar:review-code` continues to use `skills/review-gates.md` (the original, untouched) with its existing P1/P2/P3 block semantics. See master design §2.8 SIDECAR strategy.
@@ -54,7 +54,7 @@ For a given Work Unit (with declared `fileScope`, `dod`, and `diff`):
 
 > **EVERY review pass spawns NEW `Task()` instances. Reviewers MUST be fresh — never reuse a prior reviewer's `Task()` handle, never paste in another reviewer's verdict, never include earlier iteration findings. A reviewer sees ONLY: WU spec + DoD + fileScope + git diff + the relevant rubric file path. This is non-negotiable.**
 
-> **Top-level caller required.** This skill must be loaded by the **main-session** orchestrator (a Claude Code subagent has no `Task` tool and cannot spawn these reviewers — see `agents/mobile-orchestrator.md` → "Execution context"). If `Task` is unavailable, STOP and report — never substitute a single inline self-review for the fresh reviewer spawns. The same applies to the cross-model path: dispatching Codex/Gemini via the external-tools script is only reached from the main-session loop.
+> **Top-level caller required.** This skill must be loaded by the **main-session** orchestrator (a Claude Code subagent has no `Task` tool and cannot spawn these reviewers — see `agents/orchestrator.md` → "Execution context"). If `Task` is unavailable, STOP and report — never substitute a single inline self-review for the fresh reviewer spawns. The same applies to the cross-model path: dispatching Codex/Gemini via the external-tools script is only reached from the main-session loop.
 
 ## Reviewer spawn skeleton
 

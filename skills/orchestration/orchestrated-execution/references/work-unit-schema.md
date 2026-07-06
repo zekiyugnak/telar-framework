@@ -28,11 +28,11 @@ checkpoint: false           # if true: interactive mode waits for user after Pha
 - **Non-overlapping file scopes for parallel WUs.** Two WUs with deps satisfied may run in parallel only if their `file_scope` arrays are disjoint.
 - **Verifiable DoD.** Each DoD item must be machine- or human-verifiable. "Works correctly" is not verifiable.
 - **Explicit deps.** If WU-002 depends on a file WU-001 creates, declare `deps: [WU-001]`.
-- **Checkpoint sparingly.** Use `checkpoint: true` only when a human must validate (e.g., visual design, store metadata, security-sensitive defaults). Every checkpoint is a workflow pause in `interactive` mode. Under `autonomy.cycle = unattended`, these validations are hoisted into the plan-ready pre-flight (Step 5a) rather than pausing mid-cycle — see `agents/mobile-orchestrator.md` → "Autonomy model".
+- **Checkpoint sparingly.** Use `checkpoint: true` only when a human must validate (e.g., visual design, store metadata, security-sensitive defaults). Every checkpoint is a workflow pause in `interactive` mode. Under `autonomy.cycle = unattended`, these validations are hoisted into the plan-ready pre-flight (Step 5a) rather than pausing mid-cycle — see `agents/orchestrator.md` → "Autonomy model".
 
 ## How the orchestrator consumes this
 
-The `mobile-orchestrator` agent decomposes a plan into WUs at the start of execution. It writes the WU list into `.tl-telar/plans/active-plan.md` (see `./state-files.md`) and tracks per-WU phase in `.tl-telar/context/execution-state.md`.
+The `orchestrator` agent decomposes a plan into WUs at the start of execution. It writes the WU list into `.tl-telar/plans/active-plan.md` (see `./state-files.md`) and tracks per-WU phase in `.tl-telar/context/execution-state.md`.
 
 Phase 2 VALIDATE uses `file_scope` to bound the file-scope check. **The check is content-aware baseline attribution, NOT a bare `git diff --name-only`** (see `../SKILL.md` Phase 1 baseline capture + Phase 2 step 4). A per-WU baseline of **path + state** (state = content hash for existing files, or `__DELETED__` for already-deleted paths) is captured once before attempt 1. Attribution examines the union of current-dirty paths AND baseline paths; a path is attributed to this WU when it has no baseline entry (and exists now) OR its current state differs from baseline (edited, newly-deleted, or re-created). This lets a multi-WU run proceed without committing between WUs and still correctly attribute edits AND deletions (including deletion of an earlier WU's still-untracked file). A bare `git diff --name-only`, or path-only subtraction, would self-lock the loop and miss edits/deletions — never use them for scope checks.
 

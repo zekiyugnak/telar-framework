@@ -44,11 +44,11 @@ const SUPPORT_DIRS = [
 // Phase 4 curation: orchestration-internal roles that are NOT user-invokable
 // specialists. They remain as spawnable `.codex/agents/*.toml` roles but are
 // excluded from the installable-plugin `$skill` channel (a plugin user would
-// never usefully type `$mobile-orchestrator`).
+// never usefully type `$orchestrator`).
 const SKILL_EXCLUDED_AGENTS = new Set([
-  'mobile-orchestrator',
-  'mobile-architect-adversarial',
-  'mobile-knowledge-curator',
+  'orchestrator',
+  'architect-adversarial',
+  'knowledge-curator',
 ]);
 
 function readText(file) {

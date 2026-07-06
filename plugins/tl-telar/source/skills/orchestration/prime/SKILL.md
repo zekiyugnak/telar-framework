@@ -11,7 +11,7 @@ capabilities:
   - Support --json mode for hook consumption
 useWhen:
   - /tl-telar:prime invoked by user or agent
-  - mobile-orchestrator boots and wants relevant facts
+  - orchestrator boots and wants relevant facts
   - SessionStart hook (matcher startup|resume|clear|compact — `compact` covers post-compaction re-prime; no PreCompact registration per Claude Code Hooks reference) injects facts
 ---
 

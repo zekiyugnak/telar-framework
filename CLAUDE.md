@@ -52,7 +52,7 @@ The recommended workflow for building features:
 - **Web platform experts**: `astro-web-expert` (SEO/OG marketing sites), `nextjs-web-expert` (authenticated Next.js/Tailwind/shadcn consoles), `admin-panel-architect` (Vite + TanStack Router/Query/Table admin panels)
 - **Service layer**: `rust-service-architect` (axum/tokio/sqlx backend services)
 - **Native bridges**: `ios-native-bridge`, `android-native-bridge`
-- **Architecture**: `mobile-navigation-architect`, `mobile-state-management`, `mobile-backend-architect`, `mobile-architect-adversarial`
+- **Architecture**: `mobile-navigation-architect`, `mobile-state-management`, `mobile-backend-architect`, `architect-adversarial`
 - **UI/UX**: `mobile-ui-ux-specialist`, `mobile-accessibility-expert`, `mobile-animations-specialist`, `mobile-design-system-architect`, `mobile-screen-builder`
 - **Security**: `mobile-security-specialist`, `mobile-security-architect`
 - **Performance**: `mobile-performance-optimizer`
@@ -62,8 +62,8 @@ The recommended workflow for building features:
 - **Testing**: `mobile-unit-testing-expert`, `mobile-e2e-testing-expert`, `mobile-device-testing`, `mobile-performance-testing`
 - **Backend**: `supabase-expert`, `mobile-api-integration`, `mobile-push-notifications`, `mobile-auth-specialist`, `mobile-storage-specialist`
 - **Advanced**: `mobile-ai-integration`, `mobile-ar-vr-specialist`, `mobile-realtime-specialist`
-- **Orchestration**: `mobile-orchestrator`
-- **Knowledge**: `mobile-knowledge-curator`
+- **Orchestration**: `orchestrator`
+- **Knowledge**: `knowledge-curator`
 
 ## Skill Discovery
 

@@ -30,7 +30,7 @@ Migrated from `skills/orchestration/external-tools/SKILL.md`.
 This skill is loaded only via:
 
 1. `/tl-telar:external-tools-health` (sets TL_TELAR_ORCHESTRATED=1).
-2. The `mobile-orchestrator` agent when adapter delegation is requested AND `.tl-telar/external-tools.yaml` has `adapters.*.enabled: true` AND health passes.
+2. The `orchestrator` agent when adapter delegation is requested AND `.tl-telar/external-tools.yaml` has `adapters.*.enabled: true` AND health passes.
 3. Explicit user request.
 
 This skill is NEVER auto-triggered from legacy mobile commands. Adapters are opt-in.

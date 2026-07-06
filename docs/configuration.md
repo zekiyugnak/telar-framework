@@ -438,7 +438,7 @@ Bunlar kaynak kodda sabit olup `.tl-telar-thresholds.json` veya `external-tools.
 | Phase 3 adversarial reviewer (conditional) | +2 (A11y, Perf — file_scope'a göre) | Aynı skill |
 | Gate başarısız olduğunda maksimum retry | 3 | `skills/orchestration/orchestrated-execution/SKILL.md` |
 | 3 retry sonrası | Kullanıcıya eskalasyon | Aynı skill |
-| WU checkpoint (unattended modda) | Plan-readiness'a çekilir, mid-cycle pause yok | `agents/mobile-orchestrator.md` |
+| WU checkpoint (unattended modda) | Plan-readiness'a çekilir, mid-cycle pause yok | `agents/orchestrator.md` |
 | Commit ve push | Asla otomatik değil — `ben yapacagim` politikası | `commands/orchestrate.md` |
 
 ---

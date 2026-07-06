@@ -63,7 +63,7 @@ The old `.claude/skills/learned/<name>.md` store was write-only-into-the-void. F
 - **Capture** (`/tl-telar:self-reflect`) — 3-phase pipeline with user-approval gate, canonicalization, typed JSONL storage.
 - **Storage** (`.tl-telar/knowledge/*.jsonl`) — 8 typed files (codebase-facts, api-behaviors, patterns, anti-patterns, gotchas, decisions, performance, security) with provenance, confidence, mobile tags (platform/framework/category).
 - **Retrieval** (`/tl-telar:prime`) — auto-invoked at the start of any orchestrated task (and on demand), returns 5-category facts (`MUST FOLLOW`, `GOTCHAS`, `PATTERNS`, `DECISIONS`, `API BEHAVIORS`) filtered by file glob / keyword / work-type.
-- **Curation** (`agents/mobile-knowledge-curator.md`) — periodic dedup, confidence promotion (3+ provenance → high), staleness sweep. Suggestion-driven; never autonomous mutation.
+- **Curation** (`agents/knowledge-curator.md`) — periodic dedup, confidence promotion (3+ provenance → high), staleness sweep. Suggestion-driven; never autonomous mutation.
 
 If you only have time to do ONE thing from this skill, run `/tl-telar:self-reflect` after your next debugging session. The rest of the loop runs itself once facts are in the KB.
 
@@ -76,6 +76,6 @@ The `learn-pattern` skill name is preserved so workflows that load it (or hooks 
 - `skills/orchestration/self-reflect/SKILL.md` — capture flow
 - `skills/orchestration/prime/SKILL.md` — retrieval flow
 - `.tl-telar/knowledge/README.md` (created by `/tl-telar:setup-orchestration`) — schema doc + tag controlled vocabulary
-- `agents/mobile-knowledge-curator.md` — periodic curation
+- `agents/knowledge-curator.md` — periodic curation
 - `commands/self-reflect.md` (`/tl-telar:self-reflect`) — slash-command entry
 - `commands/prime.md` (`/tl-telar:prime`) — slash-command entry

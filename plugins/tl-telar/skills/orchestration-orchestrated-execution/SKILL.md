@@ -29,7 +29,7 @@ Migrated from `skills/orchestration/orchestrated-execution/SKILL.md`.
 
 This skill is loaded only via:
 
-1. The `mobile-orchestrator` agent's workflow per active WU.
+1. The `orchestrator` agent's workflow per active WU.
 2. `/tl-telar:orchestrate <task>` (which routes through the orchestrator).
 3. Explicit user request to run the 4-phase loop on a specific WU.
 
@@ -84,7 +84,7 @@ The baseline records what earlier WUs (or pre-existing user edits) had already c
 
 **Sequential-overlap note.** The Work Unit schema forbids overlapping `file_scope` only for *parallel* WUs. Sequential WUs may legitimately touch the same file (e.g., WU-001 creates `RootStack.tsx`, WU-003 adds a route to it). The content-aware baseline handles this: WU-003's edit changes the hash, so it's attributed to WU-003 and checked against WU-003's `file_scope`. If WU-003's scope doesn't include that file, it correctly FAILs — which is the desired behavior.
 
-Then dispatch a fresh `Task()` implementer subagent (this requires the 4-phase loop to be driven by the **main-session** orchestrator — a subagent cannot spawn the implementer/reviewer subagents this loop needs; see `agents/mobile-orchestrator.md` → "Execution context") with:
+Then dispatch a fresh `Task()` implementer subagent (this requires the 4-phase loop to be driven by the **main-session** orchestrator — a subagent cannot spawn the implementer/reviewer subagents this loop needs; see `agents/orchestrator.md` → "Execution context") with:
 - WU spec, DoD, file scope
 - Instruction: "STAY within declared file scope — do not modify files outside it. Do NOT self-certify — the orchestrator will validate independently. Follow TDD where the WU's DoD has a test item."
 - Self-review checklist (per the implementer-prompt convention).
@@ -200,7 +200,7 @@ The implementer subagent does NOT commit. The orchestrator agent itself:
 3a. **Update `.tl-telar/context/project-context.md` (sub-spec 4 wiring)**: read or create from the template at `resources/templates/orchestration/project-context.md`; append a row to the **Completed Work Units** table (`| WU-<id> | <title> | <key files> | <new services/modules> |`); if new patterns emerged, add a bullet under **Established Patterns**. File is git-ignored per §2.7a — orchestrator scratchpad, NOT a durable artifact, but recovery and subsequent WU implementers read it for cross-WU coherence.
 3b. **Conditional `/tl-telar:self-reflect` (sub-spec 5 wiring).** Fire the self-reflect skill here when EITHER (a) this is a single-WU run (the orchestrator's plan decomposed into exactly one WU and this is it), OR (b) `.tl-telar-thresholds.json` → `enforcement.self_reflect_per_wu == true`. The orchestrator agent's Step 7.5 handles the multi-WU-without-opt-in case (one capture pre-PR); this Phase 4 hook handles the other two cases. If neither condition holds, SKIP and let Step 7.5 cover it post-WU-loop. The single-WU case is detected by: `.tl-telar/plans/active-plan.md` lists exactly one WU AND this WU's status flipped to COMPLETE in step 3.
 4. Remove this WU's baseline artifacts (`.tl-telar/context/wu-<id>-baseline.tsv`, `wu-<id>-changes.txt`) — they were per-WU scratch. (All under `.tl-telar/context/`, already git-ignored per §2.7a, so this is hygiene not correctness.)
-5. If WU `checkpoint: true`: when `autonomy.cycle = interactive` (default), present a checkpoint report and WAIT for user. When `autonomy.cycle = unattended`, do NOT pause — the human validation was hoisted to the orchestrator's Step 5a plan-readiness pre-flight; proceed using the pre-approved artifact (see `agents/mobile-orchestrator.md` → "Autonomy model"). A checkpoint reached in unattended mode with no pre-flight artifact is a pre-flight defect: STOP and report, do not guess.
+5. If WU `checkpoint: true`: when `autonomy.cycle = interactive` (default), present a checkpoint report and WAIT for user. When `autonomy.cycle = unattended`, do NOT pause — the human validation was hoisted to the orchestrator's Step 5a plan-readiness pre-flight; proceed using the pre-approved artifact (see `agents/orchestrator.md` → "Autonomy model"). A checkpoint reached in unattended mode with no pre-flight artifact is a pre-flight defect: STOP and report, do not guess.
 
 ## Anti-patterns (do NOT do these)
 

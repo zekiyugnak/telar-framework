@@ -27,7 +27,7 @@ Loads `skills/orchestration/self-reflect`. Runs Phase A (PR comments) + Phase B 
 
 ## When fires automatically
 
-- `mobile-orchestrator` Step 7 (pre-PR) on multi-WU runs.
+- `orchestrator` Step 7 (pre-PR) on multi-WU runs.
 - Per-WU if `enforcement.self_reflect_per_wu: true` in `.tl-telar-thresholds.json`.
 
 ## When fires manually
