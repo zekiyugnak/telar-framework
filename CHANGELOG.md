@@ -6,6 +6,22 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+## [0.8.0] - 2026-07-06
+
+### Added
+
+- Per-agent model tiering (frontmatter `model:`; opus/sonnet/haiku) and Opus-pinned adversarial reviewers, plus Codex per-agent `model_reasoning_effort` tiering.
+- Stack-aware adversarial reviewer roster resolver (`scripts/tl-telar-reviewer-roster.js`) that selects reviewers by Work-Unit file scope across mobile, web, backend-data, rust, and desktop domains.
+- Domain review rubrics: web-security, backend-data-security, web-accessibility, rust-safety, web-performance, backend-correctness, frontend-ux, and desktop-security; generic code rubric extended with simplicity/coupling criteria.
+- CI workflow running unit test suites and a Codex-artifact drift guard.
+
+### Changed
+
+- De-mobiled the framework identity across the README, docs site, and manifests — Telar is a multi-domain (mobile/web/Rust/desktop) framework, not mobile-only.
+- Renamed cross-cutting agents to drop the misleading `mobile-` prefix: `orchestrator`, `architect-adversarial`, `knowledge-curator` (genuine mobile specialists keep the prefix).
+- Codex plugin curation: internal-only agents excluded from the installable skill channel; trimmed the `source/skills` copy to the referenced orchestration subtree.
+- Honest Codex-host gate degradation: probe for subagent support, else emit a DEGRADED banner instead of a faked single-reviewer pass.
+
 ## [0.7.0] - 2026-07-06
 
 ### Added
