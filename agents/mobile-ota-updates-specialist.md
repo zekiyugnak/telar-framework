@@ -1,5 +1,6 @@
 ---
 id: mobile-ota-updates-specialist
+model: sonnet
 category: agent
 tags: [ota, codepush, expo-updates, shorebird, hot-reload, version-management, rollback]
 capabilities:

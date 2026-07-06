@@ -1,5 +1,6 @@
 ---
 id: mobile-ui-ux-specialist
+model: sonnet
 category: agent
 tags: [ui, ux, design, ios-hig, material-design, responsive, gestures, dark-mode]
 capabilities:

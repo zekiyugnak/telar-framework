@@ -1,5 +1,6 @@
 ---
 id: android-native-bridge
+model: sonnet
 category: agent
 tags: [android, kotlin, java, native-modules, gradle, aar, react-native, flutter]
 capabilities:

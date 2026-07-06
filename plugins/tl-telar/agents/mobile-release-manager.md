@@ -1,5 +1,6 @@
 ---
 id: mobile-release-manager
+model: sonnet
 category: agent
 tags: [release, versioning, changelog, rollout, feature-flags, crash-monitoring, ab-testing]
 capabilities:

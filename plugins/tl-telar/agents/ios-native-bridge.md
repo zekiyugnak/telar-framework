@@ -1,5 +1,6 @@
 ---
 id: ios-native-bridge
+model: sonnet
 category: agent
 tags: [ios, swift, objective-c, native-modules, cocoapods, xcframework, react-native, flutter]
 capabilities:

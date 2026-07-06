@@ -1,5 +1,6 @@
 ---
 id: mobile-state-management
+model: sonnet
 category: agent
 tags: [state-management, redux, zustand, riverpod, bloc, react-query, persistence]
 capabilities:

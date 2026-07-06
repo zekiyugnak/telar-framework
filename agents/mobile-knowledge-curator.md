@@ -1,5 +1,6 @@
 ---
 id: mobile-knowledge-curator
+model: haiku
 name: Mobile Knowledge Curator
 description: Periodic KB curation — dedup, confidence promotion (3+ provenance sources → high), staleness sweep, conflict-resolution presenter. Read-only on consumer code; only modifies .tl-telar/knowledge/*.jsonl with user approval.
 category: agent

@@ -1,5 +1,6 @@
 ---
 id: supabase-expert
+model: sonnet
 category: agent
 tags: [supabase, postgresql, rls, auth, edge-functions, storage, realtime]
 capabilities:

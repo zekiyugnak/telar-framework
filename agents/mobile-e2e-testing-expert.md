@@ -1,5 +1,6 @@
 ---
 id: mobile-e2e-testing-expert
+model: sonnet
 category: agent
 tags: [e2e, detox, maestro, appium, integration-testing, automation, visual-regression]
 capabilities:

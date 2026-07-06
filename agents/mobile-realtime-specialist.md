@@ -1,5 +1,6 @@
 ---
 id: mobile-realtime-specialist
+model: sonnet
 category: agent
 tags: [realtime, websockets, socket-io, supabase-realtime, mqtt, streaming, presence]
 capabilities:

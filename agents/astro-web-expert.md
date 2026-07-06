@@ -1,5 +1,6 @@
 ---
 id: astro-web-expert
+model: sonnet
 category: agent
 tags: [astro, ssg, seo, og, content-collections, islands, web]
 capabilities:

@@ -53,6 +53,12 @@ For each active role, dispatch a `Task()`:
 ```text
 Description: "Adversarial review — <role>"
 Subagent type: general-purpose
+Model: opus   # binding: EVERY adversarial reviewer runs on Opus regardless of the
+              # session model. This gate is the last line of defense — it is pinned
+              # to the highest-reasoning tier, never left to inherit a cheaper
+              # session model (e.g. Fable/Sonnet). If the running Claude Code build
+              # cannot set a per-Task model, STOP and report; do not silently let
+              # reviewers inherit the session model.
 Prompt:
   You are the <ROLE> ADVERSARIAL REVIEWER of a software change.
 
