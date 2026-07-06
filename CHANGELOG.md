@@ -6,14 +6,14 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
-## [0.8.0] - 2026-07-06
+## [0.7.0] - 2026-07-06
 
 ### Added
 
 - Per-agent model tiering (frontmatter `model:`; opus/sonnet/haiku) and Opus-pinned adversarial reviewers, plus Codex per-agent `model_reasoning_effort` tiering.
 - Stack-aware adversarial reviewer roster resolver (`scripts/tl-telar-reviewer-roster.js`) that selects reviewers by Work-Unit file scope across mobile, web, backend-data, rust, and desktop domains.
 - Domain review rubrics: web-security, backend-data-security, web-accessibility, rust-safety, web-performance, backend-correctness, frontend-ux, and desktop-security; generic code rubric extended with simplicity/coupling criteria.
-- CI workflow running unit test suites and a Codex-artifact drift guard.
+- CI workflow (`.github/workflows/ci.yml`) on pull requests to `main`/`develop`: unit test suites, agent/skill/blueprint validation, and a Codex-artifact drift guard that regenerates `.agents/`, `.codex/`, and `plugins/tl-telar/` and fails if they diverge from source.
 
 ### Changed
 
@@ -21,15 +21,6 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - Renamed cross-cutting agents to drop the misleading `mobile-` prefix: `orchestrator`, `architect-adversarial`, `knowledge-curator` (genuine mobile specialists keep the prefix).
 - Codex plugin curation: internal-only agents excluded from the installable skill channel; trimmed the `source/skills` copy to the referenced orchestration subtree.
 - Honest Codex-host gate degradation: probe for subagent support, else emit a DEGRADED banner instead of a faked single-reviewer pass.
-
-## [0.7.0] - 2026-07-06
-
-### Added
-
-- CI workflow (`.github/workflows/ci.yml`) running on pull requests to `main`/`develop`: a Codex artifact drift guard that regenerates `.agents/`, `.codex/`, and `plugins/tl-telar/` and fails if they diverge from source, plus agent/skill/blueprint validation.
-
-### Changed
-
 - Finalized Codex install guidance across the README and documentation site (marketplace ref commands; plugin install distinguished from the optional `adapters.codex` delegation).
 
 ## [0.6.0] - 2026-07-05
