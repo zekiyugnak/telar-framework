@@ -1,7 +1,7 @@
 # Telar
 
 > **The agentic engineering framework** — plan, build, review, and ship, with agents.
-> By Zeki Yugnak · v0.7.0 — 41 agents, 113 skills, 23 commands, 4 hooks, 7 rules, 29 scripts
+> By Zeki Yugnak · v0.8.0 — 46 agents, 116 skills, 23 commands, 4 hooks, 7 rules, 29 scripts
 
 Telar is a multi-agent engineering framework for Claude Code and Codex that takes a feature from idea to production — orchestrated planning, adversarial review gates, a persistent knowledge base, and cross-model verification. It spans cross-platform apps end to end: **mobile** (**React Native** & **Flutter**) with deep native integration, **web** (**Astro**, **Next.js**/Tailwind/shadcn, **Vite**/TanStack admin panels), **Rust** service layers, and **desktop** — with stack-aware orchestration, reviewers, and rubrics across every domain.
 
@@ -14,8 +14,8 @@ The full reference — every agent, skill, command, and rule, plus the orchestra
 | | |
 |---|---|
 | [Getting Started](https://zekiyugnak.github.io/telar-framework/getting-started.html) | Install and run your first command |
-| [Agents](https://zekiyugnak.github.io/telar-framework/agents.html) | 41 specialized subagents |
-| [Skills](https://zekiyugnak.github.io/telar-framework/skills.html) | 113 reference modules |
+| [Agents](https://zekiyugnak.github.io/telar-framework/agents.html) | 46 specialized subagents |
+| [Skills](https://zekiyugnak.github.io/telar-framework/skills.html) | 116 reference modules |
 | [Commands](https://zekiyugnak.github.io/telar-framework/commands.html) | 23 slash-command workflows |
 | [Rules](https://zekiyugnak.github.io/telar-framework/rules.html) | 7 always-on standards |
 | [Orchestration](https://zekiyugnak.github.io/telar-framework/orchestration.html) | The opt-in pipeline, in depth |
@@ -84,8 +84,8 @@ See the [command reference](https://zekiyugnak.github.io/telar-framework/command
 
 ## Highlights
 
-- **41 specialized agents** — platform experts, native bridges, architecture, security, testing, release, orchestration, and a companion web (Astro/Next.js/Vite-TanStack) and Rust service layer.
-- **113 skills** — reusable reference modules, decision frameworks, and ready-to-use feature blueprints for React Native, Flutter, the web stack, and Rust services.
+- **46 specialized agents** — mobile & native platform experts, native bridges, architecture, security, testing, release, orchestration; a full web stack (Astro/Next.js/Vite-TanStack plus a framework-agnostic React expert and web security/performance/accessibility specialists); Rust services; and desktop (Electron/Tauri).
+- **116 skills** — reusable reference modules, decision frameworks, and ready-to-use feature blueprints for React Native, Flutter, the web stack, and Rust services.
 - **Two-stage review gates** — requirement compliance and code quality, with adversarial and collaborative reviewers.
 - **Orchestrated mode (opt-in)** — design + plan review gates, a 4-phase IMPLEMENT/VALIDATE/REVIEW/COMMIT loop, and blocking quality gates. Independent Work Units run in parallel — a pure readiness scheduler dispatches concurrent WUs whose dependencies are met and file scopes are disjoint (bounded by `execution.max_parallel_wus`). The orchestrator honors your git policy and never auto-commits.
 - **Persistent knowledge base** — typed JSONL facts captured via `/tl-telar:self-reflect` and re-primed into context each session.
@@ -106,8 +106,8 @@ See the [command reference](https://zekiyugnak.github.io/telar-framework/command
 
 | Directory | Contents |
 |-----------|----------|
-| `agents/` | 41 agent definitions |
-| `skills/` | 113 skill modules (incl. `blueprints/` and `orchestration/`) |
+| `agents/` | 46 agent definitions |
+| `skills/` | 116 skill modules (incl. `blueprints/` and `orchestration/`) |
 | `commands/` | 23 slash commands |
 | `rules/` | 7 always-on rules |
 | `hooks/` | Session and pre-build hooks |
