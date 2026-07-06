@@ -1,6 +1,6 @@
 ---
 name: "orchestration-adversarial-code-review"
-description: "**EVERY review pass spawns NEW `Task()` instances. Reviewers MUST be fresh — never reuse a prior reviewer's `Task()` handle, never paste in another reviewer's verdict, never include earlier iteration findings. A reviewer"
+description: "`--default-domain` comes from the project-detect framework signal (orchestrator Step 5b / project-context); it only decides how UI files with no strong path marker are classified. The resolver returns JSON `{ domains, re"
 source_type: "orchestration"
 source_file: "skills/orchestration/adversarial-code-review.md"
 ---
@@ -40,11 +40,21 @@ This skill is NEVER auto-triggered from legacy mobile commands. `/tl-telar:revie
 
 For a given Work Unit (with declared `fileScope`, `dod`, and `diff`):
 
-1. **Determine reviewer roster** by file-scope intersection:
-   - **Always present (2)**: Adversarial Code Reviewer, Adversarial Mobile Security Reviewer.
-   - **Conditional (Mobile UX/A11y)**: activate if any path in `fileScope` matches: `screens/`, `components/`, `app/`, `lib/widgets/`, `lib/ui/`, or any `.tsx`/`.dart` UI-class file.
-   - **Conditional (Mobile Performance)**: activate if any path matches list/animation/render-heavy code (`*List*`, `*Animation*`, `*Render*`, plus screens flagged in WU `Checkpoint: yes`).
-   - Store Compliance is NOT spawned by this skill; it's reserved for `/tl-telar:release-app`-bound work.
+1. **Determine reviewer roster** with the stack-aware resolver — do NOT hardcode a mobile roster:
+
+   ```bash
+   node scripts/tl-telar-reviewer-roster.js --default-domain <mobile|web> <every path in fileScope>
+   ```
+
+   `--default-domain` comes from the project-detect framework signal (orchestrator Step 5b / project-context); it only decides how UI files with no strong path marker are classified. The resolver returns JSON `{ domains, reviewers: [{ role, reviewer_key, rubric, model, reason }] }`. Spawn EXACTLY that set — it is stack-aware, so a web/admin or backend WU never gets a mobile rubric:
+   - Always: **Code** (generic rubric) + one **Security** reviewer per in-scope domain (`mobile-security` | `web-security` | `backend-data-security` | `rust-safety`).
+   - Backend/service in scope → **BackendCorrectness** (data-integrity + reliability + API-contract).
+   - UI in scope → **FrontendUX** (states + i18n) + **Accessibility** (per UI domain).
+   - Perf-sensitive paths → **Performance** (per UI domain).
+   - Every reviewer carries `model: opus` (gate-quality pin) and its own `rubric` path — use those verbatim.
+   - Store Compliance is NOT spawned here; it's reserved for `/tl-telar:release-app`-bound work.
+
+   A WU whose fileScope spans many domains (e.g. backend + web) yields a large roster — that is a signal the WU is doing too much and should have been split, not a resolver bug.
 2. **Spawn N fresh `Task()` subagents in parallel**, one per active reviewer role. Each gets the corresponding rubric path and the WU context. See `./references/spawn-prompts.md` if you create one; otherwise inline the prompt skeleton below.
 3. **Aggregate verdicts**. Any single FAIL → overall FAIL.
 4. **Return** to caller (the orchestrator) with the aggregated verdict.
@@ -74,11 +84,10 @@ Prompt:
   Mode: Adversarial. Your job is to FIND FAILURES, not to approve, not to
   suggest improvements. You have NO context from previous reviews.
 
-  Read the rubric at: <rubric-path>
-  (Generic: resources/rubrics/orchestration/adversarial-review-rubric.md)
-  (Mobile Security: resources/rubrics/orchestration/mobile-security-adversarial-rubric.md)
-  (Mobile A11y: resources/rubrics/orchestration/mobile-accessibility-adversarial-rubric.md)
-  (Mobile Perf: resources/rubrics/orchestration/mobile-performance-adversarial-rubric.md)
+  Read the rubric at: <rubric-path from the resolver's `rubric` field for this reviewer>
+  (The resolver selects the domain-correct rubric — generic code, {mobile|web|backend-data|rust}
+  security, backend-correctness, frontend-ux, {mobile|web} accessibility, or {mobile|web}
+  performance. Never substitute a mobile rubric on a web/backend reviewer.)
 
   Apply the criteria. Cite findings with rule IDs.
 
