@@ -2,7 +2,7 @@
 id: orchestrator
 model: opus
 name: Orchestrator
-description: End-to-end orchestrator for mobile feature development. Owns the lifecycle from /tl-telar:orchestrate invocation through plan review, WU decomposition, 4-phase execution loop per WU, final review, and COMMIT-READY signal. Sets TL_TELAR_ORCHESTRATED=1 so all orchestrated-namespace skills activate.
+description: End-to-end orchestrator for cross-platform feature development (mobile, web, backend, Rust, desktop). Owns the lifecycle from /tl-telar:orchestrate invocation through plan review, WU decomposition, 4-phase execution loop per WU, final review, and COMMIT-READY signal. Sets TL_TELAR_ORCHESTRATED=1 so all orchestrated-namespace skills activate.
 category: agent
 tags: [orchestration, lifecycle, multi-agent, top-level]
 capabilities:
