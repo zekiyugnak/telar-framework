@@ -46,10 +46,12 @@ The recommended workflow for building features:
 
 ## Agent Discovery
 
-**41 agents** organized by domain:
+**46 agents** organized by domain:
 
 - **Platform experts**: `react-native-expert`, `flutter-expert`
-- **Web platform experts**: `astro-web-expert` (SEO/OG marketing sites), `nextjs-web-expert` (authenticated Next.js/Tailwind/shadcn consoles), `admin-panel-architect` (Vite + TanStack Router/Query/Table admin panels)
+- **Web platform experts**: `astro-web-expert` (SEO/OG marketing sites), `nextjs-web-expert` (authenticated Next.js/Tailwind/shadcn consoles), `admin-panel-architect` (Vite + TanStack Router/Query/Table admin panels), `web-frontend-expert` (framework-agnostic React/TS SPA)
+- **Web specialists**: `web-security-architect` (appsec/authz/CSP/threat-modeling), `web-performance-optimizer` (Core Web Vitals/bundle/render), `web-accessibility-expert` (WCAG 2.2 AA)
+- **Desktop**: `desktop-expert` (Electron & Tauri — secure IPC, packaging, auto-update)
 - **Service layer**: `rust-service-architect` (axum/tokio/sqlx backend services)
 - **Native bridges**: `ios-native-bridge`, `android-native-bridge`
 - **Architecture**: `mobile-navigation-architect`, `mobile-state-management`, `mobile-backend-architect`, `architect-adversarial`
@@ -67,13 +69,14 @@ The recommended workflow for building features:
 
 ## Skill Discovery
 
-**113 skills** including:
+**116 skills** including:
 
 - **Blueprints** (`skills/blueprints/`): auth-flow, crud-list, chat-feature, settings-screen, onboarding-flow
 - **Astro**: astro-seo-og, astro-content-performance
 - **Next.js/Tailwind/shadcn**: shadcn-component-patterns, tailwind-v4-design-tokens, nextjs-auth-app-router
 - **Admin panel (Vite + TanStack)**: tanstack-router-patterns, tanstack-query-patterns, tanstack-table-patterns, supabase-rls-client-patterns, supabase-tus-resumable-upload, command-palette-cmdk, tremor-dashboard-charts, i18n-rtl-formatjs-lingui
 - **Rust service**: rust-axum-routing, rust-sqlx-patterns, rust-service-architecture, rust-testing-pyramid, rust-deployment
+- **Web (framework-agnostic)**: web-state-management, web-animations, web-testing
 - **Workflow**: requirements-gather, brainstorm-first, plan-and-track, review-gates, iterative-build-loop, mobile-commit-convention, systematic-debugging, verification-before-completion
   - `plan-review-gate` — adversarial 3-reviewer gate on PLAN.md (orchestration namespace, sub-spec 1)
   - `orchestrated-execution` — 4-phase IMPLEMENT/VALIDATE/REVIEW/COMMIT loop (orchestration namespace, sub-spec 2)

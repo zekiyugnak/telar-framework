@@ -5,9 +5,9 @@
 
 ## Summary
 
-- **41 agents** available
-- **14** with decision frameworks
-- **14** with anti-pattern guidance
+- **46 agents** available
+- **19** with decision frameworks
+- **19** with anti-pattern guidance
 
 ## Quick Reference
 
@@ -17,6 +17,7 @@
 | [android-native-bridge](#android-native-bridge) | - | - |
 | [architect-adversarial](#architect-adversarial) | - | - |
 | [astro-web-expert](#astro-web-expert) | Yes | Yes |
+| [desktop-expert](#desktop-expert) | Yes | Yes |
 | [flutter-expert](#flutter-expert) | Yes | Yes |
 | [google-play-specialist](#google-play-specialist) | - | - |
 | [ios-app-store-specialist](#ios-app-store-specialist) | - | - |
@@ -54,6 +55,10 @@
 | [react-native-expert](#react-native-expert) | Yes | Yes |
 | [rust-service-architect](#rust-service-architect) | Yes | Yes |
 | [supabase-expert](#supabase-expert) | Yes | Yes |
+| [web-accessibility-expert](#web-accessibility-expert) | Yes | Yes |
+| [web-frontend-expert](#web-frontend-expert) | Yes | Yes |
+| [web-performance-optimizer](#web-performance-optimizer) | Yes | Yes |
+| [web-security-architect](#web-security-architect) | Yes | Yes |
 
 ## Agent Details
 
@@ -163,6 +168,37 @@ Specialist in Astro for public-facing marketing and candidate-acquisition (caree
 - Adding interactive widgets (forms, filters, carousels) to an otherwise static site
 - Setting up Content Collections for job listings, blog posts, or team bios
 - Migrating a marketing site from a client-heavy SPA framework to Astro for performance
+
+---
+
+### desktop-expert
+
+**Desktop Expert**
+
+Specialist in cross-platform desktop application development with Electron and Tauri — covering process architecture, secure IPC design, native OS integration, packaging, and auto-update pipelines.
+
+**File:** `agents/desktop-expert.md`
+
+**Tags:** desktop, electron, tauri, ipc, packaging, auto-update, cross-platform
+
+**Capabilities:**
+- Architecting cross-platform desktop apps with Electron (main/renderer) or Tauri (Rust core/webview)
+- Designing secure IPC channels — Electron contextBridge + minimal allow-listed preload API; Tauri commands + capability allowlist
+- Packaging and distributing per-OS artifacts (dmg, nsis, AppImage, msi) with electron-builder/electron-forge or Tauri bundler
+- Wiring auto-update pipelines with cryptographic signature verification (electron-updater, Tauri updater with pinned pubkey)
+- Implementing native OS integration — system menus, tray icons, global shortcuts, deep links / custom protocols
+- Managing multi-window state, offline-first storage, and window session persistence
+- Reusing a React/TypeScript web frontend in the renderer process, cross-referencing web-frontend patterns
+- Handing off code signing and notarization to a signing specialist with a clear artifact + credential brief
+
+**Use when:**
+- Building a new cross-platform desktop app and deciding between Electron and Tauri
+- Hardening an existing Electron app (nodeIntegration still on, no contextBridge, unvalidated IPC)
+- Implementing or auditing a Tauri command surface and its capability allowlist
+- Setting up auto-update with signature/integrity verification for an Electron or Tauri app
+- Packaging multi-OS artifacts in CI (dmg + nsis + AppImage + msi from one pipeline)
+- Adding native OS features — tray, global shortcuts, custom protocol handler, file associations
+- Diagnosing renderer-visible main-process data that should never have crossed the IPC boundary
 
 ---
 
@@ -1193,6 +1229,143 @@ Specialist in Supabase backend development for mobile applications.
 - Creating serverless functions with Edge Functions
 - Setting up file storage with access controls
 - Adding realtime features to mobile apps
+
+---
+
+### web-accessibility-expert
+
+**Web Accessibility Expert**
+
+WCAG 2.2 AA specialist for web applications. Semantic HTML first, ARIA only when necessary, full keyboard operability, and inclusive design for color, motion, and responsive behavior.
+
+**File:** `agents/web-accessibility-expert.md`
+
+**Tags:** accessibility, wcag, aria, keyboard, semantic-html, web
+
+**Capabilities:**
+- WCAG 2.2 AA audit and remediation for web applications and React/TSX component libraries
+- Semantic HTML landmark and heading-hierarchy structure design
+- ARIA roles, states, and properties — applying the name/role/value model correctly
+- Keyboard navigation patterns: focus order, skip links, focus trap and restore in modals/dialogs
+- Form accessibility: programmatic labels, error message association, required/invalid states
+- Color contrast evaluation (4.5:1 normal text, 3:1 large text and UI components)
+- User-preference media queries: prefers-reduced-motion, prefers-color-scheme, text-spacing, 200% zoom
+- Automated testing with axe-core, eslint-plugin-jsx-a11y, and @axe-core/playwright
+- Screen reader smoke testing guidance for VoiceOver (macOS/iOS) and NVDA (Windows)
+
+**Use when:**
+- Auditing a page or component tree for WCAG 2.2 AA compliance
+- Building a modal, dialog, drawer, or popover that needs focus trap and focus restore
+- Adding a skip link or ARIA landmark structure to a page shell
+- Associating form labels and inline error messages programmatically
+- Implementing a live region for async notifications (toasts, status banners, loading states)
+- Managing focus after a client-side route change in a Next.js or React SPA
+- Evaluating color contrast for text, icons, focus rings, and interactive UI components
+- Writing or reviewing Playwright + axe-core automated accessibility tests
+- Choosing between a native HTML element and an ARIA role for a custom widget
+
+---
+
+### web-frontend-expert
+
+**Web Frontend Expert**
+
+Framework-agnostic React + TypeScript specialist for general-purpose SPAs — the foundational web UI craft that any React app needs regardless of whether it runs on Next.js, Astro, Vite, or another host. Covers component architecture, state boundaries, hooks discipline, rendering performance, forms, data fetching, and bundling. Hands off to framework-specific agents (nextjs-web-expert, astro-web-expert, admin-panel-architect) and to web-accessibility-expert and web-performance-optimizer for their owned concerns.
+
+**File:** `agents/web-frontend-expert.md`
+
+**Tags:** react, typescript, frontend, spa, vite, state, rendering, web
+
+**Capabilities:**
+- Designing component architecture for React + TypeScript SPAs (composition, container/presentational split, when to split a component)
+- Drawing the client-state vs server-state boundary and wiring TanStack Query for all remote data
+- Hooks discipline — custom hooks, correct deps arrays, deriving state instead of syncing it with useEffect
+- Rendering performance — scoped memo/useMemo/useCallback, stable keys, list virtualization, Suspense and concurrent transitions
+- Forms with react-hook-form + zod (controlled vs uncontrolled, field registration, schema-based validation)
+- Data-fetching patterns with TanStack Query — loading/error/empty states, error boundaries, query invalidation
+- Vite project setup, code-splitting, lazy routes, tree shaking, dynamic imports
+- Local vs global state decisions — when useState/useReducer suffices vs when a store is warranted
+
+**Use when:**
+- Architecting a new React + TypeScript SPA or setting up a Vite project from scratch
+- Deciding how to split components, where to colocate state, or whether to add a global store
+- Choosing between client state and server/cache state (TanStack Query vs Zustand vs useReducer)
+- Diagnosing unnecessary re-renders, unstable keys, or memo thrash in a component tree
+- Setting up react-hook-form with zod schema validation for a complex form
+- Adding error boundaries, loading skeletons, or empty-state UI for async data flows
+- Evaluating when to use Suspense, startTransition, or useDeferredValue for responsive UIs
+- Setting up code-splitting and lazy routes in a Vite + React Router project
+
+---
+
+### web-performance-optimizer
+
+**Web Performance Optimizer**
+
+Profiling-first specialist for web application performance — Core Web Vitals, bundle size, rendering, data fetching, and asset optimization across Vite, Next.js, and Astro stacks.
+
+**File:** `agents/web-performance-optimizer.md`
+
+**Tags:** web-performance, core-web-vitals, bundle, rendering, caching, web
+
+**Capabilities:**
+- Measuring and improving Core Web Vitals (LCP, CLS, INP, TTFB) with Lighthouse, WebPageTest, and RUM
+- Analyzing and reducing JavaScript bundle size with Vite bundle visualizer and rollup-plugin-visualizer
+- Implementing route-level code splitting, dynamic imports, and tree-shaking
+- Eliminating unnecessary React re-renders via targeted memoization and profiling
+- Virtualizing large lists to keep the main thread free during scroll
+- Diagnosing and resolving request waterfalls; parallel/batched fetching; TanStack Query cache tuning
+- Optimizing images (responsive srcset, lazy loading, next-gen formats, CDN)
+- Tuning font loading with font-display, preload hints, and subsetting
+- Offloading heavy CPU work to web workers to unblock the main thread
+- Setting and enforcing performance budgets in CI
+
+**Use when:**
+- Core Web Vitals are failing (LCP > 2.5 s, INP > 200 ms, CLS > 0.1) in Lighthouse or field data
+- A Vite/Next.js/Astro bundle has grown and routes are loading slowly
+- React components re-render excessively and Chrome DevTools Profiler shows flame-chart spikes
+- A page makes sequential fetch waterfalls instead of parallel requests
+- Images are unoptimized (no srcset, no lazy load, wrong format) causing LCP regression
+- A main-thread task exceeds 50 ms (Long Task) and blocks INP
+- TTFB is high and caching headers or streaming SSR have not been configured
+- TanStack Query staleTime/gcTime are not tuned and unnecessary network round-trips occur
+
+---
+
+### web-security-architect
+
+**Web Security Architect**
+
+Principal engineer specializing in proactive web application, API, and data-layer security architecture. Applies STRIDE threat modeling, defense-in-depth, and secure-by-default patterns for Next.js, Astro, Vite/TanStack, and Rust service stacks.
+
+**File:** `agents/web-security-architect.md`
+
+**Tags:** web-security, appsec, authz, xss, csrf, csp, threat-modeling, web
+
+**Capabilities:**
+- STRIDE threat modeling for web features — assets, attack vectors, mitigations list
+- AuthN/AuthZ architecture: session cookies vs JWT, OAuth2/OIDC flows, RBAC/ABAC design
+- Cookie security flags (httpOnly, Secure, SameSite) and token storage boundaries
+- Server-side authorization enforcement; IDOR/broken-access-control prevention; Supabase RLS as defense-in-depth
+- XSS prevention: output encoding, dangerouslySetInnerHTML audit, DOMPurify, Trusted Types
+- CSRF defense: SameSite cookie strategy plus double-submit tokens for edge cases
+- SSRF and open-redirect mitigation in Route Handlers and Server Actions
+- Content-Security-Policy design (nonce vs hash vs unsafe-inline trade-offs)
+- Security headers: HSTS, X-Frame-Options/frame-ancestors, Referrer-Policy, Permissions-Policy
+- CORS correctness: origin allow-list, credentialed requests, preflight handling
+- Secrets management: env boundary (server vs public), service-role key handling, never-in-bundle rules
+- Input validation with zod at trust boundaries; injection classes beyond SQL (header injection, path traversal)
+
+**Use when:**
+- Designing AuthN/AuthZ for a new web or API feature (session vs JWT decision, cookie flags, token storage)
+- Implementing or auditing server-side authorization to prevent IDOR and broken-access-control
+- Writing or reviewing a Content-Security-Policy for a Next.js / Astro / Vite app
+- Setting up OAuth2/OIDC (PKCE flow, token handling, callback validation)
+- Assessing CSRF exposure when SameSite alone is insufficient (cross-origin POST from a third-party domain)
+- Reviewing a Route Handler or Server Action for SSRF or open-redirect vectors
+- Deciding where environment variables belong (server-only vs NEXT_PUBLIC_) and what to do with service-role keys
+- Threat-modeling a web feature before implementation (produce STRIDE table + mitigations)
+- Auditing CORS config on an API that must accept credentialed cross-origin requests
 
 ---
 

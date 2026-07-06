@@ -6,6 +6,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+### Added
+
+- Five web/desktop agents to balance the mobile-heavy roster: `desktop-expert` (Electron & Tauri), `web-frontend-expert` (framework-agnostic React/TS), `web-security-architect` (opus), `web-performance-optimizer`, `web-accessibility-expert`.
+- Three framework-agnostic web skills: `web-state-management`, `web-animations`, `web-testing`.
+- Counts synced to 46 agents / 116 skills; orchestrator description de-mobiled.
+
 ## [0.7.0] - 2026-07-06
 
 ### Added

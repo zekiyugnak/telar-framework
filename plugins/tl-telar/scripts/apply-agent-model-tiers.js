@@ -29,6 +29,7 @@ const OPUS = new Set([
   'mobile-backend-architect',
   'rust-service-architect',
   'admin-panel-architect',
+  'web-security-architect',
   'orchestrator', // documentary — session-governed at runtime
 ]);
 

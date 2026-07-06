@@ -1327,6 +1327,42 @@
           <li>Row selection state and bulk-action patterns</li>
         </ul><a class="src" href="https://github.com/zekiyugnak/telar-framework/blob/main/skills/tanstack-table-patterns.md">Source ↗</a></div>
       </article>
+      <article class="card" data-search="web-state-management state-management zustand redux-toolkit jotai tanstack-query web">
+        <div class="card-head"><h3>web-state-management</h3></div>
+        <p class="desc">Prevents the most common React/TS architecture mistake — server data leaking into global stores — and keeps re-renders minimal by matching the right tool to each state category.</p>
+        <div class="chips"><span class="chip">zustand</span><span class="chip">jotai</span><span class="chip">state-management</span></div>
+        <button class="card-toggle" aria-expanded="false">Details</button>
+        <div class="card-detail" hidden><h4>Capabilities</h4><ul>
+          <li>Deciding which tool owns each piece of state (server vs client vs URL vs local)</li>
+          <li>Zustand slice pattern with typed selectors that avoid whole-store subscriptions</li>
+          <li>Persist middleware for client-only state that survives page refresh</li>
+          <li>Jotai atoms and signals for fine-grained, leaf-level reactive state</li>
+        </ul><a class="src" href="https://github.com/zekiyugnak/telar-framework/blob/main/skills/web-state-management.md">Source ↗</a></div>
+      </article>
+      <article class="card" data-search="web-animations animations framer-motion css-transitions view-transitions reduced-motion web">
+        <div class="card-head"><h3>web-animations</h3></div>
+        <p class="desc">Eliminates jank from layout-animating properties and ensures reduced-motion compliance while unlocking fluid, accessible 60fps interactions.</p>
+        <div class="chips"><span class="chip">framer-motion</span><span class="chip">reduced-motion</span></div>
+        <button class="card-toggle" aria-expanded="false">Details</button>
+        <div class="card-detail" hidden><h4>Capabilities</h4><ul>
+          <li>GPU-accelerated CSS transitions and keyframes using compositor-only properties</li>
+          <li>Framer Motion variants, layout animations, and AnimatePresence for enter/exit</li>
+          <li>View Transitions API for route and state change crossfades</li>
+          <li>prefers-reduced-motion enforcement at every layer</li>
+        </ul><a class="src" href="https://github.com/zekiyugnak/telar-framework/blob/main/skills/web-animations.md">Source ↗</a></div>
+      </article>
+      <article class="card" data-search="web-testing testing vitest testing-library playwright web e2e">
+        <div class="card-head"><h3>web-testing</h3></div>
+        <p class="desc">Eliminates brittle implementation-detail tests and flaky E2E suites; aligns the test pyramid so fast unit feedback survives rapid UI iteration without sacrificing confidence in critical user journeys.</p>
+        <div class="chips"><span class="chip">vitest</span><span class="chip">playwright</span><span class="chip">testing-library</span></div>
+        <button class="card-toggle" aria-expanded="false">Details</button>
+        <div class="card-detail" hidden><h4>Capabilities</h4><ul>
+          <li>Writing component tests that query by role/label — behavior over implementation</li>
+          <li>Mocking network calls with MSW so tests survive API refactors without touching component code</li>
+          <li>E2E tests with Playwright covering critical paths using built-in locator-based waiting</li>
+          <li>Catching accessibility regressions in E2E with @axe-core/playwright</li>
+        </ul><a class="src" href="https://github.com/zekiyugnak/telar-framework/blob/main/skills/web-testing.md">Source ↗</a></div>
+      </article>
       <article class="card" data-search="supabase-rls-client-patterns supabase rls postgres security anon-key admin-panel">
         <div class="card-head"><h3>supabase-rls-client-patterns</h3></div>
         <p class="desc">Prevents full-database exposure through the anon key — the top failure mode of a service-role-free client.</p>

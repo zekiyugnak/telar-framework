@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Agents — Telar</title>
-<meta name="description" content="The 41 specialized agents in Telar, grouped by domain.">
+<meta name="description" content="The 46 specialized agents in Telar, grouped by domain.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;650;800;850&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="assets/telar.css">
@@ -31,7 +31,7 @@
   <div class="page-title">
     <span class="eyebrow">Reference</span>
     <h1>Agents</h1>
-    <p>41 specialized subagents, each an expert in one domain. Expand a card for its capabilities, when to use it, and a link to its source.</p>
+    <p>46 specialized subagents, each an expert in one domain. Expand a card for its capabilities, when to use it, and a link to its source.</p>
   </div>
 
   <div class="filter-bar">
@@ -995,6 +995,116 @@
             <li>Reviewing whether a pattern leaks trust to the client in a service-role-free stack</li>
           </ul>
           <a class="src" href="https://github.com/zekiyugnak/telar-framework/blob/main/agents/admin-panel-architect.md">Source ↗</a>
+        </div>
+      </article>
+
+      <article class="card" data-search="desktop-expert desktop electron tauri ipc packaging auto-update cross-platform">
+        <div class="card-head"><span class="card-icon">🖥️</span><h3>desktop-expert</h3></div>
+        <p class="desc">Cross-platform desktop specialist — Electron and Tauri IPC, packaging, and auto-update.</p>
+        <div class="chips"><span class="chip">electron</span><span class="chip">tauri</span><span class="chip">ipc</span></div>
+        <button class="card-toggle" aria-expanded="false">Details</button>
+        <div class="card-detail" hidden>
+          <h4>Capabilities</h4><ul>
+            <li>Architecting cross-platform desktop apps with Electron (main/renderer) or Tauri (Rust core/webview)</li>
+            <li>Designing secure IPC channels — Electron contextBridge + minimal allow-listed preload API; Tauri commands + capability allowlist</li>
+            <li>Packaging and distributing per-OS artifacts (dmg, nsis, AppImage, msi) with electron-builder/electron-forge or Tauri bundler</li>
+            <li>Wiring auto-update pipelines with cryptographic signature verification (electron-updater, Tauri updater with pinned pubkey)</li>
+            <li>Implementing native OS integration — system menus, tray icons, global shortcuts, deep links / custom protocols</li>
+          </ul>
+          <h4>When to use</h4><ul>
+            <li>Building a new cross-platform desktop app and deciding between Electron and Tauri</li>
+            <li>Hardening an existing Electron app (nodeIntegration still on, no contextBridge, unvalidated IPC)</li>
+            <li>Setting up auto-update with signature/integrity verification for an Electron or Tauri app</li>
+          </ul>
+          <a class="src" href="https://github.com/zekiyugnak/telar-framework/blob/main/agents/desktop-expert.md">Source ↗</a>
+        </div>
+      </article>
+
+      <article class="card" data-search="web-frontend-expert react typescript spa vite state rendering frontend web">
+        <div class="card-head"><span class="card-icon">⚛️</span><h3>web-frontend-expert</h3></div>
+        <p class="desc">React + TypeScript SPA specialist — component architecture, state boundaries, and rendering.</p>
+        <div class="chips"><span class="chip">react</span><span class="chip">tanstack-query</span><span class="chip">vite</span></div>
+        <button class="card-toggle" aria-expanded="false">Details</button>
+        <div class="card-detail" hidden>
+          <h4>Capabilities</h4><ul>
+            <li>Designing component architecture for React + TypeScript SPAs (composition, container/presentational split)</li>
+            <li>Drawing the client-state vs server-state boundary and wiring TanStack Query for all remote data</li>
+            <li>Hooks discipline — custom hooks, correct deps arrays, deriving state instead of syncing with useEffect</li>
+            <li>Rendering performance — scoped memo/useMemo/useCallback, stable keys, list virtualization, Suspense</li>
+            <li>Forms with react-hook-form + zod and data-fetching patterns with TanStack Query</li>
+          </ul>
+          <h4>When to use</h4><ul>
+            <li>Architecting a new React + TypeScript SPA or setting up a Vite project from scratch</li>
+            <li>Deciding how to split components, where to colocate state, or whether to add a global store</li>
+            <li>Diagnosing unnecessary re-renders, unstable keys, or memo thrash in a component tree</li>
+          </ul>
+          <a class="src" href="https://github.com/zekiyugnak/telar-framework/blob/main/agents/web-frontend-expert.md">Source ↗</a>
+        </div>
+      </article>
+
+      <article class="card" data-search="web-security-architect web-security appsec authz xss csrf csp threat-modeling web">
+        <div class="card-head"><span class="card-icon">🛡️</span><h3>web-security-architect</h3></div>
+        <p class="desc">Web application security specialist — STRIDE, AuthN/AuthZ, CSP, and secure-by-default.</p>
+        <div class="chips"><span class="chip">appsec</span><span class="chip">csrf</span><span class="chip">csp</span></div>
+        <button class="card-toggle" aria-expanded="false">Details</button>
+        <div class="card-detail" hidden>
+          <h4>Capabilities</h4><ul>
+            <li>STRIDE threat modeling for web features — assets, attack vectors, mitigations list</li>
+            <li>AuthN/AuthZ architecture: session cookies vs JWT, OAuth2/OIDC flows, RBAC/ABAC design</li>
+            <li>XSS prevention: output encoding, dangerouslySetInnerHTML audit, DOMPurify, Trusted Types</li>
+            <li>Content-Security-Policy design (nonce vs hash vs unsafe-inline trade-offs)</li>
+            <li>CSRF defense, SSRF and open-redirect mitigation, secrets management and env boundary</li>
+          </ul>
+          <h4>When to use</h4><ul>
+            <li>Designing AuthN/AuthZ for a new web or API feature (session vs JWT decision, cookie flags, token storage)</li>
+            <li>Writing or reviewing a Content-Security-Policy for a Next.js / Astro / Vite app</li>
+            <li>Threat-modeling a web feature before implementation (produce STRIDE table + mitigations)</li>
+          </ul>
+          <a class="src" href="https://github.com/zekiyugnak/telar-framework/blob/main/agents/web-security-architect.md">Source ↗</a>
+        </div>
+      </article>
+
+      <article class="card" data-search="web-performance-optimizer web-performance core-web-vitals bundle rendering caching web">
+        <div class="card-head"><span class="card-icon">⚡</span><h3>web-performance-optimizer</h3></div>
+        <p class="desc">Profiling-first web performance specialist — Core Web Vitals, bundle size, and rendering.</p>
+        <div class="chips"><span class="chip">core-web-vitals</span><span class="chip">bundle</span><span class="chip">lighthouse</span></div>
+        <button class="card-toggle" aria-expanded="false">Details</button>
+        <div class="card-detail" hidden>
+          <h4>Capabilities</h4><ul>
+            <li>Measuring and improving Core Web Vitals (LCP, CLS, INP, TTFB) with Lighthouse, WebPageTest, and RUM</li>
+            <li>Analyzing and reducing JavaScript bundle size with Vite bundle visualizer and rollup-plugin-visualizer</li>
+            <li>Implementing route-level code splitting, dynamic imports, and tree-shaking</li>
+            <li>Eliminating unnecessary React re-renders via targeted memoization and profiling</li>
+            <li>Optimizing images (responsive srcset, lazy loading, next-gen formats) and offloading CPU work to web workers</li>
+          </ul>
+          <h4>When to use</h4><ul>
+            <li>Core Web Vitals are failing (LCP &gt; 2.5 s, INP &gt; 200 ms, CLS &gt; 0.1) in Lighthouse or field data</li>
+            <li>A Vite/Next.js/Astro bundle has grown and routes are loading slowly</li>
+            <li>React components re-render excessively and Chrome DevTools Profiler shows flame-chart spikes</li>
+          </ul>
+          <a class="src" href="https://github.com/zekiyugnak/telar-framework/blob/main/agents/web-performance-optimizer.md">Source ↗</a>
+        </div>
+      </article>
+
+      <article class="card" data-search="web-accessibility-expert accessibility wcag aria keyboard semantic-html web">
+        <div class="card-head"><span class="card-icon">♿</span><h3>web-accessibility-expert</h3></div>
+        <p class="desc">WCAG 2.2 AA specialist — semantic HTML, ARIA, keyboard navigation, and accessible forms.</p>
+        <div class="chips"><span class="chip">wcag</span><span class="chip">aria</span><span class="chip">keyboard</span></div>
+        <button class="card-toggle" aria-expanded="false">Details</button>
+        <div class="card-detail" hidden>
+          <h4>Capabilities</h4><ul>
+            <li>WCAG 2.2 AA audit and remediation for web applications and React/TSX component libraries</li>
+            <li>Semantic HTML landmark and heading-hierarchy structure design</li>
+            <li>Keyboard navigation patterns: focus order, skip links, focus trap and restore in modals/dialogs</li>
+            <li>Form accessibility: programmatic labels, error message association, required/invalid states</li>
+            <li>Automated testing with axe-core, eslint-plugin-jsx-a11y, and @axe-core/playwright</li>
+          </ul>
+          <h4>When to use</h4><ul>
+            <li>Auditing a page or component tree for WCAG 2.2 AA compliance</li>
+            <li>Building a modal, dialog, drawer, or popover that needs focus trap and focus restore</li>
+            <li>Managing focus after a client-side route change in a Next.js or React SPA</li>
+          </ul>
+          <a class="src" href="https://github.com/zekiyugnak/telar-framework/blob/main/agents/web-accessibility-expert.md">Source ↗</a>
         </div>
       </article>
 
