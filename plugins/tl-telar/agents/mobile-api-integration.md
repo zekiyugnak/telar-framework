@@ -1,5 +1,6 @@
 ---
 id: mobile-api-integration
+model: sonnet
 category: agent
 tags: [api, rest, graphql, axios, apollo, dio, interceptors, caching]
 capabilities:

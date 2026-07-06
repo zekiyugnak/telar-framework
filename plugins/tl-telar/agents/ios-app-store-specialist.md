@@ -1,5 +1,6 @@
 ---
 id: ios-app-store-specialist
+model: sonnet
 category: agent
 tags: [app-store, testflight, app-review, metadata, screenshots, in-app-purchase, subscriptions]
 capabilities:

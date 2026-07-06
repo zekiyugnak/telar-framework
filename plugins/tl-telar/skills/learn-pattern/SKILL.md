@@ -14,7 +14,7 @@ Migrated from `skills/learn-pattern.md`.
 - Claude/Telar source files remain the source of truth; this file is the generated Codex adapter.
 - Skill-local support files from the original Telar skill, such as `references/...` or `workflow/...`, are packaged beside this `SKILL.md`.
 - Repo-root references from the original Telar file, such as `agents/...`, `commands/...`, `scripts/...`, `resources/...`, `rules/...`, `hooks/...`, or `templates/...`, are packaged at this plugin root.
-- Original Telar `skills/...` source paths are packaged under `source/skills/...` because the plugin-root `skills/` directory is reserved for generated Codex skill adapters.
+- The original Telar orchestration source (`skills/orchestration/...`) is packaged under `source/skills/orchestration/...` for exact-reference lookups; all other Telar skills exist here only as the generated adapters under the plugin-root `skills/` directory.
 - Resolve plugin-root paths from this generated skill directory via `../..` when reading support files or running packaged scripts.
 
 
@@ -63,7 +63,7 @@ The old `.claude/skills/learned/<name>.md` store was write-only-into-the-void. F
 - **Capture** (`/tl-telar:self-reflect`) — 3-phase pipeline with user-approval gate, canonicalization, typed JSONL storage.
 - **Storage** (`.tl-telar/knowledge/*.jsonl`) — 8 typed files (codebase-facts, api-behaviors, patterns, anti-patterns, gotchas, decisions, performance, security) with provenance, confidence, mobile tags (platform/framework/category).
 - **Retrieval** (`/tl-telar:prime`) — auto-invoked at the start of any orchestrated task (and on demand), returns 5-category facts (`MUST FOLLOW`, `GOTCHAS`, `PATTERNS`, `DECISIONS`, `API BEHAVIORS`) filtered by file glob / keyword / work-type.
-- **Curation** (`agents/mobile-knowledge-curator.md`) — periodic dedup, confidence promotion (3+ provenance → high), staleness sweep. Suggestion-driven; never autonomous mutation.
+- **Curation** (`agents/knowledge-curator.md`) — periodic dedup, confidence promotion (3+ provenance → high), staleness sweep. Suggestion-driven; never autonomous mutation.
 
 If you only have time to do ONE thing from this skill, run `/tl-telar:self-reflect` after your next debugging session. The rest of the loop runs itself once facts are in the KB.
 
@@ -76,6 +76,6 @@ The `learn-pattern` skill name is preserved so workflows that load it (or hooks 
 - `skills/orchestration/self-reflect/SKILL.md` — capture flow
 - `skills/orchestration/prime/SKILL.md` — retrieval flow
 - `.tl-telar/knowledge/README.md` (created by `/tl-telar:setup-orchestration`) — schema doc + tag controlled vocabulary
-- `agents/mobile-knowledge-curator.md` — periodic curation
+- `agents/knowledge-curator.md` — periodic curation
 - `commands/self-reflect.md` (`/tl-telar:self-reflect`) — slash-command entry
 - `commands/prime.md` (`/tl-telar:prime`) — slash-command entry

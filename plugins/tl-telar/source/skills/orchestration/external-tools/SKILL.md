@@ -11,7 +11,7 @@ capabilities:
   - Reserved Phase γ integration point (cross-model review)
 useWhen:
   - User invokes /tl-telar:external-tools-health
-  - mobile-orchestrator (sub-spec 8+) wants to delegate implementation or review
+  - orchestrator (sub-spec 8+) wants to delegate implementation or review
   - User explicitly requests "use external tools" / "delegate to codex/gemini"
 ---
 
@@ -22,7 +22,7 @@ useWhen:
 This skill is loaded only via:
 
 1. `/tl-telar:external-tools-health` (sets TL_TELAR_ORCHESTRATED=1).
-2. The `mobile-orchestrator` agent when adapter delegation is requested AND `.tl-telar/external-tools.yaml` has `adapters.*.enabled: true` AND health passes.
+2. The `orchestrator` agent when adapter delegation is requested AND `.tl-telar/external-tools.yaml` has `adapters.*.enabled: true` AND health passes.
 3. Explicit user request.
 
 This skill is NEVER auto-triggered from legacy mobile commands. Adapters are opt-in.

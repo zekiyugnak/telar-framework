@@ -13,7 +13,7 @@ capabilities:
   - Append accepted facts to .tl-telar/knowledge/*.jsonl
 useWhen:
   - /tl-telar:self-reflect invoked
-  - mobile-orchestrator Step 7 (pre-PR, mandatory for multi-WU runs)
+  - orchestrator Step 7 (pre-PR, mandatory for multi-WU runs)
   - User explicitly requests "capture learnings"
 ---
 
@@ -24,7 +24,7 @@ useWhen:
 This skill is loaded only via:
 
 1. `/tl-telar:self-reflect` (sets TL_TELAR_ORCHESTRATED=1).
-2. The `mobile-orchestrator` agent's Step 7 (pre-PR knowledge capture, multi-WU mandatory).
+2. The `orchestrator` agent's Step 7 (pre-PR knowledge capture, multi-WU mandatory).
 3. Per-WU opt-in: `.tl-telar-thresholds.json` → `enforcement.self_reflect_per_wu: true` (default false).
 4. Explicit user request.
 

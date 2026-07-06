@@ -1,6 +1,6 @@
 ---
 name: "orchestration-design-review-gate"
-description: "Requires a **top-level caller** — `/tl-telar:review-design` or the main-session orchestrator (see `agents/mobile-orchestrator.md` → \"Execution context\"). A Claude Code subagent has no `Task` tool; never let a spawned sub"
+description: "Requires a **top-level caller** — `/tl-telar:review-design` or the main-session orchestrator (see `agents/orchestrator.md` → \"Execution context\"). A Claude Code subagent has no `Task` tool; never let a spawned subagent i"
 source_type: "orchestration"
 source_file: "skills/orchestration/design-review-gate/SKILL.md"
 ---
@@ -14,11 +14,10 @@ Migrated from `skills/orchestration/design-review-gate/SKILL.md`.
 - Claude/Telar source files remain the source of truth; this file is the generated Codex adapter.
 - Skill-local support files from the original Telar skill, such as `references/...` or `workflow/...`, are packaged beside this `SKILL.md`.
 - Repo-root references from the original Telar file, such as `agents/...`, `commands/...`, `scripts/...`, `resources/...`, `rules/...`, `hooks/...`, or `templates/...`, are packaged at this plugin root.
-- Original Telar `skills/...` source paths are packaged under `source/skills/...` because the plugin-root `skills/` directory is reserved for generated Codex skill adapters.
+- The original Telar orchestration source (`skills/orchestration/...`) is packaged under `source/skills/orchestration/...` for exact-reference lookups; all other Telar skills exist here only as the generated adapters under the plugin-root `skills/` directory.
 - Resolve plugin-root paths from this generated skill directory via `../..` when reading support files or running packaged scripts.
-- Codex compatibility override: references to Claude `Task()` mean Codex subagent workflows. Spawn fresh Codex subagents in parallel when the current Codex surface exposes subagent tools; preserve the same reviewer roles, inputs, and freshness rules.
-- If the current Codex surface cannot spawn subagents, stop and report that the full orchestration gate is unavailable in this surface. Do not replace a required multi-reviewer gate with a single inline self-review.
-- After each Codex subagent batch returns, close completed subagent handles before starting any retry iteration or later gate; otherwise long orchestration runs can exhaust the local subagent thread limit.
+- **Codex subagent gate — probe, then use or degrade (fail-closed; never fake).** Claude `Task()` calls map to Codex subagent spawns. Before EVERY multi-reviewer gate: (1) PROBE whether the current Codex surface exposes an agent-spawn tool. (2) If YES → spawn the resolver-selected reviewers as fresh, parallel Codex agent roles; preserve each role, its own rubric, and the freshness rule (no reviewer sees another's verdict or a prior iteration), then close each subagent handle before the next iteration so long runs do not exhaust the local subagent thread limit. (3) If NO → emit a literal `DEGRADED: full multi-reviewer gate unavailable on this Codex surface` line and STOP the gate. Recommend re-running on a Claude Code host or a Codex build that exposes subagent spawning. NEVER substitute a single inline self-review for the independent multi-reviewer gate, and never silently continue as if the gate passed.
+- **Stack-aware roster (parity with the Claude path).** Derive the reviewer roster from `scripts/tl-telar-reviewer-roster.js` (packaged at this plugin root) against the WU `file_scope` — do NOT hardcode a mobile roster. It returns the domain-correct Security/BackendCorrectness/FrontendUX/Accessibility/Performance reviewers, each with its own rubric path, for mobile, web, backend-data, and rust changes alike.
 - Treat Claude `Workflow` tool references as unavailable in Codex unless an explicit equivalent tool is present. Use the documented prose fallback path by default.
 - Treat `TL_TELAR_ORCHESTRATED=1` as a workflow mode marker in Codex. Do not require a literal Claude slash command to set it.
 - Do not pass scheduler `--isolate` merely because Codex is running. Use `--isolate` only after a concrete Codex worktree isolation and merge-back mechanism has been verified for the run; otherwise keep disjoint file-scope serialization.
@@ -30,7 +29,7 @@ Migrated from `skills/orchestration/design-review-gate/SKILL.md`.
 
 This skill is loaded only via:
 
-1. The `mobile-orchestrator` agent's workflow after a RESEARCH.md or design doc commit.
+1. The `orchestrator` agent's workflow after a RESEARCH.md or design doc commit.
 2. `/tl-telar:review-design [--latest | --design-file <path>]` (sets TL_TELAR_ORCHESTRATED=1).
 3. `skills/brainstorm-first.md`'s Orchestrated Mode section (sub-spec 6 augmentation, §1.1-gated).
 4. Explicit user request such as "run the design review gate".
@@ -59,7 +58,7 @@ For a given design doc (typically `RESEARCH.md` or `docs/plans/*-design.md`):
 
 ### Step 1: Spawn 6 reviewers in parallel
 
-> Requires a **top-level caller** — `/tl-telar:review-design` or the main-session orchestrator (see `agents/mobile-orchestrator.md` → "Execution context"). A Claude Code subagent has no `Task` tool; never let a spawned subagent invoke this skill.
+> Requires a **top-level caller** — `/tl-telar:review-design` or the main-session orchestrator (see `agents/orchestrator.md` → "Execution context"). A Claude Code subagent has no `Task` tool; never let a spawned subagent invoke this skill.
 
 Single Task() batch call. Each:
 - subagent_type: `general-purpose`

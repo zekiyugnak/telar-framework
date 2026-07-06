@@ -1,5 +1,6 @@
 ---
 id: mobile-security-specialist
+model: sonnet
 category: agent
 tags: [security, keychain, keystore, certificate-pinning, jailbreak, obfuscation, biometric]
 capabilities:

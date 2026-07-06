@@ -1,5 +1,6 @@
 ---
 id: mobile-accessibility-expert
+model: sonnet
 category: agent
 tags: [accessibility, a11y, voiceover, talkback, wcag, screen-reader, focus-management]
 capabilities:

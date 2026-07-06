@@ -35,7 +35,7 @@ Written by the orchestrator agent ONCE per plan, after the user approves the WU 
 ...
 ```
 
-The `<!-- status: in-progress -->` HTML comment is the load-bearing recovery sentinel. The `mobile-orchestrator` agent flips it to `completed` at successful Step 8 close (cross-platform `sed`); the `recovery` skill consumes the sentinel on SessionStart and prompts the user when an in-progress plan is found.
+The `<!-- status: in-progress -->` HTML comment is the load-bearing recovery sentinel. The `orchestrator` agent flips it to `completed` at successful Step 8 close (cross-platform `sed`); the `recovery` skill consumes the sentinel on SessionStart and prompts the user when an in-progress plan is found.
 
 ## `.tl-telar/context/execution-state.md`
 

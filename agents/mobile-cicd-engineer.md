@@ -1,5 +1,6 @@
 ---
 id: mobile-cicd-engineer
+model: sonnet
 category: agent
 tags: [cicd, github-actions, bitrise, codemagic, fastlane, eas-build, automation]
 capabilities:

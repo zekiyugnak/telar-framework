@@ -1,5 +1,6 @@
 ---
 id: mobile-design-system-architect
+model: sonnet
 category: agent
 tags: [design-system, design-tokens, figma, theming, dark-mode, accessibility, ios-hig, material-design]
 capabilities:

@@ -22,7 +22,9 @@ Reviewers are **fresh `Task()` instances** with no prior context (master design 
 - G6. Did the implementer add comments that describe WHAT instead of WHY when the WHAT is non-obvious from the code? Pure WHAT comments on obvious code are noise but not FAIL. WHAT comments hiding a non-obvious WHY → FAIL.
 - G7. Did the implementer leave debug artifacts (console.log, print(), TODO without ticket reference, commented-out code) in the diff? → FAIL.
 - G8. Did the implementer add tests that don't actually verify behavior (asserting a mocked return value, snapshot tests without rendered output)? → FAIL.
+- G9. Did the implementer add speculative abstraction the WU does not need (a factory/interface/generic with a single caller, config for a value that never varies, indirection with no second use)? This violates the `simplicity-first` rule → FAIL.
+- G10. Did the change introduce a boundary/coupling violation (a module reaching into another's internals, a UI layer importing a data-layer detail, a new import cycle, duplicated logic that already exists elsewhere)? → FAIL.
 
 ## Verdict format
 
-Reviewers return a single JSON object matching the sub-spec 1 verdict schema (`skills/orchestration/plan-review-gate/references/verdict-schema.md`) with `reviewer: "adversarial-code"` and rule IDs from G1-G8 (or per-domain rubric IDs for specialist reviewers).
+Reviewers return a single JSON object matching the sub-spec 1 verdict schema (`skills/orchestration/plan-review-gate/references/verdict-schema.md`) with `reviewer: "adversarial-code"` and rule IDs from G1-G10 (or per-domain rubric IDs for specialist reviewers).

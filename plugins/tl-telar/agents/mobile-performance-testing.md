@@ -1,5 +1,6 @@
 ---
 id: mobile-performance-testing
+model: sonnet
 category: agent
 tags: [performance-testing, load-testing, profiling, benchmarks, memory-leaks, startup-time]
 capabilities:

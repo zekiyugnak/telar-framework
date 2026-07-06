@@ -1,5 +1,6 @@
 ---
 id: mobile-security-architect
+model: opus
 category: agent
 tags: [security, owasp, encryption, pii, gdpr, compliance, penetration-testing, threat-modeling]
 capabilities:

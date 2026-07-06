@@ -147,6 +147,7 @@ node scripts/tl-telar-wu-scheduler.js \
 
     <h2>External AI delegation <span style="color:var(--text-faint);font-weight:400">(Phase β/γ — disabled by default)</span></h2>
     <p>Optional adapters can delegate implementation or review to external models (Codex, Gemini) with a budget circuit breaker ($1/task, $10/session) and fail-closed behavior. Cross-model review enforces that the model which wrote a diff never reviews it. Enable per-adapter in <code>.tl-telar/external-tools.yaml</code>; check status with <code>/tl-telar:external-tools-health</code>.</p>
+    <div class="callout"><strong>Separate from Codex plugin support.</strong> The Codex plugin is installed with <code>codex plugin marketplace add zekiyugnak/telar-framework --ref develop</code> and makes Telar available inside Codex as <code>@tl-telar</code>. External AI delegation is an optional orchestration feature and must be enabled separately in <code>.tl-telar/external-tools.yaml</code>.</div>
 
     <h2>Authoring inputs for orchestrate</h2>
     <p><code>/tl-telar:orchestrate</code> accepts three input modes:</p>
@@ -175,7 +176,7 @@ node scripts/tl-telar-wu-scheduler.js \
 </main>
 
 <footer><div class="wrap fl">
-  <span>Telar v0.6.0 — MIT © 2026 Zeki Yugnak</span>
+  <span>Telar v0.7.0 — MIT © 2026 Zeki Yugnak</span>
   <span><a href="https://github.com/zekiyugnak/telar-framework">GitHub</a> · <a href="index.html">Docs home</a></span>
 </div></footer>
 

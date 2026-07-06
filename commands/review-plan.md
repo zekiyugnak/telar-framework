@@ -48,4 +48,4 @@ Runs the Plan Review Gate (orchestrated mode) on an implementation plan.
 
 ## Integration with the orchestrator
 
-When the `mobile-orchestrator` agent (sub-spec 2) is operational, it invokes the same skill internally with its own iteration tracking via `.tl-telar/context/execution-state.md`. This command remains useful for ad-hoc reviews and as a debugging tool when the orchestrator is not in use.
+When the `orchestrator` agent (sub-spec 2) is operational, it invokes the same skill internally with its own iteration tracking via `.tl-telar/context/execution-state.md`. This command remains useful for ad-hoc reviews and as a debugging tool when the orchestrator is not in use.

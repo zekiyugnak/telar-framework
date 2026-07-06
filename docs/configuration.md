@@ -11,6 +11,10 @@ Her iki dosya da consumer projenizin kökünde (veya `.tl-telar/` altında) yer 
 
 ---
 
+## Oturum modeli ve maliyet (önemli)
+
+`/tl-telar:orchestrate` **ana oturumda** çalışan bir orkestratördür. Spawn edilen agent'lar kendi model tier'larını (`agents/*.md` frontmatter `model:`) ve reviewer'lar sabit Opus kullanır — ama **orkestratörün kendi turları senin `/model` seçimini** kullanır ve bunu agent frontmatter'ı **override edemez**. Uzun bir orchestrate koşusunu en pahalı modelde (ör. Fable) çalıştırmak maliyetin büyük kısmını oradan üretir. **Öneri:** `orchestrate`'i **Sonnet veya Opus** oturumunda çalıştır; en yüksek-maliyet modeli yalnızca gerçekten gerektiğinde seç.
+
 ## `.tl-telar-thresholds.json`
 
 Orchestratörün **Phase 2 VALIDATE** aşamasında okuduğu ana config dosyasıdır. Her gate komutu `*_strict` bayrağına göre "bloklar veya sadece loglar" kararını verir.
@@ -327,6 +331,8 @@ export OPENAI_API_KEY="sk-..."
 # adapters.codex.enabled: true
 ```
 
+> **Codex plugin ile Codex adapter farklıdır.** `codex plugin marketplace add zekiyugnak/telar-framework --ref develop` ve `codex plugin add tl-telar@telar` Telar'ı Codex içinde kullanılabilir yapar. Buradaki `adapters.codex.enabled: true` ise Telar'ın orchestrated mode sırasında bazı işleri harici Codex CLI'a delege etmesi içindir ve default olarak kapalıdır.
+
 ### Routing
 
 ```yaml
@@ -432,7 +438,7 @@ Bunlar kaynak kodda sabit olup `.tl-telar-thresholds.json` veya `external-tools.
 | Phase 3 adversarial reviewer (conditional) | +2 (A11y, Perf — file_scope'a göre) | Aynı skill |
 | Gate başarısız olduğunda maksimum retry | 3 | `skills/orchestration/orchestrated-execution/SKILL.md` |
 | 3 retry sonrası | Kullanıcıya eskalasyon | Aynı skill |
-| WU checkpoint (unattended modda) | Plan-readiness'a çekilir, mid-cycle pause yok | `agents/mobile-orchestrator.md` |
+| WU checkpoint (unattended modda) | Plan-readiness'a çekilir, mid-cycle pause yok | `agents/orchestrator.md` |
 | Commit ve push | Asla otomatik değil — `ben yapacagim` politikası | `commands/orchestrate.md` |
 
 ---

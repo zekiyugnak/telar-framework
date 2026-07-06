@@ -1,5 +1,6 @@
 ---
 id: mobile-performance-optimizer
+model: sonnet
 category: agent
 tags: [performance, profiling, optimization, flipper, devtools, hermes, impeller, memory]
 capabilities:
