@@ -6,6 +6,19 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+## [0.9.0] - 2026-07-08
+
+### Added
+
+- **OKF knowledge layer** — first-class support for the newly announced [Open Knowledge Format](https://github.com/GoogleCloudPlatform/knowledge-catalog) (OKF v0.1): an optional `docs/knowledge/` domain-knowledge bundle that agents read for orientation before touching a table or schema, while ADRs and the schema spec remain the source of truth.
+  - `okf-knowledge-curator` agent — cross-cutting campaign work (bulk-produce concepts, drift-lint, cross-link the concept graph); routes high-stakes concepts (Access Policy / Invariant / Compliance Control) to adversarial review; no-op if the project ships no bundle.
+  - `okf-knowledge-authoring` skill — the shared authoring contract (frontmatter + required non-empty `type`, `# Citations` origin, one-way authority, PII boundary, cross-linking, pre-merge validation checklist).
+  - Consumer rule wired once into the orchestrated-execution IMPLEMENT preamble — every Work Unit implementer reads the relevant concept before touching a table; generic and conditional (no-op without a bundle), never duplicated per-agent.
+
+### Changed
+
+- Counts synced to 47 agents / 117 skills across manifests, README, CLAUDE.md, and the documentation site (agent + skill cards).
+
 ## [0.8.0] - 2026-07-06
 
 ### Added
