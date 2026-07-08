@@ -1,4 +1,4 @@
-# Telar v0.8.0
+# Telar v0.9.0
 
 Agentic engineering framework for Claude Code, spanning cross-platform apps end to end: mobile (React Native, Flutter, native bridges), web (Astro, Next.js/Tailwind/shadcn, Vite/TanStack admin panels), Rust service layers, and desktop. Not mobile-only — the orchestration, reviewer roster, and rubrics are stack-aware across every domain.
 
@@ -46,7 +46,7 @@ The recommended workflow for building features:
 
 ## Agent Discovery
 
-**46 agents** organized by domain:
+**47 agents** organized by domain:
 
 - **Platform experts**: `react-native-expert`, `flutter-expert`
 - **Web platform experts**: `astro-web-expert` (SEO/OG marketing sites), `nextjs-web-expert` (authenticated Next.js/Tailwind/shadcn consoles), `admin-panel-architect` (Vite + TanStack Router/Query/Table admin panels), `web-frontend-expert` (framework-agnostic React/TS SPA)
@@ -65,11 +65,11 @@ The recommended workflow for building features:
 - **Backend**: `supabase-expert`, `mobile-api-integration`, `mobile-push-notifications`, `mobile-auth-specialist`, `mobile-storage-specialist`
 - **Advanced**: `mobile-ai-integration`, `mobile-ar-vr-specialist`, `mobile-realtime-specialist`
 - **Orchestration**: `orchestrator`
-- **Knowledge**: `knowledge-curator`
+- **Knowledge**: `knowledge-curator` (JSONL agent-memory KB — `.tl-telar/knowledge/*.jsonl`), `okf-knowledge-curator` (OKF domain-knowledge bundle — `docs/knowledge/`; bulk produce / drift-lint / cross-link; no-op if no bundle)
 
 ## Skill Discovery
 
-**116 skills** including:
+**117 skills** including:
 
 - **Blueprints** (`skills/blueprints/`): auth-flow, crud-list, chat-feature, settings-screen, onboarding-flow
 - **Astro**: astro-seo-og, astro-content-performance
@@ -87,6 +87,7 @@ The recommended workflow for building features:
   - `self-reflect` — 3-phase KB capture with user-approval gate (orchestration namespace, sub-spec 5)
   - `design-review-gate` — 6-reviewer collaborative gate on RESEARCH.md/design docs (PM/Architect/Designer/Security-Design/CTO/Mobile-Platform) (orchestration namespace, sub-spec 6)
   - `external-tools` — Layer A/B external AI delegation (Codex/Gemini adapters + dispatcher); Phase β, disabled by default (orchestration namespace, sub-spec 7)
+- **Knowledge (OKF)**: `okf-knowledge-authoring` — author/maintain `docs/knowledge/` concepts (OKF format + one-way authority + PII contract); paired with the `okf-knowledge-curator` agent
 - **Requirements**: requirements-gather, requirements-traceability, update-requirement (command)
 - **Design**: design-system-persistence, component-scaffolding, prompt-to-screen, mobile-design-system
 - **Platform**: rn-navigation, flutter-navigation, rn-state-management, flutter-state-management, ...
