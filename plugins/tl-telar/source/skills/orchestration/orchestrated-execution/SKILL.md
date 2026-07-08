@@ -79,6 +79,7 @@ The baseline records what earlier WUs (or pre-existing user edits) had already c
 Then dispatch a fresh `Task()` implementer subagent (this requires the 4-phase loop to be driven by the **main-session** orchestrator — a subagent cannot spawn the implementer/reviewer subagents this loop needs; see `agents/orchestrator.md` → "Execution context") with:
 - WU spec, DoD, file scope
 - Instruction: "STAY within declared file scope — do not modify files outside it. Do NOT self-certify — the orchestrator will validate independently. Follow TDD where the WU's DoD has a test item."
+- Knowledge layer (if present): if the project ships an OKF knowledge bundle (typically `docs/knowledge/`), read the concept for anything you touch before touching it — for a table, its `docs/knowledge/**/tables/<table>.md`; for a domain term or flow, the matching glossary/scenario concept. Honor its documented constraints. Authority is `docs/adr/` + `docs/data_model/`; the bundle is a derived orientation layer, not a second source of truth. No bundle present → skip (no-op).
 - Self-review checklist (per the implementer-prompt convention).
 
 The implementer reports back. Status DONE → Phase 2. Status BLOCKED → escalate immediately.

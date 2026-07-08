@@ -1,9 +1,9 @@
 # Telar
 
 > **The agentic engineering framework** — plan, build, review, and ship, with agents.
-> By Zeki Yugnak · v0.8.0 — 46 agents, 116 skills, 23 commands, 4 hooks, 7 rules, 29 scripts
+> By Zeki Yugnak · v0.9.0 — 47 agents, 117 skills, 23 commands, 4 hooks, 7 rules, 29 scripts
 
-Telar is a multi-agent engineering framework for Claude Code and Codex that takes a feature from idea to production — orchestrated planning, adversarial review gates, a persistent knowledge base, and cross-model verification. It spans cross-platform apps end to end: **mobile** (**React Native** & **Flutter**) with deep native integration, **web** (**Astro**, **Next.js**/Tailwind/shadcn, **Vite**/TanStack admin panels), **Rust** service layers, and **desktop** — with stack-aware orchestration, reviewers, and rubrics across every domain.
+Telar is a multi-agent engineering framework for Claude Code and Codex that takes a feature from idea to production — orchestrated planning, adversarial review gates, a persistent knowledge base, cross-model verification, and a new OKF domain-knowledge layer. It spans cross-platform apps end to end: **mobile** (**React Native** & **Flutter**) with deep native integration, **web** (**Astro**, **Next.js**/Tailwind/shadcn, **Vite**/TanStack admin panels), **Rust** service layers, and **desktop** — with stack-aware orchestration, reviewers, and rubrics across every domain.
 
 ## 📖 Full documentation
 
@@ -84,11 +84,12 @@ See the [command reference](https://zekiyugnak.github.io/telar-framework/command
 
 ## Highlights
 
-- **46 specialized agents** — mobile & native platform experts, native bridges, architecture, security, testing, release, orchestration; a full web stack (Astro/Next.js/Vite-TanStack plus a framework-agnostic React expert and web security/performance/accessibility specialists); Rust services; and desktop (Electron/Tauri).
-- **116 skills** — reusable reference modules, decision frameworks, and ready-to-use feature blueprints for React Native, Flutter, the web stack, and Rust services.
+- **47 specialized agents** — mobile & native platform experts, native bridges, architecture, security, testing, release, orchestration; a full web stack (Astro/Next.js/Vite-TanStack plus a framework-agnostic React expert and web security/performance/accessibility specialists); Rust services; and desktop (Electron/Tauri).
+- **117 skills** — reusable reference modules, decision frameworks, and ready-to-use feature blueprints for React Native, Flutter, the web stack, and Rust services.
 - **Two-stage review gates** — requirement compliance and code quality, with adversarial and collaborative reviewers.
 - **Orchestrated mode (opt-in)** — design + plan review gates, a 4-phase IMPLEMENT/VALIDATE/REVIEW/COMMIT loop, and blocking quality gates. Independent Work Units run in parallel — a pure readiness scheduler dispatches concurrent WUs whose dependencies are met and file scopes are disjoint (bounded by `execution.max_parallel_wus`). The orchestrator honors your git policy and never auto-commits.
 - **Persistent knowledge base** — typed JSONL facts captured via `/tl-telar:self-reflect` and re-primed into context each session.
+- **🆕 OKF knowledge layer (new)** — optional support for the [Open Knowledge Format](https://github.com/GoogleCloudPlatform/knowledge-catalog): a `docs/knowledge/` domain-knowledge bundle agents consult (orientation) before touching a table or schema, while ADRs and the schema spec stay the source of truth. Produced and kept healthy by the `okf-knowledge-curator` agent and the `okf-knowledge-authoring` skill; a no-op in projects without a bundle.
 - **Optional external AI** — Codex/Gemini adapters with a budget circuit breaker and cross-model review (disabled by default).
 
 ## The workflow
@@ -106,8 +107,8 @@ See the [command reference](https://zekiyugnak.github.io/telar-framework/command
 
 | Directory | Contents |
 |-----------|----------|
-| `agents/` | 46 agent definitions |
-| `skills/` | 116 skill modules (incl. `blueprints/` and `orchestration/`) |
+| `agents/` | 47 agent definitions |
+| `skills/` | 117 skill modules (incl. `blueprints/` and `orchestration/`) |
 | `commands/` | 23 slash commands |
 | `rules/` | 7 always-on rules |
 | `hooks/` | Session and pre-build hooks |
