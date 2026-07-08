@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Agents — Telar</title>
-<meta name="description" content="The 46 specialized agents in Telar, grouped by domain.">
+<meta name="description" content="The 47 specialized agents in Telar, grouped by domain.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;650;800;850&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="assets/telar.css">
@@ -1135,8 +1135,8 @@
 
   <!-- ORCHESTRATION & KNOWLEDGE -->
   <section class="group">
-    <h2 id="orch">Orchestration &amp; Knowledge <span class="gc">2</span></h2>
-    <p class="gdesc">The lifecycle owner and the knowledge-base curator.</p>
+    <h2 id="orch">Orchestration &amp; Knowledge <span class="gc">3</span></h2>
+    <p class="gdesc">The lifecycle owner and the knowledge-base curators (JSONL agent-memory + OKF domain bundle).</p>
     <div class="cards">
 
       <article class="card" data-search="orchestrator orchestration lifecycle multi-agent top-level pipeline work-unit">
@@ -1180,6 +1180,26 @@
         </div>
       </article>
 
+      <article class="card" data-search="okf-knowledge-curator okf knowledge-bundle curation cross-linking documentation lint docs-knowledge">
+        <div class="card-head"><span class="card-icon">🗂️</span><h3>okf-knowledge-curator</h3></div>
+        <p class="desc">OKF bundle campaigns: bulk produce, drift-lint, cross-link. No-op without <code>docs/knowledge/</code>.</p>
+        <div class="chips"><span class="chip">🆕 new</span><span class="chip">okf</span><span class="chip">knowledge-bundle</span><span class="chip">cross-linking</span></div>
+        <button class="card-toggle" aria-expanded="false">Details</button>
+        <div class="card-detail" hidden>
+          <h4>Capabilities</h4><ul>
+            <li>Bulk-produce concepts for a type — skeleton from source, then enrich</li>
+            <li>Drift lint: coverage gaps, staleness, missing citations, broken links</li>
+            <li>Cross-link the graph: RPC→table, policy→table, invariant→RPC</li>
+            <li>Route high-stakes concepts to adversarial review before merge</li>
+          </ul>
+          <h4>When to use</h4><ul>
+            <li>The project ships an OKF <code>docs/knowledge/</code> bundle</li>
+            <li>Campaign work no feature-agent owns (bulk / lint / cross-link)</li>
+          </ul>
+          <a class="src" href="https://github.com/zekiyugnak/telar-framework/blob/main/agents/okf-knowledge-curator.md">Source ↗</a>
+        </div>
+      </article>
+
     </div>
   </section>
 
@@ -1187,7 +1207,7 @@
 </main>
 
 <footer><div class="wrap fl">
-  <span>Telar v0.8.0 — MIT © 2026 Zeki Yugnak</span>
+  <span>Telar v0.9.0 — MIT © 2026 Zeki Yugnak</span>
   <span><a href="https://github.com/zekiyugnak/telar-framework/tree/main/agents">All agents on GitHub</a> · <a href="index.html">Docs home</a></span>
 </div></footer>
 
