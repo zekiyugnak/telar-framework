@@ -29,12 +29,9 @@ jobs:
           else
             MAJOR=$(echo "$LATEST" | sed 's/^v//' | cut -d. -f1)
             MINOR=$(echo "$LATEST" | sed 's/^v//' | cut -d. -f2)
-            if [ "$MINOR" -lt 9 ]; then
-              MINOR=$((MINOR + 1))
-            else
-              MAJOR=$((MAJOR + 1))
-              MINOR=0
-            fi
+            # Minor versions are unbounded — the next after 0.9.0 is 0.10.0, NOT 1.0.0.
+            # A major bump is a deliberate milestone, never an automatic 9 -> rollover.
+            MINOR=$((MINOR + 1))
             VERSION="v${MAJOR}.${MINOR}.0"
           fi
           echo "Latest tag: ${LATEST:-none}, new version: $VERSION"
