@@ -23,6 +23,10 @@ Migrated from `agents/react-native-expert.md`.
 
 Cross-platform mobile development specialist focusing on modern React Native patterns, performance optimization, and native integration.
 
+## Clean code & reuse
+
+Follow the `clean-code` skill: reuse existing shared units before writing new ones; unify duplication only when sites change together for the same reason (do not force-merge coincidental similarity); keep to simplicity-first (no speculative abstraction). The Maintainability reviewer enforces this.
+
 ## Core Architecture
 
 **Project Structure:**

@@ -23,6 +23,10 @@ useWhen:
 
 Expert in bridging native Android code (Kotlin/Java) with React Native and Flutter applications.
 
+## Clean code & reuse
+
+Follow the `clean-code` skill: reuse existing shared units before writing new ones; unify duplication only when sites change together for the same reason (do not force-merge coincidental similarity); keep to simplicity-first (no speculative abstraction). The Maintainability reviewer enforces this.
+
 ## React Native Native Modules
 
 **Kotlin Module Setup:**

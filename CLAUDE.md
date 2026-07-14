@@ -1,4 +1,4 @@
-# Telar v0.9.0
+# Telar v0.10.0
 
 Agentic engineering framework for Claude Code, spanning cross-platform apps end to end: mobile (React Native, Flutter, native bridges), web (Astro, Next.js/Tailwind/shadcn, Vite/TanStack admin panels), Rust service layers, and desktop. Not mobile-only — the orchestration, reviewer roster, and rubrics are stack-aware across every domain.
 
@@ -69,7 +69,7 @@ The recommended workflow for building features:
 
 ## Skill Discovery
 
-**117 skills** including:
+**118 skills** including:
 
 - **Blueprints** (`skills/blueprints/`): auth-flow, crud-list, chat-feature, settings-screen, onboarding-flow
 - **Astro**: astro-seo-og, astro-content-performance
@@ -88,6 +88,7 @@ The recommended workflow for building features:
   - `design-review-gate` — 6-reviewer collaborative gate on RESEARCH.md/design docs (PM/Architect/Designer/Security-Design/CTO/Mobile-Platform) (orchestration namespace, sub-spec 6)
   - `external-tools` — Layer A/B external AI delegation (Codex/Gemini adapters + dispatcher); Phase β, disabled by default (orchestration namespace, sub-spec 7)
 - **Knowledge (OKF)**: `okf-knowledge-authoring` — author/maintain `docs/knowledge/` concepts (OKF format + one-way authority + PII contract); paired with the `okf-knowledge-curator` agent
+- **Quality**: `clean-code` — literature-grounded DRY/SOLID/reuse authoring contract (Metz wrong-abstraction test + do-not-over-apply guardrails); enforced by the always-on Maintainability reviewer
 - **Requirements**: requirements-gather, requirements-traceability, update-requirement (command)
 - **Design**: design-system-persistence, component-scaffolding, prompt-to-screen, mobile-design-system
 - **Platform**: rn-navigation, flutter-navigation, rn-state-management, flutter-state-management, ...
