@@ -52,6 +52,10 @@ A WU FAILS localization review if any of:
   (`count === 1 ? 'item' : 'items'`) instead of the i18n library's plural or
   interpolation mechanism (ICU message format or project-equivalent).
 
+### Reuse & duplication
+
+- UXR1. A UI element re-implements an existing shared component instead of reusing it → FAIL. A new element used the same way in more than one surface but left inlined → defer to the Maintainability rubric (`D-DUP`/`D-REUSE`) as an advisory. Do NOT force-merge visually-similar components that have different behavior/responsibility.
+
 ## Verdict format
 
 JSON per the schema. Rule IDs UX1–UX5, I18N1–I18N5. Reviewer field: `"frontend-ux"`.
