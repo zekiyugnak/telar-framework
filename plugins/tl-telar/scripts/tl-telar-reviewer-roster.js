@@ -36,6 +36,7 @@ const DOMAIN_RULES = [
 
 const UI_RE   = /\.(tsx|jsx|dart|astro|vue|svelte)$|(^|\/)(components|screens|widgets|pages)\//i;
 const PERF_RE = /(list|table|grid|virtual|animation|render|chart|carousel)/i;
+const CODE_RE = /\.(ts|tsx|js|jsx|dart|rs|sql|astro|vue|svelte|mjs|cjs)$/i;
 
 // domain -> { security rubric, a11y rubric (UI only), perf rubric (UI only) }
 const RUBRICS = {
@@ -71,6 +72,7 @@ function classify(paths, defaultDomain) {
   const domains = new Set();
   let hasUI = false;
   let hasPerf = false;
+  let hasCode = false;
   const uiDomains = new Set();
 
   for (const raw of paths) {
@@ -84,6 +86,7 @@ function classify(paths, defaultDomain) {
 
     const isUI = UI_RE.test(p);
     if (isUI) hasUI = true;
+    if (CODE_RE.test(p)) hasCode = true;
 
     // A UI file with no strong domain marker inherits the default domain.
     if (!primary && isUI) primary = defaultDomain || null;
@@ -97,11 +100,11 @@ function classify(paths, defaultDomain) {
   // never left with only a generic code review.
   if (domains.size === 0 && defaultDomain) domains.add(defaultDomain);
 
-  return { domains: [...domains], hasUI, hasPerf, uiDomains: [...uiDomains] };
+  return { domains: [...domains], hasUI, hasPerf, hasCode, uiDomains: [...uiDomains] };
 }
 
 function resolveRoster(paths, defaultDomain) {
-  const { domains, hasUI, hasPerf, uiDomains } = classify(paths, defaultDomain);
+  const { domains, hasUI, hasPerf, hasCode, uiDomains } = classify(paths, defaultDomain);
   const reviewers = [];
 
   // Always-on: generic adversarial code reviewer.
@@ -112,6 +115,17 @@ function resolveRoster(paths, defaultDomain) {
     model: REVIEWER_MODEL,
     reason: 'always-on',
   });
+
+  // Always-on when any code file is in scope: senior Maintainability/Design reviewer.
+  if (hasCode) {
+    reviewers.push({
+      role: 'Maintainability',
+      reviewer_key: 'maintainability',
+      rubric: `${RUBRIC_DIR}/maintainability-design-adversarial-rubric.md`,
+      model: REVIEWER_MODEL,
+      reason: 'code-in-scope',
+    });
+  }
 
   // Always-on: one Security reviewer per present domain (domain-specific rubric).
   for (const d of domains) {

@@ -272,7 +272,12 @@ agents:
 - [ ] Deep link handling correct
 - [ ] Error states handled
 - [ ] Tests included
+- [ ] No duplication (textual or semantic — same job, different code) whose sites change together for the same reason; existing shared units reused, not re-implemented
+- [ ] No bloat / speculative abstraction (simplicity-first); design patterns applied only where they earn complexity
+- [ ] NOT flagged: coincidental similarity with different responsibilities (wrong abstraction), dogmatic tiny-function/length gates
 ```
+
+> Apply the full rule catalog from `resources/rubrics/orchestration/maintainability-design-adversarial-rubric.md` (D-DUP / D-REUSE / D-BLOAT / D-SMELL / D-SOLID / D-PATTERN / D-CLEAN). Genuine duplication/bloat → P1 (blocks merge); reuse/refactor suggestions → P3 (advisory). Honor the Metz "change together for the same reason" guardrail.
 
 ### Action Items
 - P1 — Fix immediately (blocks merge)
@@ -282,3 +287,5 @@ agents:
 ### References
 - `rules/platform-conventions.md` for HIG/Material compliance
 - `skills/review-gates.md` for two-stage review process
+- `resources/rubrics/orchestration/maintainability-design-adversarial-rubric.md` for the senior maintainability/design rule catalog (duplication, reuse, bloat, smells, SOLID)
+- `skills/clean-code.md` for the implementer-side authoring contract

@@ -23,6 +23,10 @@ Migrated from `agents/desktop-expert.md`.
 
 Specialist in cross-platform desktop application development with Electron and Tauri — covering process architecture, secure IPC design, native OS integration, packaging, and auto-update pipelines.
 
+## Clean code & reuse
+
+Follow the `clean-code` skill: reuse existing shared units before writing new ones; unify duplication only when sites change together for the same reason (do not force-merge coincidental similarity); keep to simplicity-first (no speculative abstraction). The Maintainability reviewer enforces this.
+
 ## Core Architecture
 
 **Process Model Comparison:**

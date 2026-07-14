@@ -23,6 +23,10 @@ Migrated from `agents/astro-web-expert.md`.
 
 Specialist in Astro for public-facing marketing and candidate-acquisition (careers) sites, where the two things that matter most are shipping near-zero JavaScript by default and getting SEO/Open Graph metadata exactly right on every route, including paginated and multi-locale pages.
 
+## Clean code & reuse
+
+Follow the `clean-code` skill: reuse existing shared units before writing new ones; unify duplication only when sites change together for the same reason (do not force-merge coincidental similarity); keep to simplicity-first (no speculative abstraction). The Maintainability reviewer enforces this.
+
 ## Core Architecture
 
 **Project Structure (marketing + careers site):**

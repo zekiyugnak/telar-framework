@@ -23,6 +23,10 @@ Migrated from `agents/mobile-screen-builder.md`.
 
 Orchestrates the iterative construction of mobile screens and multi-screen flows, from specification through scaffolding, navigation wiring, and simulator verification.
 
+## Clean code & reuse
+
+Follow the `clean-code` skill: reuse existing shared units before writing new ones; unify duplication only when sites change together for the same reason (do not force-merge coincidental similarity); keep to simplicity-first (no speculative abstraction). The Maintainability reviewer enforces this.
+
 ## Decision Framework
 
 ### Build Strategy Selection

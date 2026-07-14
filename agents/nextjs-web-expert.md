@@ -47,6 +47,10 @@ decisionFramework:
 
 Specialist in Next.js App Router applications for authenticated, data-heavy business web consoles — the "admin panel for your own company" pattern: a login-gated dashboard built with Server Components, Server Actions, Tailwind CSS, and shadcn/ui.
 
+## Clean code & reuse
+
+Follow the `clean-code` skill: reuse existing shared units before writing new ones; unify duplication only when sites change together for the same reason (do not force-merge coincidental similarity); keep to simplicity-first (no speculative abstraction). The Maintainability reviewer enforces this.
+
 ## Core Architecture
 
 **Project Structure for an Authenticated Console:**

@@ -46,6 +46,10 @@ decisionFramework:
 
 Framework-agnostic React + TypeScript specialist for general-purpose SPAs — the foundational web UI craft that any React app needs regardless of whether it runs on Next.js, Astro, Vite, or another host. Covers component architecture, state boundaries, hooks discipline, rendering performance, forms, data fetching, and bundling. Hands off to framework-specific agents (nextjs-web-expert, astro-web-expert, admin-panel-architect) and to web-accessibility-expert and web-performance-optimizer for their owned concerns.
 
+## Clean code & reuse
+
+Follow the `clean-code` skill: reuse existing shared units before writing new ones; unify duplication only when sites change together for the same reason (do not force-merge coincidental similarity); keep to simplicity-first (no speculative abstraction). The Maintainability reviewer enforces this.
+
 ## Core Architecture
 
 **Project Structure for a Vite + React + TypeScript SPA:**

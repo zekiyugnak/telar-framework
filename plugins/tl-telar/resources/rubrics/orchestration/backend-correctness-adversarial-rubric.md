@@ -42,6 +42,10 @@ A WU FAILS API contract review if any of:
 - AC4. An enum value set or a DB CHECK constraint's allowed values are changed in a way that is not backward-compatible with already-shipped clients that serialized or pinned the old value set.
 - AC5. The API contract changed (new field, new route, changed shape, changed auth requirement) with no corresponding update to the OpenAPI spec, JSON schema, or generated types.
 
+### Reuse & duplication
+
+- BCR1. The change re-implements business logic, an RPC, a query, or a view that already exists instead of reusing or centralizing it (same reason to change) → FAIL. Distinct endpoints with different responsibilities that merely look alike are NOT duplication — do not force-merge them (see the Maintainability `D-DUP` guardrail).
+
 ## Verdict format
 
 JSON per the schema. Use rule IDs DI1–DI6, RL1–RL6, and AC1–AC5. The reviewer's `reviewer` field is `"backend-correctness"`.

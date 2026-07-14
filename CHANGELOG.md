@@ -6,6 +6,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+## [0.10.0] - 2026-07-14
+
+### Added
+
+- **Maintainability reviewer + `clean-code` skill** — a software-design-literature-grade code-quality gate. New always-on `Maintainability` reviewer (rubric `maintainability-design-adversarial-rubric.md`) catches duplication (textual + semantic), bloat, Fowler smells, and SOLID/coupling defects as BLOCKING failures and surfaces reuse/refactor suggestions (e.g. "extract this widget to `common`") as non-blocking ADVISORY findings — balanced by binding do-not-over-apply guardrails (Metz wrong-abstraction, YAGNI scope, Muratori). Shared `clean-code` authoring skill wired into the orchestrated-execution IMPLEMENT preamble and 14 code-writing agents; FrontendUX + BackendCorrectness rubrics, the `review-code` command, and review-gates Stage 2 gained reuse/duplication checks; advisories are surfaced to the user (non-blocking).
+
 ## [0.9.0] - 2026-07-08
 
 ### Added
