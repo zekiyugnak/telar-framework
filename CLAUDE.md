@@ -1,4 +1,4 @@
-# Telar v0.10.0
+# Telar v0.11.0
 
 Agentic engineering framework for Claude Code, spanning cross-platform apps end to end: mobile (React Native, Flutter, native bridges), web (Astro, Next.js/Tailwind/shadcn, Vite/TanStack admin panels), Rust service layers, and desktop. Not mobile-only — the orchestration, reviewer roster, and rubrics are stack-aware across every domain.
 
@@ -46,7 +46,7 @@ The recommended workflow for building features:
 
 ## Agent Discovery
 
-**47 agents** organized by domain:
+**48 agents** organized by domain:
 
 - **Platform experts**: `react-native-expert`, `flutter-expert`
 - **Web platform experts**: `astro-web-expert` (SEO/OG marketing sites), `nextjs-web-expert` (authenticated Next.js/Tailwind/shadcn consoles), `admin-panel-architect` (Vite + TanStack Router/Query/Table admin panels), `web-frontend-expert` (framework-agnostic React/TS SPA)
@@ -69,7 +69,7 @@ The recommended workflow for building features:
 
 ## Skill Discovery
 
-**118 skills** including:
+**122 skills** including:
 
 - **Blueprints** (`skills/blueprints/`): auth-flow, crud-list, chat-feature, settings-screen, onboarding-flow
 - **Astro**: astro-seo-og, astro-content-performance
