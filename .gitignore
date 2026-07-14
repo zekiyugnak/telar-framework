@@ -9,6 +9,9 @@ docs/*-DRAFT.md
 # Internal design specs (brainstorming output) — keep local, not published.
 docs/superpowers/
 
+# Subagent-driven-development process scratch (ledger + task reports) — local only.
+.superpowers/
+
 # macOS Finder metadata.
 .DS_Store
 

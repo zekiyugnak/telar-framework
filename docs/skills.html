@@ -57,6 +57,7 @@
     <a href="#astro">Astro</a>
     <a href="#nextweb">Next.js Web</a>
     <a href="#adminpanel">Admin Panel</a>
+    <a href="#webe2e">Web E2E</a>
     <a href="#rustsvc">Rust Service</a>
   </nav>
 
@@ -1438,6 +1439,61 @@
     </div>
   </section>
 
+  <!-- WEB E2E -->
+  <section class="group">
+    <h2 id="webe2e">Web E2E <span class="gc">4</span></h2>
+    <p class="gdesc">Playwright E2E for Refine + TanStack Router + Supabase + shadcn web apps, sibling in depth to the mobile E2E skill set.</p>
+    <div class="cards">
+      <article class="card" data-search="supabase-e2e-harness testing e2e supabase playwright rls web">
+        <div class="card-head"><h3>supabase-e2e-harness</h3></div>
+        <p class="desc">Arrange/Act Supabase E2E test-data model: service_role provisions, real UI + RLS acts; plain-fetch factory; runId isolation.</p>
+        <div class="chips"><span class="chip">testing</span><span class="chip">e2e</span><span class="chip">supabase</span></div>
+        <button class="card-toggle" aria-expanded="false">Details</button>
+        <div class="card-detail" hidden><h4>Capabilities</h4><ul>
+          <li>Plain-fetch Supabase REST/RPC factory (no supabase-js in Playwright)</li>
+          <li>Arrange with service_role, act through real UI + RLS</li>
+          <li>Composable role factories (candidate, employer, staff, credential)</li>
+          <li>runId namespacing for isolation without per-test teardown</li>
+        </ul><a class="src" href="https://github.com/zekiyugnak/telar-framework/blob/main/skills/supabase-e2e-harness.md">Source ↗</a></div>
+      </article>
+      <article class="card" data-search="web-e2e-locators testing e2e playwright locators shadcn tanstack web">
+        <div class="card-head"><h3>web-e2e-locators</h3></div>
+        <p class="desc">Stable Playwright locators + no-fixed-sleep waiting for shadcn/Radix, TanStack Table/Query, react-hook-form/zod.</p>
+        <div class="chips"><span class="chip">playwright</span><span class="chip">locators</span><span class="chip">shadcn</span></div>
+        <button class="card-toggle" aria-expanded="false">Details</button>
+        <div class="card-detail" hidden><h4>Capabilities</h4><ul>
+          <li>data-testid-primary + getByRole/getByLabel locator strategy</li>
+          <li>shadcn/Radix combobox, dialog, toast locator recipes</li>
+          <li>TanStack Table sort/filter/paginate assertions on rendered rows</li>
+          <li>TanStack Query async settling via web-first auto-retrying assertions</li>
+        </ul><a class="src" href="https://github.com/zekiyugnak/telar-framework/blob/main/skills/web-e2e-locators.md">Source ↗</a></div>
+      </article>
+      <article class="card" data-search="web-e2e-catalog testing e2e playwright catalog ci web">
+        <div class="card-head"><h3>web-e2e-catalog</h3></div>
+        <p class="desc">E2E scenario catalog matrix + smoke/basic/full tags + phased regression orchestrator + multi-baseURL Playwright config.</p>
+        <div class="chips"><span class="chip">catalog</span><span class="chip">ci</span><span class="chip">playwright</span></div>
+        <button class="card-toggle" aria-expanded="false">Details</button>
+        <div class="card-detail" hidden><h4>Capabilities</h4><ul>
+          <li>Catalog INDEX matrix with per-scenario markdown docs</li>
+          <li>Tag taxonomy (@smoke / @basic / @full) mapped to npm scripts</li>
+          <li>Phased regression orchestrator (unit -&gt; pgTAP -&gt; per-surface E2E -&gt; cross-surface)</li>
+          <li>Multi-baseURL Playwright config (dual webServers, workers:1)</li>
+        </ul><a class="src" href="https://github.com/zekiyugnak/telar-framework/blob/main/skills/web-e2e-catalog.md">Source ↗</a></div>
+      </article>
+      <article class="card" data-search="web-e2e-review testing e2e review quality-gate web">
+        <div class="card-head"><h3>web-e2e-review</h3></div>
+        <p class="desc">Adversarial gate: 24 silent-always-pass anti-patterns (P0/P1/P2) incl. service_role-in-act.</p>
+        <div class="chips"><span class="chip">review</span><span class="chip">quality-gate</span><span class="chip">e2e</span></div>
+        <button class="card-toggle" aria-expanded="false">Details</button>
+        <div class="card-detail" hidden><h4>Capabilities</h4><ul>
+          <li>24 silent-pass anti-patterns in P0/P1/P2 tiers</li>
+          <li>Failure classification into root-cause categories</li>
+          <li>Enforces await-on-expect, no fixed sleeps, Arrange/Act separation</li>
+        </ul><a class="src" href="https://github.com/zekiyugnak/telar-framework/blob/main/skills/web-e2e-review.md">Source ↗</a></div>
+      </article>
+    </div>
+  </section>
+
   <!-- RUST SERVICE -->
   <section class="group">
     <h2 id="rustsvc">Rust Service <span class="gc">5</span></h2>
@@ -1510,7 +1566,7 @@
 </main>
 
 <footer><div class="wrap fl">
-  <span>Telar v0.10.0 — MIT © 2026 Zeki Yugnak</span>
+  <span>Telar v0.11.0 — MIT © 2026 Zeki Yugnak</span>
   <span><a href="https://github.com/zekiyugnak/telar-framework/tree/main/skills">All skills on GitHub</a> · <a href="index.html">Docs home</a></span>
 </div></footer>
 
