@@ -174,6 +174,28 @@ test('product page has no critical accessibility violations', async ({ page }) =
 
 Set `trace: 'on-first-retry'` in `playwright.config.ts` — the trace viewer gives a step-by-step DOM/network replay that cuts flaky-test diagnosis time dramatically versus log tailing.
 
+### E2E engine: official Playwright agents vs MCP live-verify
+
+Two different tools cover two different moments in the workflow — generating/maintaining the durable spec suite versus verifying a change works right now against a running app.
+
+**Official Playwright test agents** (Planner → Generator → Healer) generate and self-heal the durable spec suite committed to the repo. Init with:
+
+```bash
+npx playwright init-agents --loop=claude
+```
+
+Hard prerequisite: this requires **Playwright 1.56+** — the agent system was introduced in 1.56, and a project on an older version must upgrade first. The harness patterns in this skill (locators, fixtures, axe scans) work on any recent Playwright version; only the official-agent generator itself needs 1.56+.
+
+**Playwright MCP** is for live, interactive verification: driving a running localhost app and asserting against the accessibility tree, not screenshots. Install:
+
+```bash
+claude mcp add playwright npx @playwright/mcp@latest
+```
+
+**When to use which:** reach for MCP during the build loop to answer "does my change work right now" against a live app. Reach for the official agents (or hand-authored specs, per this skill's Layer 4 patterns above) to produce and maintain the durable regression suite that runs in CI.
+
+For the stack-specific pieces of an E2E suite, see [[supabase-e2e-harness]] for Supabase test data setup (Arrange/Act), [[web-e2e-locators]] for stable locator and waiting strategy, [[web-e2e-catalog]] for how the suite itself should be structured, and [[web-e2e-review]] before declaring any E2E suite done.
+
 ### Which layer for what
 
 | What you are testing | Layer | Tool |

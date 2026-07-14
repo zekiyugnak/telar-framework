@@ -5,9 +5,9 @@
 
 ## Summary
 
-- **47 agents** available
+- **48 agents** available
 - **20** with decision frameworks
-- **20** with anti-pattern guidance
+- **21** with anti-pattern guidance
 
 ## Quick Reference
 
@@ -57,6 +57,7 @@
 | [rust-service-architect](#rust-service-architect) | Yes | Yes |
 | [supabase-expert](#supabase-expert) | Yes | Yes |
 | [web-accessibility-expert](#web-accessibility-expert) | Yes | Yes |
+| [web-e2e-testing-expert](#web-e2e-testing-expert) | - | Yes |
 | [web-frontend-expert](#web-frontend-expert) | Yes | Yes |
 | [web-performance-optimizer](#web-performance-optimizer) | Yes | Yes |
 | [web-security-architect](#web-security-architect) | Yes | Yes |
@@ -1290,6 +1291,29 @@ WCAG 2.2 AA specialist for web applications. Semantic HTML first, ARIA only when
 - Evaluating color contrast for text, icons, focus rings, and interactive UI components
 - Writing or reviewing Playwright + axe-core automated accessibility tests
 - Choosing between a native HTML element and an ARIA role for a custom widget
+
+---
+
+### web-e2e-testing-expert
+
+**Web E2E Testing Expert**
+
+Expert in end-to-end testing for Refine and TanStack Router web applications backed by Supabase, with shadcn/ui as the component layer. Sibling to `mobile-e2e-testing-expert`, scoped to the web surface: this agent owns suite architecture, test-data strategy, locator discipline, and the pre-merge review gate for Playwright specs — it does not restate the skills it drives, it loads and applies them.
+
+**File:** `agents/web-e2e-testing-expert.md`
+
+**Tags:** e2e, playwright, supabase, refine, tanstack, web, automation
+
+**Capabilities:**
+- Playwright E2E for Refine + TanStack Router web apps
+- Supabase Arrange/Act test-data harness (service_role provision, real-UI act)
+- Official Playwright agents (Planner/Generator/Healer) + MCP live verification
+- Cross-surface scenario authoring (admin <-> client-web)
+- Ephemeral-Supabase CI wiring
+
+**Use when:**
+- Setting up or extending E2E testing for a Supabase-backed React web app
+- Writing cross-surface Playwright scenarios that must honor RLS
 
 ---
 

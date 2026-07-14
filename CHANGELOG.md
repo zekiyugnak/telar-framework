@@ -6,6 +6,16 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+## [0.11.0] - 2026-07-14
+
+### Added
+
+- **Web E2E testing capability** — a reusable, stack-aware end-to-end testing capability for the modern React web stack (React 19 + Vite + Refine / TanStack Router + TanStack Table + shadcn/ui + Supabase + Playwright), codifying proven, ADR-backed harness patterns rather than importing generic tooling.
+  - New skills: **`supabase-e2e-harness`** (the Arrange/Act test-data model — `service_role` provisions data, every act runs through real UI + RLS; plain-`fetch` factory instead of `supabase-js`; `runId` namespacing instead of teardown), **`web-e2e-locators`** (stable `data-testid`/role locators + no-fixed-sleep waiting for shadcn/Radix, TanStack Table/Query, react-hook-form/zod), **`web-e2e-catalog`** (scenario matrix + `@smoke`/`@basic`/`@full` tag taxonomy + phased regression orchestrator + multi-baseURL Playwright config), and **`web-e2e-review`** (24-pattern P0/P1/P2 silent-always-pass anti-pattern gate, including a `service_role`-in-act violation check).
+  - New agent **`web-e2e-testing-expert`** (a web sibling of `mobile-e2e-testing-expert`) driving the four skills, with Refine/TanStack route discovery and the official Playwright agents (Planner/Generator/Healer) + MCP live-verification engine.
+  - New command **`/tl-telar:setup-web-e2e`** — a 4-phase scaffold (detect stack → scaffold factory + config → generate first scenario → wire CI + review).
+  - `web-testing` skill extended with an E2E-engine section (official Playwright agents vs MCP live-verify); `setup-e2e` now routes web apps to `setup-web-e2e`; `iterative-build-loop` gained a browser-verification path (Playwright MCP) alongside simulator verification.
+
 ## [0.10.0] - 2026-07-14
 
 ### Added

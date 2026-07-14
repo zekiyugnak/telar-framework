@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Agents — Telar</title>
-<meta name="description" content="The 47 specialized agents in Telar, grouped by domain.">
+<meta name="description" content="The 48 specialized agents in Telar, grouped by domain.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;650;800;850&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="assets/telar.css">
@@ -31,7 +31,7 @@
   <div class="page-title">
     <span class="eyebrow">Reference</span>
     <h1>Agents</h1>
-    <p>46 specialized subagents, each an expert in one domain. Expand a card for its capabilities, when to use it, and a link to its source.</p>
+    <p>48 specialized subagents, each an expert in one domain. Expand a card for its capabilities, when to use it, and a link to its source.</p>
   </div>
 
   <div class="filter-bar">
@@ -928,7 +928,7 @@
 
   <!-- WEB & SERVICE -->
   <section class="group">
-    <h2 id="web">Web &amp; Service Layer <span class="gc">4</span></h2>
+    <h2 id="web">Web &amp; Service Layer <span class="gc">5</span></h2>
     <p class="gdesc">A companion web stack (Astro, Next.js, Vite/TanStack) and a Rust backend service layer alongside the mobile agents.</p>
     <div class="cards">
 
@@ -995,6 +995,27 @@
             <li>Reviewing whether a pattern leaks trust to the client in a service-role-free stack</li>
           </ul>
           <a class="src" href="https://github.com/zekiyugnak/telar-framework/blob/main/agents/admin-panel-architect.md">Source ↗</a>
+        </div>
+      </article>
+
+      <article class="card" data-search="web-e2e-testing-expert e2e playwright supabase refine tanstack web automation">
+        <div class="card-head"><span class="card-icon">🎭</span><h3>web-e2e-testing-expert</h3></div>
+        <p class="desc">Playwright E2E for Refine + TanStack Router + Supabase + shadcn web apps; Arrange/Act Supabase harness; official Playwright agents + MCP; cross-surface scenarios.</p>
+        <div class="chips"><span class="chip">playwright</span><span class="chip">supabase</span><span class="chip">tanstack</span></div>
+        <button class="card-toggle" aria-expanded="false">Details</button>
+        <div class="card-detail" hidden>
+          <h4>Capabilities</h4><ul>
+            <li>Playwright E2E for Refine + TanStack Router web apps</li>
+            <li>Supabase Arrange/Act test-data harness (service_role provision, real-UI act)</li>
+            <li>Official Playwright agents (Planner/Generator/Healer) + MCP live verification</li>
+            <li>Cross-surface scenario authoring (admin &lt;-&gt; client-web)</li>
+            <li>Ephemeral-Supabase CI wiring</li>
+          </ul>
+          <h4>When to use</h4><ul>
+            <li>Setting up or extending E2E testing for a Supabase-backed React web app</li>
+            <li>Writing cross-surface Playwright scenarios that must honor RLS</li>
+          </ul>
+          <a class="src" href="https://github.com/zekiyugnak/telar-framework/blob/main/agents/web-e2e-testing-expert.md">Source ↗</a>
         </div>
       </article>
 
@@ -1207,7 +1228,7 @@
 </main>
 
 <footer><div class="wrap fl">
-  <span>Telar v0.10.0 — MIT © 2026 Zeki Yugnak</span>
+  <span>Telar v0.11.0 — MIT © 2026 Zeki Yugnak</span>
   <span><a href="https://github.com/zekiyugnak/telar-framework/tree/main/agents">All agents on GitHub</a> · <a href="index.html">Docs home</a></span>
 </div></footer>
 

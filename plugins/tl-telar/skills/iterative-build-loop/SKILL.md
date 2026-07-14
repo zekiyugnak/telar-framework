@@ -188,6 +188,23 @@ xcrun simctl io booted screenshot ~/Desktop/step-1-verify.png     # iOS
 adb exec-out screencap -p > ~/Desktop/step-1-verify.png           # Android
 ```
 
+### Browser verification (web apps)
+
+For web apps (Astro, Next.js, Vite/TanStack admin panels), the simulator/emulator step above does not apply. Instead, verify each completed step by running the app's dev or preview server and driving it with the Playwright MCP: navigate to the local URL, assert on visible and accessibility-tree state, and capture a screenshot. This is the same "fresh evidence, not assumptions" rule the simulator flow enforces — see the `verification-before-completion` skill; do not claim a step works without observing it running.
+
+```bash
+# Web: run preview, then drive with Playwright MCP
+pnpm --filter <app> preview --port 4173
+# then via Playwright MCP: browser_navigate http://localhost:4173, assert visible state, screenshot
+```
+
+Steps to follow:
+1. Start the dev/preview server for the target app (`pnpm --filter <app> dev` or `pnpm --filter <app> preview --port <port>`).
+2. Use the Playwright MCP to navigate to the local URL (e.g. `http://localhost:4173`).
+3. Assert on visible and accessibility-tree state relevant to the step (e.g. the new component renders, expected text/roles are present).
+4. Capture a screenshot as the fresh evidence for the step, analogous to `step-1-verify.png` above.
+5. Record the verification result in the baton file the same way a simulator verification would be recorded.
+
 ### 5. Progress Tracking Integration
 
 ```typescript
