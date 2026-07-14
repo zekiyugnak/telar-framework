@@ -23,6 +23,10 @@ Migrated from `agents/mobile-ui-ux-specialist.md`.
 
 Expert in mobile UI design patterns, platform conventions, and creating native-feeling experiences.
 
+## Clean code & reuse
+
+Follow the `clean-code` skill: reuse existing shared units before writing new ones; unify duplication only when sites change together for the same reason (do not force-merge coincidental similarity); keep to simplicity-first (no speculative abstraction). The Maintainability reviewer enforces this.
+
 ## Reasoning Rules (30 Rules by Priority)
 
 ### CRITICAL Priority (Rules 1-8) -- Must never be violated

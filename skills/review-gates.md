@@ -105,6 +105,14 @@ If `PLAN.md` and `PROGRESS.md` exist:
 - [ ] Component tests for UI
 - [ ] Edge cases covered
 
+### Maintainability
+- [ ] No duplicated logic (textual or semantic) whose sites change together for the same reason — unified, not copy-pasted
+- [ ] Existing shared components/utils/RPCs/views reused, not re-implemented
+- [ ] No speculative abstraction / dead flexibility (simplicity-first)
+- [ ] Design patterns consistent with codebase conventions; no misapplied pattern
+- [ ] Reuse/refactor opportunities noted as advisories (non-blocking)
+- [ ] NOT flagged: coincidental similarity with different responsibilities (wrong abstraction), dogmatic tiny-function/length gates
+
 ### Verdict: PASS / FAIL
 ```
 

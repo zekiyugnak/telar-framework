@@ -90,6 +90,14 @@ Prompt:
 
   Apply the criteria. Cite findings with rule IDs.
 
+  MAINTAINABILITY REVIEWER ONLY — ADVISORY CAPABILITY. If your rubric is
+  maintainability-design-adversarial-rubric.md, you ADDITIONALLY populate the
+  `advisories[]` array for its [ADVISORY] rules (e.g. "extract this widget to
+  components/common", "this could apply the repository pattern"). Advisories are
+  reported to the user but NEVER set `verdict: FAIL` and NEVER block COMMIT; the
+  verdict is PASS iff `blockers` is empty. Every OTHER reviewer stays
+  pure-adversarial — blockers only, no suggestions, empty `advisories`.
+
   Output a single JSON object matching the schema at
   skills/orchestration/plan-review-gate/references/verdict-schema.md
   with `reviewer: "<role-key>"`. No prose outside the JSON.
@@ -134,6 +142,7 @@ Two additions that improve traceability without touching the spawn invariant:
 
 1. **Per-criterion DoD verification.** Each reviewer maps every DoD item to an explicit verdict — `met` / `not-met` / `not-verifiable-from-diff` — reported in its JSON (a `dod_verdicts` array alongside the schema's existing fields, or within its findings list). A DoD item is `met` only with evidence in the diff (a code path, test, or assertion). "Looks done" is not evidence — see `verification-before-completion`. A blanket pass that does not address each DoD item individually is itself a defect.
 2. **Findings write-back (caller side, after aggregation).** After the verdict is aggregated, the caller (orchestrator) writes a `## Code Review Findings` block under the WU in `.tl-telar/context/execution-state.md` containing: overall verdict, per-reviewer blockers/advisories (with rule IDs and `file:line`), and the merged per-criterion DoD table. Only then tick the DoD checkboxes in `PLAN.md`/`PROGRESS.md` that **every** reviewer marked `met` — never tick a box on a `not-met` or `not-verifiable` criterion. Reviewers never write these files; the caller does, preserving the read-only-reviewer separation.
+3. **Surface advisories to the user (caller side).** When aggregated `all_advisories` is non-empty, the orchestrator reports them in its turn summary to the user — grouped by rule ID with `file:line` and labeled as **non-blocking senior suggestions** (e.g. "extract this widget to `common`", "apply the repository pattern here"). Advisories inform the user and the next iteration but NEVER gate COMMIT and NEVER force a retry. Do not bury them only in `execution-state.md`: a silent advisory the user never sees is a lost review. On overall PASS with advisories, still proceed to Phase 4 — the advisories ride along in the report, not the gate.
 
 ## Anti-patterns (do NOT do these)
 

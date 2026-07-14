@@ -21,14 +21,14 @@ const keys = (r) => r.reviewers.map((x) => x.reviewer_key);
 {
   const r = resolveRoster(['migrations/20260706.sql'], null);
   const k = keys(r);
-  assert.deepEqual(k, ['code', 'backend-data-security', 'backend-correctness']);
+  assert.deepEqual(k, ['code', 'maintainability', 'backend-data-security', 'backend-correctness']);
   assert.ok(!k.includes('web-a11y') && !k.includes('frontend-ux'));
 }
 
 // Rust service WU: rust safety + backend correctness.
 {
   const r = resolveRoster(['crates/api/src/handler.rs'], null);
-  assert.deepEqual(keys(r), ['code', 'rust-safety', 'backend-correctness']);
+  assert.deepEqual(keys(r), ['code', 'maintainability', 'rust-safety', 'backend-correctness']);
 }
 
 // Mobile screen WU: mobile security + frontend-ux + mobile a11y; NEVER a web rubric.
@@ -77,6 +77,16 @@ const keys = (r) => r.reviewers.map((x) => x.reviewer_key);
 {
   const r = resolveRoster(['admin/Foo.tsx'], 'web');
   assert.ok(r.reviewers.every((x) => /^resources\/rubrics\/orchestration\/.+\.md$/.test(x.rubric)));
+}
+
+// Maintainability reviewer is always-on when any code file is in scope; absent otherwise.
+{
+  const withCode = resolveRoster(['src/components/Button.tsx'], 'web');
+  assert.ok(keys(withCode).includes('maintainability'), 'code WU must include the maintainability reviewer');
+  assert.ok(withCode.reviewers.find((x) => x.reviewer_key === 'maintainability').rubric
+    === 'resources/rubrics/orchestration/maintainability-design-adversarial-rubric.md');
+  const noCode = resolveRoster(['README.md', 'docs/logo.png'], null);
+  assert.ok(!keys(noCode).includes('maintainability'), 'non-code WU must not include the maintainability reviewer');
 }
 
 console.log('reviewer-roster.test.js: all assertions passed');
