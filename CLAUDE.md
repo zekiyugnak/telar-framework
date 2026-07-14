@@ -1,4 +1,4 @@
-# Telar v0.10.0
+# Telar v0.11.0
 
 Agentic engineering framework for Claude Code, spanning cross-platform apps end to end: mobile (React Native, Flutter, native bridges), web (Astro, Next.js/Tailwind/shadcn, Vite/TanStack admin panels), Rust service layers, and desktop. Not mobile-only — the orchestration, reviewer roster, and rubrics are stack-aware across every domain.
 
@@ -25,6 +25,7 @@ Agentic engineering framework for Claude Code, spanning cross-platform apps end 
 | Release to stores | `/tl-telar:release-app` |
 | Set up CI/CD | `/tl-telar:setup-cicd` |
 | Set up E2E tests | `/tl-telar:setup-e2e` |
+| Set up web E2E tests | `/tl-telar:setup-web-e2e [app-path]` |
 | Migrate native to cross-platform | `/tl-telar:migrate-app` |
 | Upgrade dependencies | `/tl-telar:upgrade-deps` |
 | Set up OTA updates | `/tl-telar:setup-ota` |
@@ -46,7 +47,7 @@ The recommended workflow for building features:
 
 ## Agent Discovery
 
-**47 agents** organized by domain:
+**48 agents** organized by domain:
 
 - **Platform experts**: `react-native-expert`, `flutter-expert`
 - **Web platform experts**: `astro-web-expert` (SEO/OG marketing sites), `nextjs-web-expert` (authenticated Next.js/Tailwind/shadcn consoles), `admin-panel-architect` (Vite + TanStack Router/Query/Table admin panels), `web-frontend-expert` (framework-agnostic React/TS SPA)
@@ -61,7 +62,7 @@ The recommended workflow for building features:
 - **Offline**: `mobile-offline-architect`
 - **CI/CD & Release**: `mobile-cicd-engineer`, `mobile-release-manager`, `mobile-code-signing-expert`, `mobile-ota-updates-specialist`
 - **Stores**: `ios-app-store-specialist`, `google-play-specialist`
-- **Testing**: `mobile-unit-testing-expert`, `mobile-e2e-testing-expert`, `mobile-device-testing`, `mobile-performance-testing`
+- **Testing**: `mobile-unit-testing-expert`, `mobile-e2e-testing-expert`, `web-e2e-testing-expert`, `mobile-device-testing`, `mobile-performance-testing`
 - **Backend**: `supabase-expert`, `mobile-api-integration`, `mobile-push-notifications`, `mobile-auth-specialist`, `mobile-storage-specialist`
 - **Advanced**: `mobile-ai-integration`, `mobile-ar-vr-specialist`, `mobile-realtime-specialist`
 - **Orchestration**: `orchestrator`
@@ -69,12 +70,13 @@ The recommended workflow for building features:
 
 ## Skill Discovery
 
-**118 skills** including:
+**122 skills** including:
 
 - **Blueprints** (`skills/blueprints/`): auth-flow, crud-list, chat-feature, settings-screen, onboarding-flow
 - **Astro**: astro-seo-og, astro-content-performance
 - **Next.js/Tailwind/shadcn**: shadcn-component-patterns, tailwind-v4-design-tokens, nextjs-auth-app-router
 - **Admin panel (Vite + TanStack)**: tanstack-router-patterns, tanstack-query-patterns, tanstack-table-patterns, supabase-rls-client-patterns, supabase-tus-resumable-upload, command-palette-cmdk, tremor-dashboard-charts, i18n-rtl-formatjs-lingui
+- **Web E2E**: supabase-e2e-harness, web-e2e-locators, web-e2e-catalog, web-e2e-review
 - **Rust service**: rust-axum-routing, rust-sqlx-patterns, rust-service-architecture, rust-testing-pyramid, rust-deployment
 - **Web (framework-agnostic)**: web-state-management, web-animations, web-testing
 - **Workflow**: requirements-gather, brainstorm-first, plan-and-track, review-gates, iterative-build-loop, mobile-commit-convention, systematic-debugging, verification-before-completion

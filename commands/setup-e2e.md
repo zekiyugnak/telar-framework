@@ -22,6 +22,10 @@ Set up end-to-end testing for mobile apps.
 
 ## Phase 1: Framework Selection (0-25%)
 
+### Web App Detection
+
+Before selecting among mobile frameworks, check whether the target is a **web app** rather than a mobile app: inspect `package.json` deps (`vite`, `@refinedev/*`, `@tanstack/react-router`, `astro`) or the app path for a web project structure. If the target is a web app (Vite / Refine / TanStack Router / Astro), delegate directly to `/tl-telar:setup-web-e2e` instead of proceeding with the mobile framework selection below — that command owns the Playwright-based web E2E setup (`supabase-e2e-harness`, `web-e2e-locators`, `web-e2e-catalog`, `web-e2e-review` skills, `web-e2e-testing-expert` agent). Stop this command's flow once delegation happens.
+
 ### Load Agents
 ```yaml
 agents:

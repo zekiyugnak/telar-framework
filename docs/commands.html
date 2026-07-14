@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Commands — Telar</title>
-<meta name="description" content="The 23 slash-command workflows in Telar.">
+<meta name="description" content="The 24 slash-command workflows in Telar.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;650;800;850&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="assets/telar.css">
@@ -31,7 +31,7 @@
   <div class="page-title">
     <span class="eyebrow">Reference</span>
     <h1>Commands</h1>
-    <p>23 slash-command workflows, all namespaced under <code>/tl-telar:</code>. Expand a card for an example and a link to its source.</p>
+    <p>24 slash-command workflows, all namespaced under <code>/tl-telar:</code>. Expand a card for an example and a link to its source.</p>
     <div class="callout"><strong>Codex usage.</strong> In Codex, install from <code>zekiyugnak/telar-framework</code> and invoke Telar through <code>@tl-telar</code> or bundled skill names such as <code>$create-app</code>, <code>$review-plan</code>, and <code>$orchestrate</code>. The slash-command names below are the Claude Code form.</div>
   </div>
 
@@ -197,7 +197,7 @@
 
   <!-- TESTING -->
   <section class="group">
-    <h2 id="test">Testing <span class="gc">2</span></h2>
+    <h2 id="test">Testing <span class="gc">3</span></h2>
     <div class="cards">
 
       <article class="card" data-search="test-app test comprehensive unit integration e2e device">
@@ -219,6 +219,17 @@
         <div class="card-detail" hidden>
           <h4>Example</h4><div class="usage">/tl-telar:setup-e2e detox</div>
           <a class="src" href="https://github.com/zekiyugnak/telar-framework/blob/main/commands/setup-e2e.md">Source ↗</a>
+        </div>
+      </article>
+
+      <article class="card" data-search="setup-web-e2e e2e testing playwright supabase refine tanstack web">
+        <div class="card-head"><h3>/tl-telar:setup-web-e2e</h3><span class="tag">command</span></div>
+        <p class="desc">Scaffold a Supabase/Playwright E2E harness for a Refine/TanStack web app (Arrange/Act patterns).</p>
+        <div class="usage">/tl-telar:setup-web-e2e [app-path]</div>
+        <button class="card-toggle" aria-expanded="false">Details</button>
+        <div class="card-detail" hidden>
+          <h4>Example</h4><div class="usage">/tl-telar:setup-web-e2e src/admin</div>
+          <a class="src" href="https://github.com/zekiyugnak/telar-framework/blob/main/commands/setup-web-e2e.md">Source ↗</a>
         </div>
       </article>
 
@@ -362,7 +373,7 @@
 </main>
 
 <footer><div class="wrap fl">
-  <span>Telar v0.10.0 — MIT © 2026 Zeki Yugnak</span>
+  <span>Telar v0.11.0 — MIT © 2026 Zeki Yugnak</span>
   <span><a href="https://github.com/zekiyugnak/telar-framework/tree/main/commands">All commands on GitHub</a> · <a href="index.html">Docs home</a></span>
 </div></footer>
 
