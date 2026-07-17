@@ -2,11 +2,14 @@
 id: adversarial-code-review
 category: skill
 impact: HIGH
-impactDescription: Spawns 2-4 fresh-instance adversarial reviewers in Phase 3 of the orchestrated 4-phase loop. Any FAIL blocks COMMIT. Prevents anchoring bias by never reusing a reviewer Task() across iterations.
-tags: [orchestration, review-gate, adversarial, multi-agent, sidecar]
+impactDescription: Spawns a risk-tier-scaled, stack-aware fresh-instance adversarial reviewer roster in Phase 3 of the orchestrated 4-phase loop (trivial→Code-only, standard→Code+Maintainability+floor-Security, critical→full roster). Any FAIL blocks COMMIT. Prevents anchoring bias by never reusing a reviewer Task() across iterations; retries are incremental (sticky-pass).
+tags: [orchestration, review-gate, adversarial, multi-agent, sidecar, risk-tier]
 capabilities:
-  - Spawn always-on reviewers (Adversarial Code, Mobile Security) in parallel
-  - Conditionally spawn specialist reviewers (Mobile UX/A11y, Mobile Performance) based on file-scope intersection
+  - Size the roster by the WU's risk_tier via scripts/tl-telar-reviewer-roster.js --risk-tier
+  - Force a Security reviewer on any tier when the sensitive-path floor fires (never droppable)
+  - Spawn the stack-correct reviewers in parallel (Code always; Maintainability/Security/BackendCorrectness/UX/A11y/Perf per tier + domain)
+  - Incremental re-review on retry (sticky-pass); critical-tier Security is never sticky
+  - Escalate critical WUs qualitatively (design-gate up front, adversarial cross-model, forced human checkpoint)
   - Aggregate per-reviewer JSON verdicts; any FAIL → overall FAIL
   - Block Phase 4 COMMIT until PASS or escalation
   - Cite rule IDs from the per-domain rubrics
@@ -34,18 +37,18 @@ For a given Work Unit (with declared `fileScope`, `dod`, and `diff`):
 1. **Determine reviewer roster** with the stack-aware resolver — do NOT hardcode a mobile roster:
 
    ```bash
-   node scripts/tl-telar-reviewer-roster.js --default-domain <mobile|web> <every path in fileScope>
+   node scripts/tl-telar-reviewer-roster.js --default-domain <mobile|web> --risk-tier <trivial|standard|critical> <every path in fileScope>
    ```
 
-   `--default-domain` comes from the project-detect framework signal (orchestrator Step 5b / project-context); it only decides how UI files with no strong path marker are classified. The resolver returns JSON `{ domains, reviewers: [{ role, reviewer_key, rubric, model, reason }] }`. Spawn EXACTLY that set — it is stack-aware, so a web/admin or backend WU never gets a mobile rubric:
-   - Always: **Code** (generic rubric) + one **Security** reviewer per in-scope domain (`mobile-security` | `web-security` | `backend-data-security` | `rust-safety`).
-   - Backend/service in scope → **BackendCorrectness** (data-integrity + reliability + API-contract).
-   - UI in scope → **FrontendUX** (states + i18n) + **Accessibility** (per UI domain).
-   - Perf-sensitive paths → **Performance** (per UI domain).
+   `--default-domain` comes from the project-detect framework signal (orchestrator Step 5b / project-context); it only decides how UI files with no strong path marker are classified. `--risk-tier` is the WU's `risk_tier` field (default `standard` if absent) and it sizes the roster. The resolver returns JSON `{ risk_tier, domains, reviewers: [{ role, reviewer_key, rubric, model, reason }] }`. Spawn EXACTLY that set — it is stack-aware (a web/admin or backend WU never gets a mobile rubric) AND risk-scaled:
+   - **`trivial`** → **Code** only. (+ a **Security** reviewer if the fileScope trips the sensitive-path floor — see below.)
+   - **`standard`** (the default) → **Code** + **Maintainability** + **Security** (only when the sensitive-path floor fires OR the domain is high-stakes backend/rust/desktop) + **BackendCorrectness** (backend/service in scope). UI **a11y / perf / FrontendUX are NOT spawned as LLM reviewers** — their mechanical criteria are covered by the Katman-1 CI lenses (`a11y_command` / `perf_command` / lint in `.tl-telar-thresholds.json`). This is the fast default.
+   - **`critical`** → the FULL roster: Code + Maintainability + Security **per in-scope domain** + BackendCorrectness + **FrontendUX** + **Accessibility** (per UI domain) + **Performance** (per perf-sensitive UI domain). Plus the qualitative escalations in the section below.
+   - **Sensitive-path FLOOR (never droppable):** when ANY fileScope path touches auth/authz/session/token/jwt/password/secret/crypto/payment/billing/migration/`.sql`/rls/acl, the resolver forces a **Security** reviewer on EVERY tier — even `trivial`. The tier can thin the discretionary reviewers, never the security floor.
    - Every reviewer carries `model: opus` (gate-quality pin) and its own `rubric` path — use those verbatim.
    - Store Compliance is NOT spawned here; it's reserved for `/tl-telar:release-app`-bound work.
 
-   A WU whose fileScope spans many domains (e.g. backend + web) yields a large roster — that is a signal the WU is doing too much and should have been split, not a resolver bug.
+   A WU whose fileScope spans many domains (e.g. backend + web) yields a large roster at `critical` — that is a signal the WU is doing too much and should have been split, not a resolver bug. Do NOT hand-tune the roster: the resolver is the single source of truth for who reviews. If you believe a `standard` WU needs a11y/perf LLM judgment, the correct move is to re-tag it `critical` in the plan (and let the plan-review-gate see that), not to add reviewers here.
 2. **Spawn N fresh `Task()` subagents in parallel**, one per active reviewer role. Each gets the corresponding rubric path and the WU context. See `./references/spawn-prompts.md` if you create one; otherwise inline the prompt skeleton below.
 3. **Aggregate verdicts**. Any single FAIL → overall FAIL.
 4. **Return** to caller (the orchestrator) with the aggregated verdict.
@@ -127,6 +130,29 @@ Build the aggregated verdict matching the sub-spec 1 schema's aggregation shape:
 ```
 
 `overall_verdict` is PASS only when ALL active reviewers returned PASS.
+
+## Retry economics — incremental re-review (sticky-pass)
+
+When a review pass returns FAIL, the loop goes back to Phase 1 (fresh implementer fixes the blockers) and returns here for another pass. Re-spawning the ENTIRE roster + full cross-model on every retry is waste: a reviewer that already PASSed on a dimension the fix did not touch has nothing new to judge. So the retry roster is INCREMENTAL, not full:
+
+1. **Always re-run the reviewer(s) that FAILed** last pass — as FRESH `Task()` instances (the spawn invariant is preserved; "fresh" ≠ "full roster" — they are independent properties).
+2. **Also re-run any previously-PASSing reviewer whose concern intersects the fix diff.** Compute the fix diff (paths + hunks changed since the last pass). If a prior-PASS reviewer's domain/files overlap those changes, re-run it — a fix to the failing dimension can silently regress a green one. Intersection is by file path at minimum; prefer changed-hunk overlap when available.
+3. **Reviewers whose dimension is untouched by the fix keep their prior PASS (sticky).** Do not re-spawn them. Record the carried-over verdict in the aggregation as `sticky: true` so the audit trail shows it was intentional, not skipped.
+4. **Cross-model Review 2 re-runs targeted at the fix, not the full diff** — dispatch the fix hunks (with enough context) rather than re-reviewing the whole WU. It still runs (never skipped when enabled); only its scope narrows.
+
+**Sticky-pass is DISABLED for `critical`-tier Security.** On a `critical` WU, the Security reviewer(s) re-run on EVERY retry regardless of whether the fix appears to touch their files — an "unrelated" change to auth/authz/crypto code can open a hole that path-intersection misses. Security is never sticky at critical. (At `standard`/`trivial`, the sensitive-path floor Security reviewer follows the normal intersection rule.)
+
+First pass is always the full tier-appropriate roster from step 1; sticky-pass applies only to iterations 2+.
+
+## Critical-tier escalation (qualitative, not just more reviewers)
+
+A `critical` WU escalates the QUALITY of scrutiny — independent + human oversight — not merely the count of Claude reviewers. Beyond the full roster above, the orchestrator (caller) applies:
+
+1. **Design-review-gate up front (before implementation).** A critical WU should have passed `skills/orchestration/design-review-gate` (or at least its Security-Design + Architect reviewers) at plan time — threat-model the change while it is still a doc. If the plan did not gate a critical WU, flag it: cheap rigor was skipped.
+2. **Mandatory negative/adversarial tests in the DoD.** The `test_plan` must include failure-path assertions (e.g. "unauthorized user cannot X", "tampered token rejected", "migration rollback restores prior state"), not just happy-path. A critical WU whose tests only prove the success path is itself a defect.
+3. **CI lenses flipped strict for this WU.** The orchestrator runs the `a11y_command` / `perf_command` / `security_command` gates as BLOCKING for a critical WU even when their `*_strict` flags default to advisory.
+4. **Cross-model Review 2 with an adversarial prompt.** For critical, prompt the second model to actively attack the risk surface ("try to break this authz / find the injection / bypass this check"), not just review generally.
+5. **Forced human checkpoint.** A critical WU is treated as `checkpoint: true` (four-eyes / two-person rule) — it does not COMMIT-ready without a human sign-off, even under `autonomy.cycle = unattended` (the sign-off is hoisted to the plan-ready pre-flight per the orchestrator's Autonomy model).
 
 ## Per-criterion verification & findings write-back
 

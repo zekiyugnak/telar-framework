@@ -1,6 +1,6 @@
-# Telar v0.11.0
+# Telar v0.12.0
 
-Agentic engineering framework for Claude Code, spanning cross-platform apps end to end: mobile (React Native, Flutter, native bridges), web (Astro, Next.js/Tailwind/shadcn, Vite/TanStack admin panels), Rust service layers, and desktop. Not mobile-only — the orchestration, reviewer roster, and rubrics are stack-aware across every domain.
+Agentic engineering framework for Claude Code, spanning cross-platform apps end to end: mobile (React Native, Flutter, native bridges), web (Astro, Next.js/Tailwind/shadcn, Vite/TanStack admin panels), Rust service layers, and desktop. Not mobile-only — the orchestration, reviewer roster, and rubrics are stack-aware across every domain. The per-WU reviewer roster is also **risk-tiered**: rigor is front-loaded into planning, so implementation review stays thin for low-risk work and escalates only where risk warrants it.
 
 ## Quick Start
 
@@ -82,7 +82,7 @@ The recommended workflow for building features:
 - **Workflow**: requirements-gather, brainstorm-first, plan-and-track, review-gates, iterative-build-loop, mobile-commit-convention, systematic-debugging, verification-before-completion
   - `plan-review-gate` — adversarial 3-reviewer gate on PLAN.md (orchestration namespace, sub-spec 1)
   - `orchestrated-execution` — 4-phase IMPLEMENT/VALIDATE/REVIEW/COMMIT loop (orchestration namespace, sub-spec 2)
-  - `adversarial-code-review` — SIDECAR for review-gates; 2-4 fresh reviewers per WU (sub-spec 2)
+  - `adversarial-code-review` — SIDECAR for review-gates; a risk-tier-scaled fresh-reviewer roster per WU (trivial→Code-only, standard→Code+Maintainability+floor-Security, critical→full roster), a never-droppable sensitive-path Security floor, and incremental sticky-pass retries (sub-spec 2)
   - `mobile-adversarial-review` — specialist spawn template for a11y/perf reviewers (sub-spec 2)
   - `recovery` — compaction + cross-session resume; reads 3-file state (orchestration namespace, sub-spec 4)
   - `prime` — KB retrieval primer; emits 5-category facts (orchestration namespace, sub-spec 5)
