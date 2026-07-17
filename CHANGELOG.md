@@ -6,6 +6,23 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+## [0.12.0] - 2026-07-17
+
+### Added
+
+- **Risk-tiered per-WU review** — the adversarial code-review roster now scales with each Work Unit's `risk_tier` instead of firing the full lens set on every change. The philosophy: front-load rigor into the plan (where a defect is cheap to fix), keep implementation review thin, and escalate only where risk warrants it.
+  - **`risk_tier` (trivial | standard | critical)** on the Work Unit schema, derived at decomposition from blast radius + `file_scope` sensitivity + size. `scripts/tl-telar-reviewer-roster.js` gained `--risk-tier`: `trivial` → Code-only; `standard` (default) → Code + Maintainability + Security (only on the sensitive-path floor or a high-stakes backend/Rust/desktop domain) + BackendCorrectness; `critical` → the full roster (adds FrontendUX + Accessibility + Performance). A pure UI change drops from ~6 reviewers to 1–2 at standard tier while a critical change keeps the full set.
+  - **Sensitive-path Security floor** — any `file_scope` path touching auth / oauth / session / token / jwt / password / secret / crypto / payment / billing / migration / `.sql` / rls / acl / access-control (matched camelCase-aware) forces a Security reviewer on **every** tier, never droppable — the guardrail against a small diff to critical code being under-reviewed.
+  - **Mandatory plan-rigor fields** — `data_contracts`, `edge_cases`, and `test_plan` are now required on every code-bearing Work Unit; the `plan-review-gate` Completeness reviewer FAILs a plan that leaves them vacuous, and rejects an under-tagged `critical` WU (RISK-TIER HONESTY gate).
+  - **Incremental sticky-pass retries** — on a review FAIL, only the failing reviewer(s) plus any prior-PASS reviewer whose concern intersects the fix diff re-run; the rest keep their PASS. `critical`-tier Security is never sticky. Cross-model (Codex/Gemini) second review re-runs targeted at the fix.
+  - **Critical-tier qualitative escalation** — a `critical` WU adds an up-front design-review gate, mandatory negative/adversarial tests, CI lenses flipped strict, an adversarial cross-model prompt, and a forced human checkpoint (four-eyes) — escalating the *quality* of scrutiny, not just the reviewer count.
+  - New `review` block + `enforcement.security_command`/`security_strict` in `tl-telar-thresholds.json` documenting the tier policy and the Katman-1 CI lenses (axe / perf-budget / semgrep) that standard-tier review relies on instead of LLM specialists.
+  - Cross-model second review remains config-gated (`external-tools.yaml`), **not** tier-gated: when enabled it runs on every WU regardless of tier.
+
+### Changed
+
+- `adversarial-code-review`, `orchestrated-execution`, and the `orchestrator` agent updated to thread `risk_tier` into the Phase-3 roster and to run incremental (not full-roster) re-review on retry. Docs (`README`, `docs/orchestration.html`, `CLAUDE.md`) updated to describe the risk-tiered roster.
+
 ## [0.11.0] - 2026-07-14
 
 ### Added

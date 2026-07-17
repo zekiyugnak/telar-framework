@@ -1,7 +1,7 @@
 # Telar
 
 > **The agentic engineering framework** — plan, build, review, and ship, with agents.
-> By Zeki Yugnak · v0.11.0 — 48 agents, 122 skills, 24 commands, 4 hooks, 7 rules, 29 scripts
+> By Zeki Yugnak · v0.12.0 — 48 agents, 122 skills, 24 commands, 4 hooks, 7 rules, 29 scripts
 
 Telar is a multi-agent engineering framework for Claude Code and Codex that takes a feature from idea to production — orchestrated planning, adversarial review gates, a persistent knowledge base, cross-model verification, and a new OKF domain-knowledge layer. It spans cross-platform apps end to end: **mobile** (**React Native** & **Flutter**) with deep native integration, **web** (**Astro**, **Next.js**/Tailwind/shadcn, **Vite**/TanStack admin panels), **Rust** service layers, and **desktop** — with stack-aware orchestration, reviewers, and rubrics across every domain.
 
@@ -87,6 +87,7 @@ See the [command reference](https://zekiyugnak.github.io/telar-framework/command
 - **47 specialized agents** — mobile & native platform experts, native bridges, architecture, security, testing, release, orchestration; a full web stack (Astro/Next.js/Vite-TanStack plus a framework-agnostic React expert and web security/performance/accessibility specialists); Rust services; and desktop (Electron/Tauri).
 - **122 skills** — reusable reference modules, decision frameworks, and ready-to-use feature blueprints for React Native, Flutter, the web stack, and Rust services.
 - **Two-stage review gates** — requirement compliance and code quality, with adversarial and collaborative reviewers.
+- **🆕 Risk-tiered review (new)** — rigor is front-loaded into the plan (mandatory `data_contracts`/`edge_cases`/`test_plan` per Work Unit, enforced by the plan gate), so implementation review stays fast. The per-WU adversarial roster scales with each WU's `risk_tier` — `trivial`→Code-only, `standard`→Code+Maintainability (UI a11y/perf handled by CI lenses), `critical`→full roster + up-front design gate + human checkpoint. A sensitive-path Security floor (auth/token/payment/migration/…) is never droppable by tier, retries re-review incrementally (sticky-pass), and cross-model review stays always-on when configured.
 - **Orchestrated mode (opt-in)** — design + plan review gates, a 4-phase IMPLEMENT/VALIDATE/REVIEW/COMMIT loop, and blocking quality gates. Independent Work Units run in parallel — a pure readiness scheduler dispatches concurrent WUs whose dependencies are met and file scopes are disjoint (bounded by `execution.max_parallel_wus`). The orchestrator honors your git policy and never auto-commits.
 - **Persistent knowledge base** — typed JSONL facts captured via `/tl-telar:self-reflect` and re-primed into context each session.
 - **🆕 OKF knowledge layer (new)** — optional support for the [Open Knowledge Format](https://github.com/GoogleCloudPlatform/knowledge-catalog): a `docs/knowledge/` domain-knowledge bundle agents consult (orientation) before touching a table or schema, while ADRs and the schema spec stay the source of truth. Produced and kept healthy by the `okf-knowledge-curator` agent and the `okf-knowledge-authoring` skill; a no-op in projects without a bundle.

@@ -7,16 +7,21 @@
  * skills/orchestration/adversarial-code-review.md with this deterministic,
  * testable resolver (same pattern as tl-telar-wu-scheduler.js).
  *
- * INPUT  : a Work Unit's file_scope (paths) + an optional default domain.
- * OUTPUT : JSON { domains, reviewers: [{ role, reviewer_key, rubric, model, reason }] }
+ * INPUT  : a Work Unit's file_scope (paths) + an optional default domain + risk_tier.
+ * OUTPUT : JSON { risk_tier, domains, reviewers: [{ role, reviewer_key, rubric, model, reason }] }
  *
  * The framework is multi-domain (mobile, web, backend/data, rust, desktop) — the
  * reviewer ROLES are generic; only the RUBRIC is domain-specific. Every reviewer
  * runs on Opus (Phase 1 gate-quality decision).
  *
+ * The roster SIZE scales with the WU's risk_tier (trivial|standard|critical, default
+ * standard) — see the tier policy above resolveRoster(). Standard is the light default
+ * (UI a11y/perf/ux are handled by CI, not LLM reviewers); critical spawns the full roster.
+ * A Security reviewer is FORCED on every tier when a sensitive path is in scope (the floor).
+ *
  * Usage:
- *   node scripts/tl-telar-reviewer-roster.js --default-domain web path1 path2 ...
- *   echo '["migrations/x.sql","admin/a.tsx"]' | node scripts/tl-telar-reviewer-roster.js --json
+ *   node scripts/tl-telar-reviewer-roster.js --default-domain web --risk-tier standard path1 path2 ...
+ *   echo '["migrations/x.sql","admin/a.tsx"]' | node scripts/tl-telar-reviewer-roster.js --risk-tier critical --json
  */
 
 'use strict';
@@ -37,6 +42,21 @@ const DOMAIN_RULES = [
 const UI_RE   = /\.(tsx|jsx|dart|astro|vue|svelte)$|(^|\/)(components|screens|widgets|pages)\//i;
 const PERF_RE = /(list|table|grid|virtual|animation|render|chart|carousel)/i;
 const CODE_RE = /\.(ts|tsx|js|jsx|dart|rs|sql|astro|vue|svelte|mjs|cjs)$/i;
+
+// Security FLOOR: a path touching one of these surfaces is inherently sensitive.
+// When ANY in-scope path matches, a Security reviewer is forced on EVERY tier —
+// the floor is never droppable by risk_tier (a "trivial"-tagged auth change still
+// gets Security). Matched on word boundaries against a camelCase-split form of the
+// path (so `PaymentForm`, `useSession`, `AuthProvider` all trip it) while avoiding
+// over-matching (`author` does NOT match `auth`; `oracle` does NOT match `acl`).
+const SENSITIVE_RE =
+  /\b(auth|oauth|authz|authn|session|login|signup|signin|token|jwt|password|passwd|secret|credential|crypto|encrypt|cipher|payment|billing|invoice|charge|migrations?|rls|acl|access[ _-]?control)\b|\.sql$/i;
+
+// Split camelCase / PascalCase so `PaymentForm` → `Payment Form`, exposing word
+// boundaries the sensitive matcher can anchor on.
+function camelSplit(s) {
+  return String(s).replace(/([a-z0-9])([A-Z])/g, '$1 $2');
+}
 
 // domain -> { security rubric, a11y rubric (UI only), perf rubric (UI only) }
 const RUBRICS = {
@@ -73,6 +93,7 @@ function classify(paths, defaultDomain) {
   let hasUI = false;
   let hasPerf = false;
   let hasCode = false;
+  let hasSensitive = false;
   const uiDomains = new Set();
 
   for (const raw of paths) {
@@ -87,6 +108,7 @@ function classify(paths, defaultDomain) {
     const isUI = UI_RE.test(p);
     if (isUI) hasUI = true;
     if (CODE_RE.test(p)) hasCode = true;
+    if (SENSITIVE_RE.test(camelSplit(p))) hasSensitive = true;
 
     // A UI file with no strong domain marker inherits the default domain.
     if (!primary && isUI) primary = defaultDomain || null;
@@ -100,11 +122,49 @@ function classify(paths, defaultDomain) {
   // never left with only a generic code review.
   if (domains.size === 0 && defaultDomain) domains.add(defaultDomain);
 
-  return { domains: [...domains], hasUI, hasPerf, hasCode, uiDomains: [...uiDomains] };
+  return { domains: [...domains], hasUI, hasPerf, hasCode, hasSensitive, uiDomains: [...uiDomains] };
 }
 
-function resolveRoster(paths, defaultDomain) {
-  const { domains, hasUI, hasPerf, hasCode, uiDomains } = classify(paths, defaultDomain);
+// Risk-tier policy (see the `review` block in tl-telar-thresholds.json):
+//   trivial  → Code only  (+ Security ONLY when the sensitive-path FLOOR fires).
+//   standard → Code + Maintainability + Security(floor OR high-stakes backend/rust/desktop
+//              domain) + BackendCorrectness. UI specialists (FrontendUX / Accessibility /
+//              Performance) are NOT spawned as LLM reviewers — their mechanical criteria are
+//              covered by the Katman-1 CI lenses (axe, perf-budget, lint). Bump a UI-heavy WU
+//              to `critical` when you want LLM UX/a11y/perf judgment.
+//   critical → the FULL roster (every relevant domain reviewer). The qualitative escalations
+//              (design-gate up front, human checkpoint, strict CI, non-sticky security retry)
+//              live in the skills, not here.
+// The Security FLOOR (a sensitive path in scope) is NEVER droppable by tier.
+const TIERS = new Set(['trivial', 'standard', 'critical']);
+const HIGH_STAKES_DOMAINS = ['backend-data', 'rust', 'desktop'];
+
+function normalizeTier(t) {
+  const v = String(t == null ? 'standard' : t).toLowerCase();
+  return TIERS.has(v) ? v : 'standard';
+}
+
+// One Security reviewer per given domain (domain-specific rubric).
+function securityReviewersFor(domains) {
+  const out = [];
+  for (const d of domains) {
+    const r = RUBRICS[d];
+    if (r && r.security) {
+      out.push({
+        role: 'Security',
+        reviewer_key: r.securityKey,
+        rubric: `${RUBRIC_DIR}/${r.security}`,
+        model: REVIEWER_MODEL,
+        reason: `domain:${d}`,
+      });
+    }
+  }
+  return out;
+}
+
+function resolveRoster(paths, defaultDomain, opts = {}) {
+  const riskTier = normalizeTier(opts.riskTier);
+  const { domains, hasUI, hasPerf, hasCode, hasSensitive, uiDomains } = classify(paths, defaultDomain);
   const reviewers = [];
 
   // Always-on: generic adversarial code reviewer.
@@ -116,7 +176,14 @@ function resolveRoster(paths, defaultDomain) {
     reason: 'always-on',
   });
 
-  // Always-on when any code file is in scope: senior Maintainability/Design reviewer.
+  // --- trivial: Code + the security floor only ------------------------------
+  if (riskTier === 'trivial') {
+    if (hasSensitive) reviewers.push(...securityReviewersFor(domains));
+    return { risk_tier: riskTier, domains, reviewers };
+  }
+
+  // --- standard & critical --------------------------------------------------
+  // Senior Maintainability/Design reviewer whenever code is in scope (advisory).
   if (hasCode) {
     reviewers.push({
       role: 'Maintainability',
@@ -127,22 +194,15 @@ function resolveRoster(paths, defaultDomain) {
     });
   }
 
-  // Always-on: one Security reviewer per present domain (domain-specific rubric).
-  for (const d of domains) {
-    const r = RUBRICS[d];
-    if (r && r.security) {
-      reviewers.push({
-        role: 'Security',
-        reviewer_key: r.securityKey,
-        rubric: `${RUBRIC_DIR}/${r.security}`,
-        model: REVIEWER_MODEL,
-        reason: `domain:${d}`,
-      });
-    }
-  }
+  // Security: critical → every in-scope domain; standard → only when the floor fires
+  // OR the domain is inherently high-stakes (backend-data / rust / desktop).
+  const securityDomains = riskTier === 'critical'
+    ? domains
+    : domains.filter((d) => hasSensitive || HIGH_STAKES_DOMAINS.includes(d));
+  reviewers.push(...securityReviewersFor(securityDomains));
 
-  // Always-on for backend/service work: ONE grouped correctness reviewer covering
-  // data-integrity + reliability + API-contract (distinct from the security reviewer).
+  // Backend/service work: ONE grouped correctness reviewer (data-integrity + reliability
+  // + API-contract), distinct from the security reviewer. On both standard and critical.
   if (domains.includes('backend-data') || domains.includes('rust')) {
     reviewers.push({
       role: 'BackendCorrectness',
@@ -153,9 +213,9 @@ function resolveRoster(paths, defaultDomain) {
     });
   }
 
-  // Conditional: Frontend UX completeness + i18n — ONE reviewer when any UI is in
-  // scope (rubric is domain-agnostic: states, responsive, localization).
-  if (hasUI) {
+  // UI specialists are CRITICAL-only as LLM reviewers (standard relies on CI lenses).
+  if (riskTier === 'critical' && hasUI) {
+    // Frontend UX completeness + i18n — ONE reviewer (states, responsive, localization).
     reviewers.push({
       role: 'FrontendUX',
       reviewer_key: 'frontend-ux',
@@ -163,12 +223,9 @@ function resolveRoster(paths, defaultDomain) {
       model: REVIEWER_MODEL,
       reason: 'ui-in-scope',
     });
-  }
-
-  // Conditional: A11y — one per UI domain in scope.
-  if (hasUI) {
-    const targets = uiDomains.length ? uiDomains : UI_DOMAINS.filter((d) => domains.includes(d));
-    for (const d of targets) {
+    // A11y — one per UI domain in scope.
+    const a11yTargets = uiDomains.length ? uiDomains : UI_DOMAINS.filter((d) => domains.includes(d));
+    for (const d of a11yTargets) {
       const r = RUBRICS[d];
       if (r && r.a11y) {
         reviewers.push({
@@ -182,10 +239,10 @@ function resolveRoster(paths, defaultDomain) {
     }
   }
 
-  // Conditional: Performance — one per UI domain when perf-sensitive paths present.
-  if (hasPerf) {
-    const targets = uiDomains.length ? uiDomains : UI_DOMAINS.filter((d) => domains.includes(d));
-    for (const d of targets) {
+  // Performance — CRITICAL-only, one per UI domain when perf-sensitive paths present.
+  if (riskTier === 'critical' && hasPerf) {
+    const perfTargets = uiDomains.length ? uiDomains : UI_DOMAINS.filter((d) => domains.includes(d));
+    for (const d of perfTargets) {
       const r = RUBRICS[d];
       if (r && r.perf) {
         reviewers.push({
@@ -199,27 +256,29 @@ function resolveRoster(paths, defaultDomain) {
     }
   }
 
-  return { domains, reviewers };
+  return { risk_tier: riskTier, domains, reviewers };
 }
 
 function parseArgs(argv) {
   const paths = [];
   let defaultDomain = null;
+  let riskTier = 'standard';
   let jsonStdin = false;
   for (let i = 0; i < argv.length; i += 1) {
     const a = argv[i];
     if (a === '--default-domain') { defaultDomain = argv[i + 1]; i += 1; }
+    else if (a === '--risk-tier') { riskTier = argv[i + 1]; i += 1; }
     else if (a === '--json') { jsonStdin = true; }
     else { paths.push(a); }
   }
-  return { paths, defaultDomain, jsonStdin };
+  return { paths, defaultDomain, riskTier, jsonStdin };
 }
 
 function main() {
-  const { paths, defaultDomain, jsonStdin } = parseArgs(process.argv.slice(2));
+  const { paths, defaultDomain, riskTier, jsonStdin } = parseArgs(process.argv.slice(2));
 
   const finish = (allPaths) => {
-    const out = resolveRoster(allPaths, defaultDomain);
+    const out = resolveRoster(allPaths, defaultDomain, { riskTier });
     process.stdout.write(`${JSON.stringify(out, null, 2)}\n`);
   };
 
