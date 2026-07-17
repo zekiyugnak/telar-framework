@@ -25,7 +25,7 @@ useWhen:
 
 ## Execution context (binding): run at the top level, never as a subagent
 
-This playbook is a **conductor** — every gate it runs spawns fresh `Task()` subagents (3 plan reviewers in Step 4, 6 design reviewers in Step 3-prime, per-WU implementers + 2–4 reviewers in Step 6). A Claude Code subagent has **no `Task` tool** (subagents cannot spawn subagents), so the conductor MUST run in the **main session**.
+This playbook is a **conductor** — every gate it runs spawns fresh `Task()` subagents (3 plan reviewers in Step 4, 6 design reviewers in Step 3-prime, per-WU implementers + a risk-tier-scaled reviewer roster in Step 6: trivial→1, standard→~2, critical→full). A Claude Code subagent has **no `Task` tool** (subagents cannot spawn subagents), so the conductor MUST run in the **main session**.
 
 - `/tl-telar:orchestrate` and `/tl-telar:resume` invoke this playbook by having the main session ADOPT it — they do NOT `Task(subagent_type=orchestrator)`.
 - **Self-check before Step 4 / Step 6:** if you are executing this playbook and the `Task` tool is unavailable, you were wrongly spawned as a subagent. STOP. Do NOT fake the gates with a single inline review pass (that destroys the reviewer independence the gate exists for) and do NOT attempt per-WU execution. Tell the parent session verbatim: "The orchestrator cannot run as a subagent — re-run `/tl-telar:orchestrate` (or `/tl-telar:resume`) directly in the main session."
@@ -176,6 +176,10 @@ The skill spawns 3 fresh reviewers. Aggregated PASS → proceed. FAIL → orches
 ## Step 5: Work Unit decomposition
 
 Once plan is PASSED, decompose into WUs per the schema (`skills/orchestration/orchestrated-execution/references/work-unit-schema.md`).
+
+**Assign each WU its plan-rigor fields at decomposition** — these are mandatory and drive the fast-implementation / thin-review economics:
+- **`risk_tier`** (`trivial` | `standard` | `critical`) — derive it from blast radius + `file_scope` sensitivity + size. `trivial` = no logic surface (copy/config/style/test-only). `standard` = ordinary feature work (the default). `critical` = touches auth/authz/PII/money/migrations/secrets, or has wide blast radius (shared/core modules, many-domain `file_scope`). This sizes the Phase-3 reviewer roster, so tag honestly — the plan-review-gate rejects an under-tagged critical WU. You already reason about all of this while decomposing; this just records it.
+- **`data_contracts`**, **`edge_cases`**, **`test_plan`** — make every interface/data shape explicit, enumerate the boundary/failure conditions, and name the specific test that proves each DoD/edge item. This front-loads rigor into the plan (cheap to fix, no code yet) so implementation is fast and per-WU review stays thin. The plan-review-gate FAILs a code-bearing WU missing any of these.
 
 **When the plan came from an `--epic` file, decomposition is mechanical:** each `### T<n>:` section becomes one `### WU-00n`, copying `spec` / `dod` / `file_scope` / `checkpoint` verbatim and rewriting task-local deps to WU ids (`deps: [T1]` → `deps: [WU-001]`). Preserve task order. Do not invent or merge tasks the author did not write — if a task is too big (spec needs "and"), flag it to the user rather than silently splitting.
 

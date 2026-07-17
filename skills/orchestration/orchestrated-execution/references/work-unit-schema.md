@@ -10,11 +10,30 @@ title: "Add LoginScreen component"
 spec: |                     # 1-3 sentence problem statement
   Add a LoginScreen at src/screens/LoginScreen.tsx that
   renders email+password fields and calls existing loginUser().
+risk_tier: standard         # trivial | standard | critical — derived at decomposition
+                            # from blast radius + file_scope sensitivity + size.
+                            # Drives Phase-3 reviewer roster size. Default: standard.
+data_contracts: |           # the exact interface/data shapes this WU touches — the
+  loginUser(email: string, password: string):    # types, API request/response shapes,
+    Promise<{ token: string } | { error: string }># DB columns, event payloads. Implicit
+  # LoginScreen props: none (route screen)         # contracts are the #1 source of impl
+                            # defects; make them explicit HERE, not discovered in review.
+edge_cases:                 # enumerated failure/boundary conditions the impl must handle
+  - "empty email or password"
+  - "network failure / timeout"
+  - "loginUser returns { error } (invalid credentials)"
+  - "double-submit while request in flight"
 dod:                        # Definition of Done — verifiable checkboxes
   - "Component renders email TextInput, password TextInput (secureTextEntry), and Submit button"
   - "Submit calls existing loginUser() from src/api/auth.ts"
   - "Empty fields show inline error 'Required'"
   - "Failure response shows 'Invalid credentials' alert"
+test_plan:                  # the SPECIFIC test that proves each DoD/edge item. This is
+  - "renders 3 controls → RTL getByRole assertions"           # what lets implementation
+  - "submit calls loginUser with entered values → mock + toHaveBeenCalledWith"  # be fast
+  - "empty fields → inline 'Required' shown, loginUser NOT called"  # and review be thin:
+  - "error response → 'Invalid credentials' alert asserted"        # tests catch the bug,
+  - "in-flight → submit disabled (no double-call)"                 # not a late reviewer.
 file_scope:                 # whitelisted paths the implementer may modify
   - src/screens/LoginScreen.tsx
   - src/screens/__tests__/LoginScreen.test.tsx
@@ -29,6 +48,12 @@ checkpoint: false           # if true: interactive mode waits for user after Pha
 - **Verifiable DoD.** Each DoD item must be machine- or human-verifiable. "Works correctly" is not verifiable.
 - **Explicit deps.** If WU-002 depends on a file WU-001 creates, declare `deps: [WU-001]`.
 - **Checkpoint sparingly.** Use `checkpoint: true` only when a human must validate (e.g., visual design, store metadata, security-sensitive defaults). Every checkpoint is a workflow pause in `interactive` mode. Under `autonomy.cycle = unattended`, these validations are hoisted into the plan-ready pre-flight (Step 5a) rather than pausing mid-cycle — see `agents/orchestrator.md` → "Autonomy model".
+- **Plan-rigor fields are mandatory (`data_contracts`, `edge_cases`, `test_plan`).** Rigor belongs in the PLAN, where a defect is cheap to fix (no code yet) — this is what lets implementation be fast and per-WU review be thin. `data_contracts` makes every interface/data shape explicit; `edge_cases` enumerates the boundary/failure conditions; `test_plan` names the SPECIFIC test that proves each DoD/edge item. The `plan-review-gate` FAILs a WU that has code in its `file_scope` but leaves any of these empty or vague (implicit contracts, unlisted edge cases, or DoD items with no proving test). A "trivial"-tier WU (copy/config/test-only, no logic surface) may collapse `data_contracts`/`edge_cases` to `none` explicitly.
+- **`risk_tier` must be honest.** `trivial` = no logic surface (copy, config, style, test-only). `standard` = ordinary feature work. `critical` = touches auth/authz/PII/money/migrations/secrets, or has wide blast radius (shared/core modules, many-domain `file_scope`). The `plan-review-gate` rejects a WU whose `file_scope` trips the security floor (auth/token/payment/migration/…) or whose `spec` describes a sensitive concern but is tagged `trivial`/`standard` without justification — an under-tagged critical WU is a blocking plan defect.
+
+## How risk_tier flows to review
+
+`risk_tier` is set once at decomposition and consumed in Phase 3: the orchestrator passes it to `scripts/tl-telar-reviewer-roster.js --risk-tier <tier>` to size the reviewer roster (trivial→Code-only, standard→Code+Maintainability+floor-Security, critical→full roster). It never changes the always-run cross-model (Codex/Gemini) second review, which is config-gated, not tier-gated. See `../../adversarial-code-review.md`.
 
 ## How the orchestrator consumes this
 

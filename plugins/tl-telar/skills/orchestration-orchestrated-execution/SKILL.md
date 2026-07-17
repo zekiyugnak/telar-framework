@@ -170,11 +170,11 @@ If all gates PASS: proceed to Phase 3.
 
 ### Phase 3: ADVERSARIAL REVIEW
 
-Load `skills/orchestration/adversarial-code-review` (the SIDECAR — see master design §2.8). It spawns 2-4 fresh reviewers in parallel based on file-scope intersection. Returns aggregated verdict.
+Load `skills/orchestration/adversarial-code-review` (the SIDECAR — see master design §2.8). It spawns a **risk-tier-scaled**, stack-aware roster in parallel: pass the WU's `risk_tier` as `--risk-tier` to `scripts/tl-telar-reviewer-roster.js` alongside the `file_scope` paths (trivial→Code-only, standard→Code+Maintainability+floor-Security, critical→full roster; a sensitive-path floor forces Security on any tier). Returns aggregated verdict. On iterations 2+, re-review is **incremental (sticky-pass)** — only the FAILing reviewers plus any prior-PASS reviewer whose concern intersects the fix diff re-run; the rest keep their PASS (critical-tier Security is never sticky). See the skill's "Retry economics" and "Critical-tier escalation" sections.
 
 **Cross-model review (sub-spec 8, Phase γ — additive SECOND review).** The adversarial-code-review skill checks `.tl-telar/external-tools.yaml` → `cross_model_review.enabled`:
 
-- **enabled: false (default):** Review 1 only — spawn 2-4 fresh Claude `Task()` reviewers based on file-scope intersection (sub-spec 2 behavior).
+- **enabled: false (default):** Review 1 only — spawn the risk-tier-scaled fresh Claude `Task()` roster (sub-spec 2 behavior, now sized by `risk_tier`).
 - **enabled: true:** run BOTH reviews; BOTH must PASS:
   - **Review 1 (always):** the same fresh Claude reviewer roster as above.
   - **Review 2 (additive, on top of Review 1):** ONE additional review of the WU diff by a model distinct from the writer AND from Claude (per `cross_model_review.matrix`), dispatched via `scripts/tl-telar-external-tools.sh dispatch --task review --tool <model> --worktree <repo> --rubric-file <rubric> --spec-file <wu-spec>`.
@@ -187,7 +187,7 @@ Load `skills/orchestration/adversarial-code-review` (the SIDECAR — see master 
 - **Overall FAIL**: increment retry count, announce blockers, loop back to Phase 1 with the failure summary. NEW implementer Task() — never reuse the prior one.
 - **After 3 retries**: escalate to user with Override / Revise-with-help / Simplify / Cancel options (same shape as sub-spec 1's plan-review-gate escalation).
 
-The rest of Phase 3 is unchanged from sub-spec 2: max 3 retries, FAIL → loop back to Phase 1 with fresh implementer (which may itself be a different model based on routing), PASS → Phase 4 COMMIT.
+The rest of Phase 3 is unchanged from sub-spec 2 except roster sizing and retry scope: max 3 retries, FAIL → loop back to Phase 1 with fresh implementer (which may itself be a different model based on routing), then the next Phase-3 pass re-reviews INCREMENTALLY (sticky-pass — only the FAILing reviewers + fix-intersecting prior-PASS reviewers; critical Security always re-runs), PASS → Phase 4 COMMIT.
 
 ### Phase 4: COMMIT
 

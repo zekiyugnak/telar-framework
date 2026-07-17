@@ -18,6 +18,18 @@
   "accessibility": {
     "required_audit_pass": false
   },
+  "review": {
+    "description": "Risk-tiered per-WU adversarial review policy for Phase 3. The roster SIZE scales with each WU's risk_tier — rigor lives in the plan (Katman 0) and mechanical lenses live in CI (Katman 1), so implementation review stays thin. See scripts/tl-telar-reviewer-roster.js and skills/orchestration/adversarial-code-review.md.",
+    "default_tier": "standard",
+    "tiers": {
+      "trivial": "Code reviewer only. Security added ONLY if a sensitive path is in scope (the floor). For copy/config/test-only/style changes with no logic surface.",
+      "standard": "Code + Maintainability + Security(sensitive-path floor OR high-stakes backend/rust/desktop domain) + BackendCorrectness. UI a11y/perf/ux are covered by CI lenses (a11y_command/perf_command + lint), NOT by LLM reviewers. The default.",
+      "critical": "Full roster (Code + Maintainability + Security per domain + BackendCorrectness + FrontendUX + Accessibility + Performance) PLUS qualitative escalations owned by the skills: design-review-gate up front, mandatory negative/adversarial tests, CI flipped strict, forced checkpoint:true (human four-eyes), and Security is NOT sticky across retries."
+    },
+    "sensitive_path_floor": "auth · oauth · authz · session · login · token · jwt · password · secret · credential · crypto · payment · billing · migration · .sql · rls · acl · access-control — matched camelCase-aware. Any in-scope match FORCES a Security reviewer on EVERY tier (never droppable). Encoded as SENSITIVE_RE in the roster script.",
+    "cross_model_second_review": "Independent (Codex/Gemini) second review is config-gated in external-tools.yaml (cross_model_review.enabled), NOT tier-gated: when enabled it runs on EVERY WU regardless of tier. On retry it re-runs targeted at the fix, not the full diff.",
+    "sticky_pass_retries": true
+  },
   "autonomy": {
     "cycle": "interactive",
     "description": "interactive (default) = the orchestrator may pause mid-cycle at checkpoint:true WUs and at self-reflect. unattended = exactly ONE human gate at plan-ready (Step 5): scope + approved UI ASCII drafts + all secrets/inputs are collected up front, then the WU cycle (Step 6) runs to PR-ready with ZERO pauses. UI/visual sign-off is hoisted into plan-readiness, never mid-cycle. Unattended never skips a decision — it makes it earlier. See agents/orchestrator.md -> 'Autonomy model'."
@@ -35,8 +47,11 @@
     "size_strict": false,
     "a11y_command": "echo 'a11y audit not configured' && exit 0",
     "a11y_strict": false,
+    "security_command": "echo 'security scan (e.g. semgrep) not configured - run /tl-telar:setup-orchestration for framework-aware defaults' && exit 0",
+    "security_strict": false,
+    "description_review_ci": "The a11y/perf/security commands are the Katman-1 CI lenses that standard-tier review relies on INSTEAD of spawning LLM a11y/perf/security reviewers. For a `critical` WU the orchestrator flips a11y_strict/perf_strict/security_strict to blocking for that WU's gate (see adversarial-code-review.md). Keep these commands populated (axe, perf-budget, semgrep) or standard-tier UI/security coverage degrades to advisory-only.",
     "blockPRCreation": true,
     "blockTaskCompletion": true,
-    "description": "Mechanical gates (coverage, file-scope) are always blocking. Mobile-extended gates (perf, size, a11y) are advisory by default; set *_strict: true to make them blocking. See rules/quality-gates.md for the tier doctrine."
+    "description": "Mechanical gates (coverage, file-scope) are always blocking. Mobile-extended gates (perf, size, a11y, security) are advisory by default; set *_strict: true to make them blocking. See rules/quality-gates.md for the tier doctrine."
   }
 }

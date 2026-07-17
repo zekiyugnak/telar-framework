@@ -55,6 +55,28 @@ section B (Completeness) and apply criteria B1–B6. If `REQUIREMENTS.md` exists
 in the repo, check that every F-x / UI-x identifier the plan claims to satisfy
 actually maps to a concrete task.
 
+PLAN-RIGOR GATE (blocking). Rigor belongs in the plan — it is what lets
+implementation be fast and per-WU review be thin. For EVERY Work Unit that has
+code in its `file_scope`, FAIL the plan if any of these is missing or vacuous:
+  - `data_contracts` — the exact interface/data shapes it touches (types, API
+    request/response, DB columns, event payloads). "TBD", hand-waving, or
+    contracts left implicit = FAIL.
+  - `edge_cases` — enumerated boundary/failure conditions. An empty list on a WU
+    that plainly has failure modes (network, auth, empty input, concurrency) = FAIL.
+  - `test_plan` — a SPECIFIC test naming how each DoD/edge item is proven. A DoD
+    item with no proving test = FAIL. "Add tests" without saying which = FAIL.
+  (A WU legitimately tagged `risk_tier: trivial` — copy/config/style/test-only,
+  no logic surface — may set `data_contracts`/`edge_cases` to `none` explicitly.)
+
+RISK-TIER HONESTY (blocking). Each WU must carry a `risk_tier`
+(trivial|standard|critical). FAIL the plan if a WU is UNDER-tagged: its
+`file_scope` trips the sensitive-path floor (auth/authz/session/token/jwt/
+password/secret/crypto/payment/billing/migration/`.sql`/rls/acl/access-control)
+OR its `spec` describes a sensitive concern (authz, PII, money, irreversible
+migration, anonymity) but it is tagged `trivial`/`standard` without explicit
+justification. A `critical`-worthy WU tagged low silently downgrades its review
+and skips the up-front design gate — that is a blocking plan defect, not a nit.
+
 Apply mobile advisories M1–M4 only as `advisories`.
 
 Your output is a single JSON object matching the schema in

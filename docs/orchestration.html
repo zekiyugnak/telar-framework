@@ -84,15 +84,16 @@
     <h3>Plan review gate — adversarial, 3 reviewers</h3>
     <p>Three fresh-instance adversarial reviewers inspect the implementation plan. <strong>PASS</strong> means it's fit to execute; <strong>FAIL</strong> means blocking defects, cited with file:line evidence and rubric rule IDs. Fresh instances each iteration prevent anchoring bias. Max 3 iterations, then human escalation.</p>
 
-    <h3>Stack-aware reviewer roster &amp; model tiering</h3>
+    <h3>Stack-aware, risk-tiered reviewer roster &amp; model tiering</h3>
     <p>The per-Work-Unit code-review roster is not hardcoded. A pure resolver (<code>scripts/tl-telar-reviewer-roster.js</code>) selects reviewers from the Work Unit's file scope, so a web, backend, Rust, or desktop change gets the domain-correct rubric instead of a mobile one. Domain rubrics cover security (mobile / web / backend-data / Rust / desktop), accessibility, performance, backend correctness (data-integrity + reliability + API-contract), and frontend UX (interaction states + i18n). Agents are model-tiered through frontmatter (<code>opus</code> / <code>sonnet</code> / <code>haiku</code>), and every adversarial reviewer is pinned to <strong>Opus</strong> as the last line of defense.</p>
+    <p>The roster also <strong>scales with the Work Unit's <code>risk_tier</code></strong>, because rigor is front-loaded into the plan (each WU carries mandatory <code>data_contracts</code> / <code>edge_cases</code> / <code>test_plan</code>, enforced by the plan gate) so implementation review can stay thin. A <code>trivial</code> WU gets a single Code reviewer; a <code>standard</code> WU gets Code + Maintainability (UI accessibility/performance are covered by deterministic CI lenses, not LLM reviewers); a <code>critical</code> WU gets the full roster plus an up-front design gate, strict CI, an adversarial cross-model pass, and a mandatory human checkpoint. A <strong>sensitive-path Security floor</strong> (auth, token, payment, migration, and the like) forces a Security reviewer on <em>every</em> tier and is never droppable. On a FAIL, retries re-review <strong>incrementally</strong> (sticky-pass — only the failing reviewer plus any prior-pass reviewer the fix touches; <code>critical</code>-tier Security is never sticky), and cross-model review stays always-on when configured rather than being gated by tier.</p>
 
     <h2>The 4-phase execution loop</h2>
     <p>Each Work Unit runs through the same loop — and, when Work Units are independent, several of these loops run <strong>concurrently</strong> (see <a href="#parallel">Parallel dispatch</a> below). Validation is run by the orchestrator itself (never delegated); reviewers are fresh each pass.</p>
     <ol class="steps">
       <li><strong>IMPLEMENT</strong> — make the change for this Work Unit.</li>
       <li><strong>VALIDATE</strong> — run validation commands directly; output is redirected to logs to keep the terminal quiet.</li>
-      <li><strong>REVIEW</strong> — spawn fresh adversarial reviewers chosen by the stack-aware resolver from the Work Unit's file scope (Code + domain Security, plus Backend-Correctness, Frontend-UX, Accessibility, or Performance as the scope warrants). Every reviewer runs on Opus. Any FAIL blocks COMMIT.</li>
+      <li><strong>REVIEW</strong> — spawn fresh adversarial reviewers chosen by the stack-aware resolver from the Work Unit's file scope and sized by its <code>risk_tier</code> (Code always; Maintainability, domain Security, Backend-Correctness, Frontend-UX, Accessibility, or Performance as the tier and scope warrant), with a never-droppable sensitive-path Security floor. Every reviewer runs on Opus. Any FAIL blocks COMMIT; retries re-review incrementally (sticky-pass).</li>
       <li><strong>COMMIT</strong> — on PASS, emit COMMIT-READY. After 3 failed retries, escalate with the full failure history.</li>
     </ol>
 
@@ -179,7 +180,7 @@ node scripts/tl-telar-wu-scheduler.js \
 </main>
 
 <footer><div class="wrap fl">
-  <span>Telar v0.11.0 — MIT © 2026 Zeki Yugnak</span>
+  <span>Telar v0.12.0 — MIT © 2026 Zeki Yugnak</span>
   <span><a href="https://github.com/zekiyugnak/telar-framework">GitHub</a> · <a href="index.html">Docs home</a></span>
 </div></footer>
 
