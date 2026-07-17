@@ -85,7 +85,7 @@ The orchestrator accepts the work to do in one of three forms. All three converg
 |---|---|
 | `/tl-telar:add-feature <feature>` | `/tl-telar:orchestrate <feature>` |
 | `/tl-telar:create-app <description>` | `/tl-telar:orchestrate Create a new app: <description>` (treats whole-app as a single big plan) |
-| Manual review at each phase | Automated 3-reviewer gate at plan + automated 2-4 reviewer gate per WU |
+| Manual review at each phase | Automated 3-reviewer gate at plan + a risk-tier-scaled per-WU review gate (trivial→1, standard→~2, critical→full roster) + always-on cross-model second review when configured |
 
 Choose orchestrated mode when you want rigorous adversarial review at every gate. Choose legacy when the task is small or the existing flow's UX suits you better.
 
