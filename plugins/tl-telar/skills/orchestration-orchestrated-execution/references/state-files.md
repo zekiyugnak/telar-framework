@@ -57,13 +57,13 @@ Written after EVERY phase transition. Atomic — the orchestrator writes a compl
 
 ## Work Unit Status
 
-| WU     | Status      | Phase     | Retries | Writer Model |
-|--------|-------------|-----------|---------|--------------|
-| WU-001 | COMPLETE    | COMMITTED | 0       | claude       |
-| WU-002 | IN-PROGRESS | VALIDATE  | 1       | codex        |
-| WU-003 | PENDING     | —         | 0       | —            |
+| WU     | Status      | Phase     | Retries | Developer Model |
+|--------|-------------|-----------|---------|-----------------|
+| WU-001 | COMPLETE    | COMMITTED | 0       | claude          |
+| WU-002 | IN-PROGRESS | VALIDATE  | 1       | codex           |
+| WU-003 | PENDING     | —         | 0       | —               |
 
-> The `Writer Model` column records which model implemented each WU. Required for cross-model review (sub-spec 8) to exclude the writer from the reviewer pool. Values: `claude | codex | gemini`.
+> The `Developer Model` column records which model implemented each WU (the "developer" role — formerly "writer"). Required for cross-model review to exclude the developer from the reviewer pool. Values: `claude | <adapter name>` (e.g. `codex`, `gemini`, `kimi`).
 
 > Multiple rows MAY be `IN-PROGRESS` simultaneously (bounded by
 > `execution.max_parallel_wus`). Each carries its own `Phase`/`Retries`. The

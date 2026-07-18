@@ -42,8 +42,9 @@ Located at `skills/orchestration/external-tools/adapters/`:
 - `_common.sh` — shared helpers (worktree mgmt, secure tmp, env stripping, JSON envelope emitter, classify_error, package_context)
 - `codex.sh` — Codex CLI adapter (subcommands: health, implement, review)
 - `gemini.sh` — Gemini CLI adapter (same subcommands)
+- `compat.sh` — **first-party** (NOT vendored) generic adapter for ANY Anthropic-compatible provider. Drives the `claude` CLI headless with a swapped endpoint (`ANTHROPIC_BASE_URL`/`ANTHROPIC_AUTH_TOKEN`), so the full agentic harness runs on a non-Claude model (e.g. Kimi K3). Selected by `adapters.<name>.type: compat`. Its cost extractor lives in this file (not in vendored `_common.sh`) — that is how new providers are onboarded without editing vendored code.
 
-**These files are vendored byte-for-byte from upstream (see THIRD_PARTY_NOTICES.md).** SHA-256 hashes recorded in CHANGELOG. Any modifications belong in Layer B.
+**`_common.sh`, `codex.sh`, `gemini.sh` are vendored byte-for-byte from upstream (see THIRD_PARTY_NOTICES.md).** SHA-256 hashes recorded in CHANGELOG. Any modifications to THOSE belong in Layer B or in the first-party `compat.sh`.
 
 ### Layer B — dispatcher (new)
 
@@ -51,18 +52,30 @@ Located at `scripts/tl-telar-external-tools.sh`:
 
 - Real YAML config parsing via `yq` or `python3 -c "import yaml"` fallback
 - Real health-check protocol (no LLM-judges-status anti-pattern)
-- Real routing (cheapest-available default + escalation chain)
-- Real budget ledger (`.tl-telar/context/external-tools-budget.jsonl`) with per-task + per-session circuit breakers
+- **Config-driven routing**: the valid tool set is the `adapters.*` keys (no hardcoded `codex|gemini`); `--tool auto` walks `routing.escalation_order`, picking the first enabled+healthy adapter. Adding an adapter is YAML-only.
+- **Role resolution** (`resolve-role`): maps a pipeline role (`architect|moderator|developer|reviewer|tester`) to its model(s) + execution path via `routing.roles` + `routing.models_registry`. Fail-closed on undefined role / unregistered model.
+- Real budget ledger (`.tl-telar/context/external-tools-budget.jsonl`) with per-task + per-session circuit breakers. Pricing is per-adapter (`adapters.*.pricing`); an unknown/undeclared price is recorded at the conservative per-task cap, never silently $0.
 - Real verdict parser (extract PASS/FAIL + issues[] from adapter raw_log for review-mode invocations)
 
 ## CLI surface
 
 ```bash
-scripts/tl-telar-external-tools.sh dispatch --task implement|review --tool codex|gemini|auto --worktree <path> [...]
+scripts/tl-telar-external-tools.sh dispatch --task implement|review --tool auto|<adapter> --worktree <path> [...]
 scripts/tl-telar-external-tools.sh health
 scripts/tl-telar-external-tools.sh budget-status
 scripts/tl-telar-external-tools.sh parse-verdict <envelope-file>
+scripts/tl-telar-external-tools.sh resolve-role <architect|moderator|developer|reviewer|tester>
 ```
+
+## Model selection & roles (config-first, opt-in override)
+
+Model selection is **config-first**: `routing.roles` in `.tl-telar/external-tools.yaml` is the single source of truth for which model plays each pipeline role, and `routing.models_registry` says how each model runs (native Claude tier vs an external adapter). Consumers NEVER hardcode a model — they call `resolve-role <role>` and use the result.
+
+- **Curated defaults ship** (architect/moderator→Fable 5, developer→Opus 4.8, reviewer→Opus 4.8 + GPT-5.6 Sol, tester→Opus 4.8), so a new project gets a sensible roster with zero choices.
+- **Headless / `resume` runs never prompt** — they read `routing.roles` as-is. Deterministic and reproducible.
+- **Interactive `/tl-telar:orchestrate` MAY offer an opt-in override menu**: present the resolved role→model roster and let the user reassign a role for this project; the choice is written back into `routing.roles` in `.tl-telar/external-tools.yaml` (so it persists and stays the single source of truth). This is a convenience over the config, never a required step, and never runs unattended.
+- **Onboarding a new model** = add a `routing.models_registry` entry (+ an `adapters.<tool>` block if external) and reference it from a role. No dispatcher or skill code changes.
+- **Health-based fallback** (`routing.fallback_by_health: true`): a role whose adapter is unhealthy falls to its `escalation` list.
 
 ## Adapter envelope (Layer A output)
 
@@ -97,10 +110,11 @@ cross_model_review:
   matrix:
     codex: ["gemini", "claude"]
     gemini: ["codex", "claude"]
-    claude: ["codex", "gemini"]
+    claude: ["codex", "kimi"]
+    kimi: ["codex", "claude"]
 ```
 
-The "writer cannot be reviewer" rule. Sub-spec 8 reads this matrix and routes Phase 3 reviewers accordingly.
+The "developer cannot be reviewer" rule (the WU's developer is its writer). The cross-model review logic reads this matrix and routes Phase 3 reviewers accordingly.
 
 ## Anti-patterns
 
