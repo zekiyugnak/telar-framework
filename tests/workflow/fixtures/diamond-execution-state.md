@@ -2,6 +2,6 @@
 
 ## Work Unit Status
 
-| WU   | Status   | Phase     | Retries | Writer Model |
-|------|----------|-----------|---------|--------------|
-| WU-A | COMPLETE | COMMITTED | 0       | claude       |
+| WU   | Status   | Phase     | Retries | Developer Model |
+|------|----------|-----------|---------|-----------------|
+| WU-A | COMPLETE | COMMITTED | 0       | claude          |

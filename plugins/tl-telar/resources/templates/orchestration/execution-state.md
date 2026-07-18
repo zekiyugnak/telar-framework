@@ -14,9 +14,9 @@
 
 ## Work Unit Status
 
-| WU     | Status      | Phase     | Retries | Writer Model |
-|--------|-------------|-----------|---------|--------------|
-| WU-001 | PENDING     | —         | 0       | claude       |
+| WU     | Status      | Phase     | Retries | Developer Model |
+|--------|-------------|-----------|---------|-----------------|
+| WU-001 | PENDING     | —         | 0       | claude          |
 
 ## Blocked / Escalated
 

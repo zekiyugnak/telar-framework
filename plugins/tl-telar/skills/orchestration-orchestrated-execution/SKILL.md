@@ -93,7 +93,7 @@ Then dispatch a fresh `Task()` implementer subagent (this requires the 4-phase l
 
 The implementer reports back. Status DONE → Phase 2. Status BLOCKED → escalate immediately.
 
-**Writer-model recording (sub-spec 8 wiring).** Before transitioning to Phase 2, append the implementer's model identity to `.tl-telar/context/execution-state.md` under the WU's row, `Writer Model` column. Values: `claude` (the default when implementer was spawned as Task()), `codex` (when dispatched via tl-telar-external-tools.sh to codex adapter), `gemini` (when dispatched to gemini adapter). This is read by Phase 3's cross-model selection logic to exclude the writer.
+**Developer-model recording (cross-model review wiring).** Before transitioning to Phase 2, append the implementer's model identity to `.tl-telar/context/execution-state.md` under the WU's row, `Developer Model` column (the "developer" role — formerly "writer"). Values: `claude` (the default when the implementer was spawned as Task()) or the adapter name it was dispatched to via tl-telar-external-tools.sh (`codex`, `gemini`, `kimi`, …). This is read by Phase 3's cross-model selection logic to exclude the developer from the reviewer pool.
 
 ### Phase 2: VALIDATE (orchestrator-run, never delegated)
 

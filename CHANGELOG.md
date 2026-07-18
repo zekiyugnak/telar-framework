@@ -6,6 +6,28 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+## [0.13.0] - 2026-07-18
+
+### Added
+
+- **Hybrid multi-model roster + config-only model onboarding** — the external-tools layer becomes model-agnostic so onboarding/swapping a frontier model is a YAML edit, not a code change (keeping pace with the constant stream of new models).
+  - **Config-driven routing** — the valid external-tool set is now the `adapters.*` keys (the hardcoded `codex|gemini` list is gone from `scripts/tl-telar-external-tools.sh`); `--tool auto` walks `routing.escalation_order` (previously a dead config key) picking the first enabled+healthy adapter.
+  - **`routing.roles` + `routing.models_registry`** — a small "virtual software team" role taxonomy (`architect`, `moderator`, `developer`, `reviewer`, `tester`) mapped to models, resolved deterministically via a new `resolve-role` subcommand. Curated default roster ships (Fable 5 → plan/moderation, Opus 4.8 → implementation, Opus 4.8 + GPT-5.6 Sol → review). Config is the single source of truth; interactive `/orchestrate` may offer an opt-in override menu that writes back to the config; headless/`resume` runs never prompt.
+  - **Generic `compat.sh` adapter** (first-party, not vendored) — drives the `claude` CLI headless with a swapped Anthropic-compatible endpoint, so any Anthropic-compatible model (e.g. **Kimi K3** via Moonshot) runs the full agentic harness. Its cost extractor lives in the adapter, not in vendored `_common.sh` — new providers onboard without touching vendored code.
+  - **Kimi K3 onboarded (disabled by default)** — `adapters.kimi` (type `compat`) + registry entry + cross-model review-matrix row. Held out of the correctness-critical implementer seat pending independent verification (~2026-07-27); available as an advisory reviewer.
+  - **Budget $0-trap fixed** — `scripts/estimate-cost.sh` now takes per-adapter pricing (`adapters.*.pricing`) and **fails closed** on unknown/undeclared pricing; the dispatcher records the conservative per-task cap instead of a silent $0 that bypassed the budget circuit breaker. New `gpt-5.6-codex`/`gpt-5.6-sol`/`kimi-k3` price rows.
+  - New tests: `estimate-cost.test.sh`, `external-tools-routing.test.sh`, `external-tools-compat.test.sh` (offline coverage of pricing fail-closed, config-driven routing, role resolution, compat health + cost extraction).
+
+### Changed
+
+- Renamed the execution-state `Writer Model` column → `Developer Model` and the "writer-cannot-be-reviewer" rule → "developer-cannot-be-reviewer" across the orchestration skills/agent/templates, aligning with the `developer` routing role.
+- `scripts/tl-telar-reviewer-roster.js` no longer hardcodes `opus`; it takes `--model` (default `opus`) so the Claude reviewer tier comes from `routing.roles.reviewer` via `resolve-role`.
+- **Benchmark-informed default roster** (see `RESEARCH-hybrid-models.md` §7 live benchmark): implementation `developer` = Sonnet 5 (high) default → Opus 4.8 (high) escalation for critical WUs → Kimi K3 (max) opt-in `$0` cost mode; `reviewer` = Opus (best-calibrated) + GPT-5.6-sol (sharp second). Added an `effort` field to `routing.models_registry` (Sonnet/Opus/Fable → high, GPT-5.6-sol → xhigh, Kimi K3 → max) and an `options` list to roles, both surfaced by `resolve-role`. GPT-5.6-sol needs codex ≥ 0.144 and its effort ladder is low<medium<high<xhigh<max<ultra (default is `low` — set it explicitly).
+
+### Fixed
+
+- `parse-verdict` now unwraps agent-stream envelopes (Strategy 0): a correct `{verdict,…}` nested inside a Codex JSONL `agent_message.text` string (or a claude `-p` `.result`) was previously reported `UNKNOWN` because the brace-scanner cannot see a verdict key buried in an escaped string. Surfaced by a live cross-model review (Codex returned a correct `FAIL` that the gate mis-read). Covered by `external-tools-parse-verdict.test.sh`.
+
 ## [0.12.0] - 2026-07-17
 
 ### Added
