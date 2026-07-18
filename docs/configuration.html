@@ -116,7 +116,7 @@
     </table>
 
     <h2 id="external-tools"><code>.tl-telar/external-tools.yaml</code></h2>
-    <p>External AI adapters (Codex, Gemini), cross-model review, and opt-in Claude Code native features. Git-ignored; created only by <code>/tl-telar:setup-orchestration</code>. Adapters are <strong>disabled by default</strong>.</p>
+    <p>External AI adapters (Codex/GPT-5.6-sol, Gemini, <strong>Kimi K3</strong> via a native <code>kimi</code> CLI or a generic Anthropic-compatible <code>compat</code> adapter), the <strong>config-driven model roster</strong> (<code>routing.roles</code> + <code>models_registry</code>), cross-model review, budget, and opt-in Claude Code native features. Git-ignored; created only by <code>/tl-telar:setup-orchestration</code>. Adapters are <strong>disabled by default</strong>. Onboarding a new model is a YAML edit — no code change; resolve any role with <code>tl-telar-external-tools.sh resolve-role &lt;role&gt;</code>.</p>
     <div class="callout"><strong>Codex plugin vs Codex adapter.</strong> Installing <code>tl-telar@telar</code> with <code>codex plugin marketplace add zekiyugnak/telar-framework --ref develop</code> loads Telar into Codex. Enabling <code>adapters.codex</code> here is different: it lets Telar delegate selected orchestration work to the Codex CLI, and remains opt-in.</div>
 
     <h3>adapters</h3>
@@ -124,10 +124,13 @@
       <thead><tr><th>Key</th><th>Type</th><th>Meaning</th></tr></thead>
       <tbody>
         <tr><td><code>enabled</code></td><td>bool</td><td>Activate the adapter. The CLI must be installed and <code>auth_env_var</code> set first.</td></tr>
-        <tr><td><code>model</code></td><td>string</td><td>Blank = adapter's own default (Codex: <code>~/.codex/config.toml</code>). e.g. <code>"gpt-5.3-codex"</code>, <code>"pro"</code>.</td></tr>
-        <tr><td><code>reasoning_effort</code></td><td>string (codex)</td><td><code>minimal｜low｜medium｜high</code>. Blank = codex default.</td></tr>
+        <tr><td><code>type</code></td><td>string</td><td>Omit for a bespoke <code>&lt;name&gt;.sh</code> adapter (codex/gemini/kimi). <code>"compat"</code> → the generic <code>compat.sh</code> that drives <code>claude</code> against any Anthropic-compatible endpoint.</td></tr>
+        <tr><td><code>model</code></td><td>string</td><td>Blank = adapter's own default (Codex: <code>~/.codex/config.toml</code>). e.g. <code>"gpt-5.6-sol"</code>, <code>"kimi-code/k3"</code>, <code>"pro"</code>.</td></tr>
+        <tr><td><code>reasoning_effort</code></td><td>string (codex)</td><td>gpt-5.6-sol ladder: <code>low｜medium｜high｜xhigh｜max｜ultra</code>. <strong>Sol's default is <code>low</code></strong> — set it explicitly. (gpt-5.6-sol needs codex-cli ≥ 0.144.)</td></tr>
+        <tr><td><code>base_url</code> / <code>api_style</code></td><td>string (compat)</td><td>Compat adapter endpoint, e.g. <code>https://api.kimi.com/coding/</code>; only <code>api_style: anthropic</code> is supported.</td></tr>
+        <tr><td><code>pricing</code></td><td>obj</td><td><code>{input_per_1m, output_per_1m}</code> USD; model-agnostic per adapter. Omitting it is <strong>fail-closed</strong> (conservative per-task cap recorded, never a silent $0). Set <code>0</code> for a flat-subscription model.</td></tr>
         <tr><td><code>timeout_seconds</code></td><td>number</td><td>Adapter invocation timeout.</td></tr>
-        <tr><td><code>auth_env_var</code></td><td>string</td><td>Env var the dispatcher reads for auth (e.g. <code>OPENAI_API_KEY</code>, <code>GEMINI_API_KEY</code>).</td></tr>
+        <tr><td><code>auth_env_var</code></td><td>string</td><td>Env var the dispatcher reads for auth (e.g. <code>OPENAI_API_KEY</code>, <code>GEMINI_API_KEY</code>, <code>KIMI_API_KEY</code>). Native <code>kimi</code>/Codex use their own CLI login instead.</td></tr>
         <tr><td><code>sandbox</code></td><td>string</td><td><code>"none"</code> — no sandbox isolation.</td></tr>
       </tbody>
     </table>
@@ -136,8 +139,11 @@
     <table class="t">
       <thead><tr><th>Key</th><th>Default</th><th>Meaning</th></tr></thead>
       <tbody>
+        <tr><td><code>routing.roles</code></td><td><em>obj</em></td><td>Model per pipeline role (<code>architect｜moderator｜developer｜reviewer｜tester</code>); each role takes <code>model</code>/<code>models</code>, optional <code>escalation</code>, <code>panel</code>, <code>options</code>. Single source of truth for the roster; resolved via <code>resolve-role</code>.</td></tr>
+        <tr><td><code>routing.models_registry</code></td><td><em>obj</em></td><td>How each model runs: <code>exec: claude</code> (native tier) or <code>exec: adapter</code> (<code>tool</code>), plus <code>tier</code>/<code>effort</code>. Onboard a model = one entry here + reference it from a role.</td></tr>
         <tr><td><code>routing.default_implementer</code></td><td><code>"cheapest-available"</code></td><td>Also <code>round-robin</code>, <code>claude</code>, or a specific tool name.</td></tr>
-        <tr><td><code>routing.escalation_order</code></td><td><code>[codex, gemini, claude]</code></td><td>Tried in order when the primary fails.</td></tr>
+        <tr><td><code>routing.escalation_order</code></td><td><code>[codex, gemini, claude]</code></td><td><code>--tool auto</code> tries adapters in this order (first enabled+healthy wins).</td></tr>
+        <tr><td><code>routing.fallback_by_health</code></td><td><code>true</code></td><td>A role's model whose adapter is unhealthy falls to its <code>escalation</code>.</td></tr>
         <tr><td><code>routing.health_recheck_every_n_tasks</code></td><td>10</td><td>Re-run health checks periodically.</td></tr>
         <tr><td><code>budget.per_task_usd</code></td><td>1.00</td><td>Max USD per adapter invocation; over → fall back to Claude.</td></tr>
         <tr><td><code>budget.per_session_usd</code></td><td>10.00</td><td>Session-wide adapter spend cap.</td></tr>
@@ -210,7 +216,7 @@
 </main>
 
 <footer><div class="wrap fl">
-  <span>Telar v0.12.0 — MIT © 2026 Zeki Yugnak</span>
+  <span>Telar v0.13.0 — MIT © 2026 Zeki Yugnak</span>
   <span><a href="https://github.com/zekiyugnak/telar-framework">GitHub</a> · <a href="index.html">Docs home</a></span>
 </div></footer>
 

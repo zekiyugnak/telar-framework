@@ -4,22 +4,87 @@
 
 adapters:
   codex:
-    enabled: false                  # set true after installing codex CLI + setting OPENAI_API_KEY
-    model: ""                       # BLANK = use your ~/.codex/config.toml default (e.g. your top model). Set e.g. "gpt-5.3-codex" to override via codex -m.
-    reasoning_effort: ""            # BLANK = use codex config default. Set minimal|low|medium|high to override via -c model_reasoning_effort (e.g. "high").
+    enabled: false                  # set true after installing codex CLI + setting OPENAI_API_KEY (or ChatGPT login)
+    model: ""                       # BLANK = your ~/.codex/config.toml default. Set "gpt-5.6-sol" for the flagship — NOTE:
+                                    #   gpt-5.6-sol REQUIRES codex-cli >= 0.144 (older CLIs 400 "requires a newer version"; run `codex update`).
+    reasoning_effort: "xhigh"       # gpt-5.6-sol ladder: low < medium < high < xhigh < max < ultra (from codex models.json).
+                                    #   ⚠️ Sol's DEFAULT is "low" — leaving this BLANK runs the flagship at LOW effort. Set it explicitly.
+                                    #   "xhigh" = extra-high depth (a strong premium default). "max" = maximum single-agent depth.
+                                    #   "ultra" = max + AUTO multi-agent delegation (fastest token burn; codex warns) — use only if you want that.
     timeout_seconds: 300
     auth_env_var: "OPENAI_API_KEY"
     sandbox: "none"
+    pricing:                        # USD per 1M tokens. Used for the budget ledger; MODEL-AGNOSTIC (applies to whatever
+      input_per_1m: 5.00            # model this adapter runs. Defaults to gpt-5.6-sol rates (~$5/$30); adjust to your model
+      output_per_1m: 30.00          # (e.g. gpt-5.6-codex ~$1.50/$6.00). Omitting pricing => fail-closed (conservative cap recorded).
   gemini:
     enabled: false                  # set true after installing gemini CLI + setting GEMINI_API_KEY
     model: "pro"
     timeout_seconds: 300
     auth_env_var: "GEMINI_API_KEY"
     sandbox: "none"
+    pricing:                        # USD per 1M tokens. See codex note above.
+      input_per_1m: 1.25
+      output_per_1m: 5.00
+  kimi:
+    # Kimi K3 (Moonshot) — TWO ways to wire it (verified live 2026-07-18):
+    #
+    # (1) NATIVE Kimi Code CLI (this default — codex-style) → runs adapters/kimi.sh, which
+    #     drives the `kimi` CLI (github.com/MoonshotAI/kimi-code) exactly like codex.sh drives
+    #     `codex exec`. Auth is the CLI's own — `kimi login` (Kimi-for-Coding subscription),
+    #     NO API-key env var, just like codex's ChatGPT login. Agentic (read/write/edit/bash).
+    #     Install: `npm i -g @moonshot-ai/kimi-code` (or code.kimi.com/install.sh) then `kimi login`.
+    #     Kimi-for-Coding is a FLAT SUBSCRIPTION → pricing 0 (declared $0, not the unknown trap).
+    #
+    # (2) GENERIC compat adapter (alternative, for an API key instead of a CLI login) → set
+    #     `type: compat` + base_url + auth_env_var to drive `claude` against a Kimi
+    #     Anthropic-compatible endpoint. Match the pair to your key (mismatch = 401):
+    #       Kimi-for-Coding key   → base_url https://api.kimi.com/coding/     + model "k3"
+    #       Platform (moonshot.ai) key → base_url https://api.moonshot.ai/anthropic + model "kimi-k3"
+    #     auth_env_var value is passed to claude as ANTHROPIC_AUTH_TOKEN (Bearer). Set pricing
+    #     to the platform per-token rates if metered.
+    enabled: false                  # (1) set true after: `kimi` CLI installed + `kimi login`
+    model: "kimi-code/k3"           # native CLI alias for K3 (compat mode would use "k3" / "kimi-k3")
+    timeout_seconds: 600
+    pricing:                        # Kimi-for-Coding flat subscription → $0 marginal (declared)
+      input_per_1m: 0.00
+      output_per_1m: 0.00
 
 routing:
+  # ---- Role → model mapping: the single source of truth for who plays which role ----
+  # Resolve deterministically with:  tl-telar-external-tools.sh resolve-role <role>
+  # The opt-in interactive override (interactive /orchestrate only) writes here;
+  # headless / resume runs read it as-is (no menu). Each model name is resolved to
+  # an execution path via models_registry below.
+  # Defaults below are benchmark-informed (see RESEARCH-hybrid-models.md §Benchmark):
+  # on backend tasks (Rust/axum, TS/Hono) Sonnet 5 (high) MATCHED Opus 4.8 (high) on
+  # contract-completeness + self-verification at lower cost, so it is the implementation
+  # workhorse; Opus escalates for critical WUs; Kimi K3 (max) is an opt-in $0 cost mode
+  # (compact + fast, but left contract gaps → keep cross-model review ON when used).
+  roles:
+    architect:  { model: "claude-fable-5",  panel: ["gpt-5.6-sol"] }              # RESEARCH/PLAN + design/plan gates
+    moderator:  { model: "claude-fable-5" }                                       # synthesizes multi-reviewer gate verdicts
+    developer:  { model: "claude-sonnet-5", escalation: ["claude-opus-4-8"], options: ["kimi-k3"] }  # WU impl: Sonnet default, Opus for critical, Kimi = opt-in cost mode
+    reviewer:   { models: ["claude-opus-4-8", "gpt-5.6-sol"] }                     # Opus primary (best-calibrated) + GPT-5.6-sol (sharp second)
+    tester:     { model: "claude-sonnet-5" }                                      # unit/E2E authoring (aligns with developer default)
+
+  # ---- Model registry: how each model actually runs ----
+  #   exec: "claude"  → native Claude tier (orchestrator spawns a Task at `tier`+`effort`)
+  #   exec: "adapter" → external, dispatched via the named `tool` (adapters.<tool>)
+  #   effort → reasoning effort the orchestrator/adapter should use (benchmark showed it matters).
+  # Onboard a new model = add ONE entry here (+ its adapters.<tool> block if external),
+  # then reference it from a role above. No dispatcher/skill code changes.
+  models_registry:
+    claude-fable-5:  { exec: "claude",  tier: "fable",  effort: "high" }
+    claude-opus-4-8: { exec: "claude",  tier: "opus",   effort: "high" }
+    claude-sonnet-5: { exec: "claude",  tier: "sonnet", effort: "high" }
+    gpt-5.6-sol:     { exec: "adapter", tool: "codex",  effort: "xhigh" }   # codex reasoning_effort; ladder tops at ultra
+    kimi-k3:         { exec: "adapter", tool: "kimi",   effort: "max" }     # Kimi CLI runs at config default_effort=max
+
+  # ---- Auto-routing / fallback (used by --tool auto and by fallback_by_health) ----
   default_implementer: "cheapest-available"  # or "round-robin" or "claude" or specific tool name
-  escalation_order: ["codex", "gemini", "claude"]
+  escalation_order: ["codex", "gemini", "claude"]  # order --tool auto tries adapters; "claude" = built-in fallback
+  fallback_by_health: true                   # a role's model whose adapter is unhealthy falls to its escalation
   health_recheck_every_n_tasks: 10           # re-run health check periodically
 
 budget:
@@ -36,10 +101,11 @@ cross_model_review:
                                     #   "block"            = STOP at startup preflight / review time + escalate; never silently pass on Review-1-only (default)
                                     #   "warn_and_proceed" = skip Review 2, proceed on Review 1 (Claude) alone, logged LOUDLY (never silent)
   matrix:
-    # When this implementer is used, these are the reviewers (the writer is excluded):
+    # When this implementer (developer) is used, these are the reviewers (the developer is excluded):
     codex: ["gemini", "claude"]
     gemini: ["codex", "claude"]
-    claude: ["codex", "gemini"]
+    claude: ["codex", "kimi"]     # codex (GPT-5.6 Sol) must-run + kimi as an ADVISORY cross-model voice
+    kimi: ["codex", "claude"]     # when Kimi K3 writes, review with codex + claude (never the writer)
 
 cc_features:
   # Opt-in adoption of newer Claude Code native capabilities. Same idiom as the

@@ -1,9 +1,11 @@
 # Telar
 
 > **The agentic engineering framework** — plan, build, review, and ship, with agents.
-> By Zeki Yugnak · v0.12.0 — 48 agents, 122 skills, 24 commands, 4 hooks, 7 rules, 29 scripts
+> By Zeki Yugnak · v0.13.0 — 48 agents, 122 skills, 24 commands, 4 hooks, 7 rules, 29 scripts
 
 Telar is a multi-agent engineering framework for Claude Code and Codex that takes a feature from idea to production — orchestrated planning, adversarial review gates, a persistent knowledge base, cross-model verification, and a new OKF domain-knowledge layer. It spans cross-platform apps end to end: **mobile** (**React Native** & **Flutter**) with deep native integration, **web** (**Astro**, **Next.js**/Tailwind/shadcn, **Vite**/TanStack admin panels), **Rust** service layers, and **desktop** — with stack-aware orchestration, reviewers, and rubrics across every domain.
+
+**Config-driven hybrid model roster (v0.13):** assign the best model to each pipeline role — `architect` / `moderator` / `developer` / `reviewer` / `tester` — in `external-tools.yaml`, and mix Claude (Sonnet 5 / Opus 4.8 / Fable 5), **GPT-5.6-sol** (via the Codex adapter) and **Kimi K3** (via a native `kimi` CLI adapter or a generic Anthropic-compatible `compat` adapter) freely. Onboarding a new model is a YAML edit, not a code change; pricing is fail-closed and reviews stay cross-model. Benchmark-tuned defaults: **Sonnet 5 (high)** implements, **Opus 4.8 (high)** escalates on critical work, **Kimi K3** is an opt-in `$0`-marginal cost mode, and review runs **Opus + GPT-5.6-sol** in parallel.
 
 ## 📖 Full documentation
 

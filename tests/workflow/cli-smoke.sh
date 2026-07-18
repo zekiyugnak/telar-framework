@@ -38,7 +38,7 @@ write_state() { # dir, wu001status
 
 ## Work Unit Status
 
-| WU     | Status   | Phase | Retries | Writer Model |
+| WU     | Status   | Phase | Retries | Developer Model |
 |--------|----------|-------|---------|--------------|
 | WU-001 | $2 | —     | 0       | claude       |
 EOF
@@ -67,7 +67,7 @@ test_cap_default_three() {
 EOF
   cat > "$1/execution-state.md" <<'EOF'
 ## Work Unit Status
-| WU | Status | Phase | Retries | Writer Model |
+| WU | Status | Phase | Retries | Developer Model |
 |----|--------|-------|---------|--------------|
 EOF
   out=$(node "$SCHED" "$1/active-plan.md" "$1/execution-state.md"); rc=$?
@@ -90,7 +90,7 @@ test_cycle_exits_nonzero() {
 EOF
   cat > "$1/execution-state.md" <<'EOF'
 ## Work Unit Status
-| WU | Status | Phase | Retries | Writer Model |
+| WU | Status | Phase | Retries | Developer Model |
 |----|--------|-------|---------|--------------|
 EOF
   out=$(node "$SCHED" "$1/active-plan.md" "$1/execution-state.md" 2>&1); rc=$?
@@ -120,7 +120,7 @@ test_plan_warnings_emitted() {
 EOF
   cat > "$1/execution-state.md" <<'EOF'
 ## Work Unit Status
-| WU | Status | Phase | Retries | Writer Model |
+| WU | Status | Phase | Retries | Developer Model |
 |----|--------|-------|---------|--------------|
 EOF
   out=$(node "$SCHED" "$1/active-plan.md" "$1/execution-state.md"); rc=$?
@@ -159,7 +159,7 @@ EOF
 EOF
   cat > "$1/execution-state.md" <<'EOF'
 ## Work Unit Status
-| WU | Status | Phase | Retries | Writer Model |
+| WU | Status | Phase | Retries | Developer Model |
 |----|--------|-------|---------|--------------|
 EOF
   out=$(node "$SCHED" "$1/active-plan.md" "$1/execution-state.md"); rc=$?
@@ -195,7 +195,7 @@ EOF
 EOF
   cat > "$1/execution-state.md" <<'EOF'
 ## Work Unit Status
-| WU | Status | Phase | Retries | Writer Model |
+| WU | Status | Phase | Retries | Developer Model |
 |----|--------|-------|---------|--------------|
 EOF
   out=$(node "$SCHED" "$1/active-plan.md" "$1/execution-state.md"); rc=$?

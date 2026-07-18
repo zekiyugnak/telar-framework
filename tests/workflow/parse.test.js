@@ -140,9 +140,9 @@ Ship auth.
 
 ## Work Unit Status
 
-| WU     | Status      | Phase     | Retries | Writer Model |
-|--------|-------------|-----------|---------|--------------|
-| WU-001 | COMPLETE    | COMMITTED | 0       | claude       |
+| WU     | Status      | Phase     | Retries | Developer Model |
+|--------|-------------|-----------|---------|-----------------|
+| WU-001 | COMPLETE    | COMMITTED | 0       | claude          |
 | WU-002 | IN-PROGRESS | VALIDATE  | 1       | codex        |
 `;
   const m = parseState(state);
