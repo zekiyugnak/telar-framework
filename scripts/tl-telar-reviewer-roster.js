@@ -12,7 +12,8 @@
  *
  * The framework is multi-domain (mobile, web, backend/data, rust, desktop) — the
  * reviewer ROLES are generic; only the RUBRIC is domain-specific. Every reviewer
- * runs on Opus (Phase 1 gate-quality decision).
+ * runs on the configured reviewer model (default Opus; from routing.roles.reviewer
+ * via --model, a Phase 1 gate-quality decision).
  *
  * The roster SIZE scales with the WU's risk_tier (trivial|standard|critical, default
  * standard) — see the tier policy above resolveRoster(). Standard is the light default
@@ -26,7 +27,11 @@
 
 'use strict';
 
-const REVIEWER_MODEL = 'opus';
+// Default Claude reviewer tier. Overridable via --model (or opts.reviewerModel):
+// the orchestrator resolves routing.roles.reviewer with
+// `tl-telar-external-tools.sh resolve-role reviewer` and passes the first
+// claude-exec model's tier here (keeping this resolver pure — no YAML I/O).
+const DEFAULT_REVIEWER_MODEL = 'opus';
 const RUBRIC_DIR = 'resources/rubrics/orchestration';
 
 // Domain classifiers, checked per path (first match wins for the primary tag,
@@ -145,7 +150,7 @@ function normalizeTier(t) {
 }
 
 // One Security reviewer per given domain (domain-specific rubric).
-function securityReviewersFor(domains) {
+function securityReviewersFor(domains, reviewerModel) {
   const out = [];
   for (const d of domains) {
     const r = RUBRICS[d];
@@ -154,7 +159,7 @@ function securityReviewersFor(domains) {
         role: 'Security',
         reviewer_key: r.securityKey,
         rubric: `${RUBRIC_DIR}/${r.security}`,
-        model: REVIEWER_MODEL,
+        model: reviewerModel,
         reason: `domain:${d}`,
       });
     }
@@ -164,6 +169,7 @@ function securityReviewersFor(domains) {
 
 function resolveRoster(paths, defaultDomain, opts = {}) {
   const riskTier = normalizeTier(opts.riskTier);
+  const reviewerModel = opts.reviewerModel || DEFAULT_REVIEWER_MODEL;
   const { domains, hasUI, hasPerf, hasCode, hasSensitive, uiDomains } = classify(paths, defaultDomain);
   const reviewers = [];
 
@@ -172,13 +178,13 @@ function resolveRoster(paths, defaultDomain, opts = {}) {
     role: 'Code',
     reviewer_key: 'code',
     rubric: `${RUBRIC_DIR}/adversarial-review-rubric.md`,
-    model: REVIEWER_MODEL,
+    model: reviewerModel,
     reason: 'always-on',
   });
 
   // --- trivial: Code + the security floor only ------------------------------
   if (riskTier === 'trivial') {
-    if (hasSensitive) reviewers.push(...securityReviewersFor(domains));
+    if (hasSensitive) reviewers.push(...securityReviewersFor(domains, reviewerModel));
     return { risk_tier: riskTier, domains, reviewers };
   }
 
@@ -189,7 +195,7 @@ function resolveRoster(paths, defaultDomain, opts = {}) {
       role: 'Maintainability',
       reviewer_key: 'maintainability',
       rubric: `${RUBRIC_DIR}/maintainability-design-adversarial-rubric.md`,
-      model: REVIEWER_MODEL,
+      model: reviewerModel,
       reason: 'code-in-scope',
     });
   }
@@ -199,7 +205,7 @@ function resolveRoster(paths, defaultDomain, opts = {}) {
   const securityDomains = riskTier === 'critical'
     ? domains
     : domains.filter((d) => hasSensitive || HIGH_STAKES_DOMAINS.includes(d));
-  reviewers.push(...securityReviewersFor(securityDomains));
+  reviewers.push(...securityReviewersFor(securityDomains, reviewerModel));
 
   // Backend/service work: ONE grouped correctness reviewer (data-integrity + reliability
   // + API-contract), distinct from the security reviewer. On both standard and critical.
@@ -208,7 +214,7 @@ function resolveRoster(paths, defaultDomain, opts = {}) {
       role: 'BackendCorrectness',
       reviewer_key: 'backend-correctness',
       rubric: `${RUBRIC_DIR}/backend-correctness-adversarial-rubric.md`,
-      model: REVIEWER_MODEL,
+      model: reviewerModel,
       reason: 'backend/service-in-scope',
     });
   }
@@ -220,7 +226,7 @@ function resolveRoster(paths, defaultDomain, opts = {}) {
       role: 'FrontendUX',
       reviewer_key: 'frontend-ux',
       rubric: `${RUBRIC_DIR}/frontend-ux-adversarial-rubric.md`,
-      model: REVIEWER_MODEL,
+      model: reviewerModel,
       reason: 'ui-in-scope',
     });
     // A11y — one per UI domain in scope.
@@ -232,7 +238,7 @@ function resolveRoster(paths, defaultDomain, opts = {}) {
           role: 'Accessibility',
           reviewer_key: r.a11yKey,
           rubric: `${RUBRIC_DIR}/${r.a11y}`,
-          model: REVIEWER_MODEL,
+          model: reviewerModel,
           reason: `ui-in-scope:${d}`,
         });
       }
@@ -249,7 +255,7 @@ function resolveRoster(paths, defaultDomain, opts = {}) {
           role: 'Performance',
           reviewer_key: r.perfKey,
           rubric: `${RUBRIC_DIR}/${r.perf}`,
-          model: REVIEWER_MODEL,
+          model: reviewerModel,
           reason: `perf-sensitive:${d}`,
         });
       }
@@ -263,22 +269,24 @@ function parseArgs(argv) {
   const paths = [];
   let defaultDomain = null;
   let riskTier = 'standard';
+  let reviewerModel = null;
   let jsonStdin = false;
   for (let i = 0; i < argv.length; i += 1) {
     const a = argv[i];
     if (a === '--default-domain') { defaultDomain = argv[i + 1]; i += 1; }
     else if (a === '--risk-tier') { riskTier = argv[i + 1]; i += 1; }
+    else if (a === '--model' || a === '--reviewer-model') { reviewerModel = argv[i + 1]; i += 1; }
     else if (a === '--json') { jsonStdin = true; }
     else { paths.push(a); }
   }
-  return { paths, defaultDomain, riskTier, jsonStdin };
+  return { paths, defaultDomain, riskTier, reviewerModel, jsonStdin };
 }
 
 function main() {
-  const { paths, defaultDomain, riskTier, jsonStdin } = parseArgs(process.argv.slice(2));
+  const { paths, defaultDomain, riskTier, reviewerModel, jsonStdin } = parseArgs(process.argv.slice(2));
 
   const finish = (allPaths) => {
-    const out = resolveRoster(allPaths, defaultDomain, { riskTier });
+    const out = resolveRoster(allPaths, defaultDomain, { riskTier, reviewerModel });
     process.stdout.write(`${JSON.stringify(out, null, 2)}\n`);
   };
 

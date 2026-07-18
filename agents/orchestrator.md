@@ -105,7 +105,7 @@ The user invoked `/tl-telar:orchestrate <text>`. Save the verbatim `<text>` as `
 **Procedure:**
 
 1. Read `cross_model_review` (enabled, on_unavailable, matrix), `adapters.*` (enabled, model, auth_env_var), and `budget` from `.tl-telar/external-tools.yaml`.
-2. Validate matrix invariants (writer-cannot-be-reviewer; a model distinct from BOTH the writer and Claude exists to serve as Review 2). Misconfig → STOP with the exact fix.
+2. Validate matrix invariants (developer-cannot-be-reviewer; a model distinct from BOTH the developer and Claude exists to serve as Review 2). Misconfig → STOP with the exact fix.
 3. For each enabled external reviewer model (codex/gemini): run `bash "$PLUGIN_ROOT/scripts/tl-telar-external-tools.sh" health` (checks CLI present + auth + reachability). Note budget caps.
 4. Print an **informative readiness report**, e.g.:
 

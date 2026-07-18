@@ -1,4 +1,4 @@
-# Telar v0.12.0
+# Telar v0.13.0
 
 Agentic engineering framework for Claude Code, spanning cross-platform apps end to end: mobile (React Native, Flutter, native bridges), web (Astro, Next.js/Tailwind/shadcn, Vite/TanStack admin panels), Rust service layers, and desktop. Not mobile-only — the orchestration, reviewer roster, and rubrics are stack-aware across every domain. The per-WU reviewer roster is also **risk-tiered**: rigor is front-loaded into planning, so implementation review stays thin for low-risk work and escalates only where risk warrants it.
 
@@ -125,8 +125,8 @@ The recommended workflow for building features:
 | `scripts/tl-telar-fetch-pr-comments.ts` | Pure data fetcher for PR comments (CodeRabbit / Bugbot / Greptile / Copilot / human). Writes `.tl-telar/temp/pr-comments.json`. Phase A of `/tl-telar:self-reflect`. Graceful degrade when no `gh auth`. |
 | `scripts/tl-telar-self-reflect.sh` | Phase A/B/C driver for `/tl-telar:self-reflect`. Phase A: harvest PR comments via the fetcher above; Phase B/C handed off to the LLM via the skill prompt. |
 | `scripts/tl-telar-wu-scheduler.js` | Pure WU readiness scheduler for `/tl-telar:orchestrate`. Reads `.tl-telar/plans/active-plan.md` + `.tl-telar/context/execution-state.md`, returns JSON `{ready, blocked, running, occupied_files, plan_warnings}` — the WUs whose `deps` are COMPLETE and whose `file_scope` is disjoint from every running WU, bounded by `execution.max_parallel_wus` (default 3). Deadlock-free (atomic all-or-nothing file-set acquisition); flags ambiguous plans (two dep-unordered WUs writing the same path). |
-| `scripts/tl-telar-external-tools.sh` | Layer B dispatcher: dispatch/health/budget-status/parse-verdict subcommands; real YAML parsing (yq or python3+PyYAML), cheapest-available routing + escalation, budget ledger (`.tl-telar/context/external-tools-budget.jsonl`) with fail-closed circuit breakers. |
-| `scripts/estimate-cost.sh` | USD estimator for external adapter invocations. |
+| `scripts/tl-telar-external-tools.sh` | Layer B dispatcher: dispatch/health/budget-status/parse-verdict/**resolve-role** subcommands. **Config-driven routing** — the valid tool set is the `adapters.*` keys (no hardcoded `codex\|gemini`); `--tool auto` walks `routing.escalation_order`. **`resolve-role`** maps a pipeline role (`architect\|moderator\|developer\|reviewer\|tester`) to its model(s)+effort via `routing.roles`+`models_registry`. Real YAML parsing (yq or python3+PyYAML), budget ledger with fail-closed circuit breakers. |
+| `scripts/estimate-cost.sh` | USD estimator for external adapter invocations. Reads per-adapter `pricing` from `external-tools.yaml` (model-agnostic); **fail-closed** on unknown/undeclared pricing (records the conservative per-task cap, never a silent $0). |
 | `scripts/tl-telar-cc-features.sh` | Deterministic `cc_features` gating resolver. `resolve`/`decision` subcommands read `cc_features.*` from `external-tools.yaml`, take the runtime capability probe result, and emit `active｜fallback｜blocked` (fail-closed: `active` requires the probe to confirm the capability). Called by the plan-review gate and orchestrator Step 5b so gating is one tested path, not prose. |
 
 ## Resources

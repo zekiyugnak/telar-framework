@@ -1,6 +1,6 @@
 ---
 name: "orchestration-adversarial-code-review"
-description: "`--default-domain` comes from the project-detect framework signal (orchestrator Step 5b / project-context); it only decides how UI files with no strong path marker are classified. `--risk-tier` is the WU's `risk_tier` fi"
+description: "`--default-domain` comes from the project-detect framework signal (orchestrator Step 5b / project-context); it only decides how UI files with no strong path marker are classified. `--model` is the Claude reviewer tier re"
 source_type: "orchestration"
 source_file: "skills/orchestration/adversarial-code-review.md"
 ---
@@ -42,15 +42,18 @@ For a given Work Unit (with declared `fileScope`, `dod`, and `diff`):
 1. **Determine reviewer roster** with the stack-aware resolver — do NOT hardcode a mobile roster:
 
    ```bash
-   node scripts/tl-telar-reviewer-roster.js --default-domain <mobile|web> --risk-tier <trivial|standard|critical> <every path in fileScope>
+   # Resolve the reviewer tier from config (default opus if unset), then size the roster:
+   REVIEWER_TIER=$(bash scripts/tl-telar-external-tools.sh resolve-role reviewer 2>/dev/null \
+     | jq -r '[.models[] | select(.exec=="claude")][0].tier // "opus"')
+   node scripts/tl-telar-reviewer-roster.js --default-domain <mobile|web> --risk-tier <trivial|standard|critical> --model "${REVIEWER_TIER:-opus}" <every path in fileScope>
    ```
 
-   `--default-domain` comes from the project-detect framework signal (orchestrator Step 5b / project-context); it only decides how UI files with no strong path marker are classified. `--risk-tier` is the WU's `risk_tier` field (default `standard` if absent) and it sizes the roster. The resolver returns JSON `{ risk_tier, domains, reviewers: [{ role, reviewer_key, rubric, model, reason }] }`. Spawn EXACTLY that set — it is stack-aware (a web/admin or backend WU never gets a mobile rubric) AND risk-scaled:
+   `--default-domain` comes from the project-detect framework signal (orchestrator Step 5b / project-context); it only decides how UI files with no strong path marker are classified. `--model` is the Claude reviewer tier resolved from `routing.roles.reviewer` (default `opus` when unset or when external-tools.yaml is absent) — this is Review 1's model; Review 2's cross-model reviewer is chosen separately from the matrix. `--risk-tier` is the WU's `risk_tier` field (default `standard` if absent) and it sizes the roster. The resolver returns JSON `{ risk_tier, domains, reviewers: [{ role, reviewer_key, rubric, model, reason }] }`. Spawn EXACTLY that set — it is stack-aware (a web/admin or backend WU never gets a mobile rubric) AND risk-scaled:
    - **`trivial`** → **Code** only. (+ a **Security** reviewer if the fileScope trips the sensitive-path floor — see below.)
    - **`standard`** (the default) → **Code** + **Maintainability** + **Security** (only when the sensitive-path floor fires OR the domain is high-stakes backend/rust/desktop) + **BackendCorrectness** (backend/service in scope). UI **a11y / perf / FrontendUX are NOT spawned as LLM reviewers** — their mechanical criteria are covered by the Katman-1 CI lenses (`a11y_command` / `perf_command` / lint in `.tl-telar-thresholds.json`). This is the fast default.
    - **`critical`** → the FULL roster: Code + Maintainability + Security **per in-scope domain** + BackendCorrectness + **FrontendUX** + **Accessibility** (per UI domain) + **Performance** (per perf-sensitive UI domain). Plus the qualitative escalations in the section below.
    - **Sensitive-path FLOOR (never droppable):** when ANY fileScope path touches auth/authz/session/token/jwt/password/secret/crypto/payment/billing/migration/`.sql`/rls/acl, the resolver forces a **Security** reviewer on EVERY tier — even `trivial`. The tier can thin the discretionary reviewers, never the security floor.
-   - Every reviewer carries `model: opus` (gate-quality pin) and its own `rubric` path — use those verbatim.
+   - Every reviewer carries `model: <resolved reviewer tier>` (default `opus`, from `routing.roles.reviewer`) and its own `rubric` path — use those verbatim.
    - Store Compliance is NOT spawned here; it's reserved for `/tl-telar:release-app`-bound work.
 
    A WU whose fileScope spans many domains (e.g. backend + web) yields a large roster at `critical` — that is a signal the WU is doing too much and should have been split, not a resolver bug. Do NOT hand-tune the roster: the resolver is the single source of truth for who reviews. If you believe a `standard` WU needs a11y/perf LLM judgment, the correct move is to re-tag it `critical` in the plan (and let the plan-review-gate see that), not to add reviewers here.
@@ -180,14 +183,14 @@ Two additions that improve traceability without touching the spawn invariant:
 **This does NOT replace the main-model review above — it ADDS a second, independent one.** When `.tl-telar/external-tools.yaml` → `cross_model_review.enabled: true`, every orchestrated WU gets TWO reviews and BOTH must PASS:
 
 - **Review 1 — main model (always runs):** the fresh Claude reviewer roster determined above (Code Quality + Mobile Security + any conditional roles). Existing sub-spec 2 behavior; runs whether or not cross-model is enabled.
-- **Review 2 — cross-model (only when enabled):** ONE additional review of the WU diff by a model different from both the writer AND Claude, dispatched through the external-tools adapter. A genuinely independent second opinion.
+- **Review 2 — cross-model (only when enabled):** ONE additional review of the WU diff by a model different from both the developer AND Claude, dispatched through the external-tools adapter. A genuinely independent second opinion.
 
 Overall verdict = PASS **iff Review 1 PASSES AND Review 2 PASSES**. Any FAIL from either → overall FAIL → loop back to Phase 1. When `enabled: false`, only Review 1 runs (unchanged from sub-spec 2).
 
 ### Selecting the Review 2 model
 
-1. Read the writer model from `.tl-telar/context/execution-state.md` (default `claude`).
-2. Candidates = `cross_model_review.matrix[<writer>]` MINUS `claude` (already used by Review 1) MINUS the writer itself. So writer=`claude` → candidates `[codex, gemini]`; writer=`codex` → `[gemini]`.
+1. Read the developer model from the `Developer Model` column of `.tl-telar/context/execution-state.md` (default `claude`).
+2. Candidates = `cross_model_review.matrix[<developer>]` MINUS `claude` (already used by Review 1) MINUS the developer itself. So developer=`claude` → candidates `[codex, kimi]`; developer=`codex` → `[gemini]`.
 3. Pick the first candidate whose adapter is `enabled: true` AND health passes AND budget allows, then dispatch the WU diff:
    `scripts/tl-telar-external-tools.sh dispatch --task review --tool <model> --rubric-file <rubric> --spec-file <wu-spec> ...`
 4. If NO candidate is available (none enabled/healthy/in-budget, or the only other model is Claude itself), apply `cross_model_review.on_unavailable` (default `block`) — see enforcement below.
@@ -206,18 +209,19 @@ Record both in `.tl-telar/context/execution-state.md` under the WU, e.g. `Review
 
 **Proof-of-execution (audit — catches a bypassed or silently-skipped second review).** When `enabled: true` and `on_unavailable: block`, after Phase 3 confirm `.tl-telar/context/external-tools-budget.jsonl` gained an entry for this WU (proof Review 2 ran) OR a logged downgrade exists. If neither → the required second review did not run: defect, STOP and report. (A WU "reviewed" only by a generic `comprehensive-review:code-reviewer`, bypassing this skill, leaves no ledger entry — this assertion would have caught the E50 silent-skip.)
 
-### Writer-cannot-be-reviewer rule
+### Developer-cannot-be-reviewer rule
 
-The matrix encodes this:
+The matrix encodes this (the writer of a WU is the "developer"; keys are adapter/tool names):
 ```yaml
 cross_model_review:
   matrix:
     codex: ["gemini", "claude"]
     gemini: ["codex", "claude"]
-    claude: ["codex", "gemini"]
+    claude: ["codex", "kimi"]
+    kimi: ["codex", "claude"]
 ```
 
-A reviewer is never the same model as the writer. Additionally, **Review 2 must differ from Claude** (Review 1's model) — never let the second review collapse onto Claude (that would just be Review 1 twice). The implementation MUST verify both invariants — if the matrix is misconfigured (e.g., user adds `claude` to claude's list), reject the config at startup with an error message.
+A reviewer is never the same model as the developer. Additionally, **Review 2 must differ from Claude** (Review 1's model) — never let the second review collapse onto Claude (that would just be Review 1 twice). The implementation MUST verify both invariants — if the matrix is misconfigured (e.g., user adds `claude` to claude's list), reject the config at startup with an error message.
 
 ### Verdict parsing (cross-model)
 
@@ -241,11 +245,11 @@ Each Review 2 dispatch hits the dispatcher's budget preflight (sub-spec 7). On `
 
 1. **Treating Review 2 as a REPLACEMENT for Review 1.** It is ADDITIVE. The main-model Claude roster (Review 1) always runs; Review 2 is an extra independent pass on top. Never drop Review 1 because "Codex reviewed".
 2. **Silently skipping Review 2 when enabled.** With `on_unavailable: block` (default) a missing second-review model BLOCKS; with `warn_and_proceed` it is loudly logged — never silent.
-3. **Letting Review 2 collapse onto Claude.** Review 2 must be distinct from the writer AND from Claude. "Fallback to Claude" for Review 2 is meaningless (Review 1 is already Claude) — the correct degradation is skip-with-warning or block.
+3. **Letting Review 2 collapse onto Claude.** Review 2 must be distinct from the developer AND from Claude. "Fallback to Claude" for Review 2 is meaningless (Review 1 is already Claude) — the correct degradation is skip-with-warning or block.
 4. **Letting a generic reviewer stand in for this skill in orchestrated mode.** Per-WU review MUST go through this skill (Review 1 + cross-model Review 2). A generic `comprehensive-review:code-reviewer` that never reads `external-tools.yaml` silently skips Review 2 — forbidden.
-5. **Sending the writer's diff to the writer's own model.** The matrix enforces exclusion; never bypass.
+5. **Sending the developer's diff to the developer's own model.** The matrix enforces exclusion; never bypass.
 6. **Treating adapter raw_log as the verdict directly.** Always pass through `parse-verdict`; envelope and model verdict are distinct contracts.
-7. **Ignoring the writer-cannot-be-reviewer / distinct-second-model invariant.** Validate at the startup preflight and on first cross-model invocation.
+7. **Ignoring the developer-cannot-be-reviewer / distinct-second-model invariant.** Validate at the startup preflight and on first cross-model invocation.
 
 ## Tests / conformance
 
