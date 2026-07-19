@@ -47,7 +47,7 @@ LEDGER="$PROJECT_ROOT/.tl-telar/context/external-tools-budget.jsonl"
 usage_err() {
   echo "ERROR: $1" >&2
   echo "Usage: tl-telar-external-tools.sh dispatch --task implement|review --worktree <path> [--tool auto|<adapter>] [--prompt-file <path>] [--rubric-file <path>] [--spec-file <path>] [--attempt N]" >&2
-  echo "       tl-telar-external-tools.sh health | budget-status | parse-verdict <envelope-file> | resolve-role <role>" >&2
+  echo "       tl-telar-external-tools.sh health | budget-status | parse-verdict <envelope-file> | resolve-role [--host <h>] <role> | resolve-host [--host <h>]" >&2
   exit 2
 }
 
@@ -798,8 +798,52 @@ cmd_parse_verdict() {
   echo '{"verdict":"UNKNOWN","reason":"could not parse raw_log via any strategy","issues":[]}'
 }
 
+resolve_host() {
+  # Resolve the active agentic HOST. Precedence (highest first):
+  #   1. explicit flag ($1)   2. $TL_TELAR_HOST   3. runtime.host (config, when != "auto")
+  #   4. runtime detection (CODEX_* / CLAUDECODE markers)   5. legacy fallback "claude".
+  # Echoes one of: claude|codex|gemini. Never fails — always resolves to a valid host.
+  local flag_host="${1:-}"
+  local host=""
+  if [[ -n "$flag_host" ]]; then
+    host="$flag_host"
+  elif [[ -n "${TL_TELAR_HOST:-}" ]]; then
+    host="$TL_TELAR_HOST"
+  else
+    local cfg_host=""
+    cfg_host="$(parse_yaml "runtime.host" 2>/dev/null || true)"
+    if [[ -n "$cfg_host" && "$cfg_host" != "auto" ]]; then
+      host="$cfg_host"
+    elif [[ -n "${CODEX_HOME:-}${CODEX_SANDBOX:-}${CODEX_MODEL:-}" ]]; then
+      host="codex"
+    elif [[ -n "${CLAUDECODE:-}${CLAUDE_CODE:-}" ]]; then
+      host="claude"
+    else
+      host="claude"
+    fi
+  fi
+  case "$host" in
+    claude|codex|gemini) : ;;
+    *) host="claude" ;;   # unknown value -> safe legacy default
+  esac
+  printf '%s' "$host"
+}
+
+cmd_resolve_host() {
+  # CLI: resolve-host [--host <h>]  -> prints the resolved host on stdout.
+  local flag_host=""
+  while [[ $# -gt 0 ]]; do
+    case "$1" in
+      --host) flag_host="${2:-}"; shift 2 ;;
+      *) shift ;;
+    esac
+  done
+  resolve_host "$flag_host"
+  echo
+}
+
 cmd_resolve_role() {
-  # $1 = role name (architect|moderator|developer|reviewer|tester|...)
+  # $1 = role name (architect|moderator|developer|reviewer|tester|...); optional --host <h>.
   # Resolves routing.roles.<role> against routing.models_registry and emits a
   # normalized JSON decision the orchestrator/review skills consume — so model
   # selection is ONE tested path (this resolver), not hardcoded model strings
@@ -810,7 +854,24 @@ cmd_resolve_role() {
   #   {"role","models":[{model,exec,tier?|tool?}],"panel":[...],"escalation":[...]}
   # Fail-closed: unknown role -> role_undefined (exit 5); a model referenced by a
   # role but absent from models_registry -> model_not_in_registry (exit 5).
-  local role="${1:-}"
+  # Output shape (host-aware):
+  #   {"role","host","source","models":[{model,host,native,exec,tier?|tool?|run?,effort}],
+  #    "panel":[...],"escalation":[...],"options":[...]}
+  # native = (model's home host == active host):
+  #   claude-native -> exec "claude" + tier (orchestrator spawns a Task in-harness)
+  #   codex-native  -> exec "native" + run (Codex runs it in-harness; NO codex-exec nesting)
+  #   not native    -> exec "adapter" + tool (dispatched via claude.sh / codex.sh / …)
+  # Role source: profiles.<host>.<role> when profiles exist, else legacy routing.roles.<role>
+  # (that fallback is the backward-compat path for pre-profiles configs).
+  # Fail-closed: role defined nowhere -> role_undefined (5); model absent from registry -> 5.
+  local role="" flag_host=""
+  while [[ $# -gt 0 ]]; do
+    case "$1" in
+      --host) flag_host="${2:-}"; shift 2 ;;
+      --*) shift ;;
+      *) [[ -z "$role" ]] && role="$1"; shift ;;
+    esac
+  done
   if [[ -z "$role" ]]; then
     echo '{"error_type":"bad_args","detail":"resolve-role requires a role name"}' >&2
     return 2
@@ -825,26 +886,57 @@ cmd_resolve_role() {
     echo '{"error_type":"dependency_missing","detail":"node is required for resolve-role JSON assembly"}'
     return 4
   fi
+  local host
+  host="$(resolve_host "$flag_host")"
   local rjson
   rjson=$(routing_json)
-  ROUTING_JSON="$rjson" node -e '
+  ROUTING_JSON="$rjson" TL_ACTIVE_HOST="$host" node -e '
     let routing;
     try { routing = JSON.parse(process.env.ROUTING_JSON || "null"); } catch (e) { routing = null; }
     const role = process.argv[1];
-    if (!routing || !routing.roles || !routing.roles[role]) {
-      process.stdout.write(JSON.stringify({error_type:"role_undefined", role,
-        detail:"routing.roles."+role+" is not defined in external-tools.yaml"}));
+    const host = process.env.TL_ACTIVE_HOST || "claude";
+    if (!routing) {
+      process.stdout.write(JSON.stringify({error_type:"routing_unavailable", role, host}));
+      process.exit(5);
+    }
+    // Host-aware role source: profiles.<host>.<role> wins; legacy routing.roles is the fallback.
+    const profiles = routing.profiles || null;
+    let rc = null, source = null;
+    if (profiles && profiles[host] && profiles[host][role]) {
+      rc = profiles[host][role]; source = "profiles." + host;
+    } else if (routing.roles && routing.roles[role]) {
+      rc = routing.roles[role]; source = "roles";
+    }
+    if (!rc) {
+      process.stdout.write(JSON.stringify({error_type:"role_undefined", role, host,
+        detail:"neither profiles." + host + "." + role + " nor routing.roles." + role + " is defined"}));
       process.exit(5);
     }
     const reg = routing.models_registry || {};
-    const resolve = (m) => reg[m] ? Object.assign({model:m}, reg[m]) : {model:m, error:"model_not_in_registry"};
-    const rc = routing.roles[role];
+    const roleEffort = rc.effort || null;   // per-role effort overrides the registry default
+    const resolve = (m) => {
+      const e = reg[m];
+      if (!e) return { model:m, error:"model_not_in_registry" };
+      // home host: explicit `host`, else derived from legacy exec/tool (back-compat).
+      const home = e.host || (e.exec === "claude" ? "claude" : (e.tool || null));
+      const native = home === host;
+      const out = { model:m, host:home, native, effort: (roleEffort || e.effort || null) };
+      if (native) {
+        if (host === "claude") { out.exec = "claude"; out.tier = e.tier || null; }
+        else { out.exec = "native"; out.run = host; }   // e.g. Codex runs it itself
+      } else {
+        out.exec = "adapter";
+        // reach a non-native model via its adapter; claude models use the claude.sh adapter.
+        out.tool = e.tool || (home && home !== "claude" ? home : "claude");
+      }
+      return out;
+    };
     const names = Array.isArray(rc.models) ? rc.models : (rc.model ? [rc.model] : []);
     const models = names.map(resolve);
     const panel = (rc.panel || []).map(resolve);
     const escalation = (rc.escalation || []).map(resolve);
     const options = (rc.options || []).map(resolve);
-    const out = {role, models, panel, escalation, options};
+    const out = { role, host, source, models, panel, escalation, options };
     const bad = [...models, ...panel, ...escalation, ...options].filter(x => x.error);
     if (bad.length) {
       out.error_type = "model_not_in_registry";
@@ -864,5 +956,6 @@ case "${1:-}" in
   budget-status) cmd_budget_status ;;
   parse-verdict) shift; cmd_parse_verdict "$@" ;;
   resolve-role) shift; cmd_resolve_role "$@" ;;
-  *) echo "Usage: $0 dispatch|health|budget-status|parse-verdict|resolve-role <args>"; exit 1 ;;
+  resolve-host) shift; cmd_resolve_host "$@" ;;
+  *) echo "Usage: $0 dispatch|health|budget-status|parse-verdict|resolve-role [--host <h>]|resolve-host [--host <h>] <args>"; exit 1 ;;
 esac
