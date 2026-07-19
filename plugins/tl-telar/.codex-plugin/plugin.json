@@ -1,6 +1,6 @@
 {
   "name": "tl-telar",
-  "version": "0.14.0",
+  "version": "0.15.0",
   "description": "Agentic engineering framework for cross-platform apps: mobile (React Native, Flutter), web (Astro, Next.js, TanStack), Rust services, and desktop - 48 agents, 122 skills, 24 commands, 4 hooks, 7 rules, 30 scripts",
   "author": {
     "name": "Zeki Yugnak",

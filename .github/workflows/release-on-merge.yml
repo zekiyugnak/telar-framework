@@ -20,21 +20,44 @@ jobs:
           fetch-depth: 0
           token: ${{ secrets.SUBMODULE_PAT }}
 
-      - name: Auto-increment version from latest tag
+      - name: Determine release version (file-authoritative, else auto-minor)
         id: version
         run: |
           LATEST=$(git tag --sort=-v:refname | grep -E '^v[0-9]+\.[0-9]+\.[0-9]+$' | head -1)
+          FILE_VER=$(jq -r '.version // ""' .claude-plugin/plugin.json 2>/dev/null || echo "")
+
+          # Historical fallback: auto-minor increment from the latest tag.
+          # Minor versions are unbounded — the next after 0.9.0 is 0.10.0, NOT 1.0.0.
+          # A major bump is a deliberate milestone, never an automatic 9 -> rollover.
           if [ -z "$LATEST" ]; then
-            VERSION="v0.1.0"
+            AUTO="v0.1.0"
           else
             MAJOR=$(echo "$LATEST" | sed 's/^v//' | cut -d. -f1)
             MINOR=$(echo "$LATEST" | sed 's/^v//' | cut -d. -f2)
-            # Minor versions are unbounded — the next after 0.9.0 is 0.10.0, NOT 1.0.0.
-            # A major bump is a deliberate milestone, never an automatic 9 -> rollover.
             MINOR=$((MINOR + 1))
-            VERSION="v${MAJOR}.${MINOR}.0"
+            AUTO="v${MAJOR}.${MINOR}.0"
           fi
-          echo "Latest tag: ${LATEST:-none}, new version: $VERSION"
+
+          # File-authoritative override: if the committed .claude-plugin/plugin.json
+          # version is valid semver and STRICTLY AHEAD of the latest tag, release
+          # exactly that version. This lets the manual file bump in the release PR
+          # drive patch/minor/major releases (the established bump convention) —
+          # e.g. a PATCH bump the auto-minor path cannot express.
+          # When plugin.json is NOT ahead (forgotten bump), fall back to AUTO so
+          # existing behavior is preserved and every merge still cuts a release.
+          VERSION="$AUTO"
+          if echo "$FILE_VER" | grep -Eq '^[0-9]+\.[0-9]+\.[0-9]+$'; then
+            if [ -z "$LATEST" ]; then
+              VERSION="v${FILE_VER}"
+            else
+              LATEST_SEMVER="${LATEST#v}"
+              if [ "$FILE_VER" != "$LATEST_SEMVER" ] && \
+                 [ "$(printf '%s\n%s\n' "$LATEST_SEMVER" "$FILE_VER" | sort -V | tail -1)" = "$FILE_VER" ]; then
+                VERSION="v${FILE_VER}"
+              fi
+            fi
+          fi
+          echo "Latest tag: ${LATEST:-none}, file version: ${FILE_VER:-none}, release version: $VERSION"
           echo "version=$VERSION" >> "$GITHUB_OUTPUT"
 
       - name: Check if tag already exists
