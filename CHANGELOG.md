@@ -15,6 +15,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   - New parser-free `resolve-adapters-dir` subcommand exposes the resolution seam, and `health` output now includes the resolved `adapters_dir` for observability.
   - New regression test `tests/workflow/external-tools-adapters-dir.test.js` locks the resolver across both packaging layouts (runs in CI, which globs `tests/**/*.test.js`).
 
+### Changed
+
+- **`release-on-merge.yml` now supports patch (and explicit minor/major) releases.** The version step is file-authoritative: when the committed `.claude-plugin/plugin.json` version is valid semver and strictly ahead of the latest tag, that version is released verbatim (so a `0.14.0 → 0.14.1` manual bump ships as a patch, which the old auto-minor-only path could not express). When `plugin.json` is not ahead (a forgotten bump), it falls back to the historical unbounded auto-minor increment, so existing behavior is preserved and every merge to `main` still cuts a release.
+
 ## [0.14.0] - 2026-07-19
 
 ### Added
