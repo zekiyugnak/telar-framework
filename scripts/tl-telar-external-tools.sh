@@ -29,7 +29,30 @@ set -euo pipefail
 
 PLUGIN_ROOT="${CLAUDE_PLUGIN_ROOT:-$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)}"
 PROJECT_ROOT="${CLAUDE_PROJECT_DIR:-$PWD}"
+
+# Resolve the Layer A adapters directory across BOTH packaging layouts:
+#   1. skills/orchestration/external-tools/adapters   — canonical nested layout
+#      (dev checkout / Telar source).
+#   2. skills/orchestration-external-tools/adapters   — the generated Codex
+#      plugin FLATTENS nested orchestration skills to a single hyphenated dir
+#      (scripts/generate-codex-plugin.js), so this is where the adapters live
+#      once packaged. The dispatcher is copied verbatim, hence this fallback.
+#   3. source/skills/orchestration/external-tools/adapters — the generated
+#      plugin also carries the untouched source subtree; last-resort probe.
+# First candidate that actually contains adapters (sentinel: _common.sh) wins.
+# If none match, keep candidate #1 so the existing "adapter file missing" error
+# path still fires with a sensible path — fail-loud, never silently broken.
 ADAPTERS_DIR="$PLUGIN_ROOT/skills/orchestration/external-tools/adapters"
+for _cand in \
+  "$PLUGIN_ROOT/skills/orchestration/external-tools/adapters" \
+  "$PLUGIN_ROOT/skills/orchestration-external-tools/adapters" \
+  "$PLUGIN_ROOT/source/skills/orchestration/external-tools/adapters"; do
+  if [[ -f "$_cand/_common.sh" ]]; then
+    ADAPTERS_DIR="$_cand"
+    break
+  fi
+done
+unset _cand
 CONFIG="$PROJECT_ROOT/.tl-telar/external-tools.yaml"
 LEDGER="$PROJECT_ROOT/.tl-telar/context/external-tools-budget.jsonl"
 
@@ -47,7 +70,7 @@ LEDGER="$PROJECT_ROOT/.tl-telar/context/external-tools-budget.jsonl"
 usage_err() {
   echo "ERROR: $1" >&2
   echo "Usage: tl-telar-external-tools.sh dispatch --task implement|review --worktree <path> [--tool auto|<adapter>] [--prompt-file <path>] [--rubric-file <path>] [--spec-file <path>] [--attempt N]" >&2
-  echo "       tl-telar-external-tools.sh health | budget-status | parse-verdict <envelope-file> | resolve-role [--host <h>] <role> | resolve-host [--host <h>]" >&2
+  echo "       tl-telar-external-tools.sh health | budget-status | parse-verdict <envelope-file> | resolve-role [--host <h>] <role> | resolve-host [--host <h>] | resolve-adapters-dir" >&2
   exit 2
 }
 
@@ -369,7 +392,7 @@ EOF
   # lines) followed by a blank-line separator, so split on blank lines — NOT per line.
   # A per-line parse fails on every line of a multi-line adapter health object (e.g.
   # codex.sh emits indented JSON), which would drop a perfectly healthy adapter.
-  HEALTH_CHUNKS="$chunks" \
+  HEALTH_CHUNKS="$chunks" HEALTH_ADAPTERS_DIR="$ADAPTERS_DIR" \
   node -e '
     const chunks = (process.env.HEALTH_CHUNKS || "")
       .split(/\n\s*\n/).map(c => c.trim()).filter(Boolean);
@@ -380,7 +403,7 @@ EOF
         if (parsed && parsed.tool) adapters[parsed.tool] = parsed;
       } catch (e) { /* skip malformed adapter chunk */ }
     }
-    const out = { parser: process.argv[1], adapters };
+    const out = { parser: process.argv[1], adapters_dir: process.env.HEALTH_ADAPTERS_DIR || "", adapters };
     process.stdout.write(JSON.stringify(out, null, 2));
   ' "$parser"
   echo ""
@@ -842,6 +865,18 @@ cmd_resolve_host() {
   echo
 }
 
+cmd_resolve_adapters_dir() {
+  # CLI: resolve-adapters-dir -> prints the resolved Layer A adapters directory
+  # and whether it actually contains adapters, as JSON. Deliberately parser-free
+  # (no yq/jq/PyYAML/node): it exposes the ADAPTERS_DIR resolution seam so the
+  # packaging-layout regression — canonical-nested vs generated-flattened — is
+  # testable in CI, which is where "adapter file missing" would otherwise only
+  # surface at runtime inside the installed Codex plugin.
+  local exists="false"
+  [[ -f "$ADAPTERS_DIR/_common.sh" ]] && exists="true"
+  printf '{"adapters_dir":"%s","exists":%s}\n' "$ADAPTERS_DIR" "$exists"
+}
+
 cmd_resolve_role() {
   # $1 = role name (architect|moderator|developer|reviewer|tester|...); optional --host <h>.
   # Resolves routing.roles.<role> against routing.models_registry and emits a
@@ -957,5 +992,6 @@ case "${1:-}" in
   parse-verdict) shift; cmd_parse_verdict "$@" ;;
   resolve-role) shift; cmd_resolve_role "$@" ;;
   resolve-host) shift; cmd_resolve_host "$@" ;;
-  *) echo "Usage: $0 dispatch|health|budget-status|parse-verdict|resolve-role [--host <h>]|resolve-host [--host <h>] <args>"; exit 1 ;;
+  resolve-adapters-dir) cmd_resolve_adapters_dir ;;
+  *) echo "Usage: $0 dispatch|health|budget-status|parse-verdict|resolve-role [--host <h>]|resolve-host [--host <h>]|resolve-adapters-dir <args>"; exit 1 ;;
 esac
