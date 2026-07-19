@@ -11,7 +11,7 @@
       "name": "tl-telar",
       "source": "./",
       "description": "Telar — the agentic engineering framework: plan, build, review, and ship, with agents. Cross-platform apps: mobile (React Native & Flutter), web (Astro, Next.js, TanStack), Rust services, and desktop.",
-      "version": "0.13.0"
+      "version": "0.14.0"
     }
   ]
 }

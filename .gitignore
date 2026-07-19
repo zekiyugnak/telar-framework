@@ -3,6 +3,17 @@
 docs/plans/
 docs/specs/
 
+# Root-level per-session working docs (PLAN/RESEARCH/PROGRESS scratch) — keep local, never
+# publish. Root-anchored (leading /) so framework templates (templates/requirements.md) and
+# test fixtures (tests/fixtures/plan-review/*.md) stay tracked.
+/PLAN.md
+/RESEARCH.md
+/PROGRESS.md
+/REQUIREMENTS.md
+/PLAN-*.md
+/RESEARCH-*.md
+/PROGRESS-*.md
+
 # Internal working/strategy drafts (licensing analysis, branding) — keep local.
 docs/*-DRAFT.md
 
