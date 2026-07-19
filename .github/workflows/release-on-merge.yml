@@ -42,7 +42,7 @@ jobs:
           # version is valid semver and STRICTLY AHEAD of the latest tag, release
           # exactly that version. This lets the manual file bump in the release PR
           # drive patch/minor/major releases (the established bump convention) —
-          # e.g. a 0.14.0 -> 0.14.1 PATCH the auto-minor path cannot express.
+          # e.g. a PATCH bump the auto-minor path cannot express.
           # When plugin.json is NOT ahead (forgotten bump), fall back to AUTO so
           # existing behavior is preserved and every merge still cuts a release.
           VERSION="$AUTO"
