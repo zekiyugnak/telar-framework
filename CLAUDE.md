@@ -1,4 +1,4 @@
-# Telar v0.14.0
+# Telar v0.14.1
 
 Agentic engineering framework for Claude Code, spanning cross-platform apps end to end: mobile (React Native, Flutter, native bridges), web (Astro, Next.js/Tailwind/shadcn, Vite/TanStack admin panels), Rust service layers, and desktop. Not mobile-only — the orchestration, reviewer roster, and rubrics are stack-aware across every domain. The per-WU reviewer roster is also **risk-tiered**: rigor is front-loaded into planning, so implementation review stays thin for low-risk work and escalates only where risk warrants it.
 

@@ -6,6 +6,15 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+## [0.14.1] - 2026-07-19
+
+### Fixed
+
+- **External-tools dispatcher could not find its adapters inside the generated Codex plugin** — the plugin generator (`scripts/generate-codex-plugin.js`) flattens nested orchestration skills, so `skills/orchestration/external-tools/adapters/` becomes `skills/orchestration-external-tools/adapters/`, but the dispatcher was copied verbatim with a hardcoded nested `ADAPTERS_DIR`. As a result `external-tools health` reported `"adapter file missing"` for every adapter inside the installed plugin even though the adapter scripts were present and both the Claude and Codex adapters were ready.
+  - `scripts/tl-telar-external-tools.sh` now resolves `ADAPTERS_DIR` by probing candidate layouts in priority order — canonical nested (dev/source), generated-flattened (`orchestration-external-tools`), then the packaged `source/` subtree — picking the first that actually contains adapters (sentinel `_common.sh`), and falling back to the canonical path so the existing "adapter file missing" error still fires loudly when nothing is found.
+  - New parser-free `resolve-adapters-dir` subcommand exposes the resolution seam, and `health` output now includes the resolved `adapters_dir` for observability.
+  - New regression test `tests/workflow/external-tools-adapters-dir.test.js` locks the resolver across both packaging layouts (runs in CI, which globs `tests/**/*.test.js`).
+
 ## [0.14.0] - 2026-07-19
 
 ### Added
