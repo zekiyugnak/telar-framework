@@ -2,6 +2,27 @@
 # Copied to consumer project's .tl-telar/external-tools.yaml by /tl-telar:setup-orchestration.
 # Adapters disabled by default — user opts in by setting enabled: true and ensuring auth env vars are set.
 
+runtime:
+  # Which agentic HOST is driving this Telar run — i.e. who plays the NATIVE
+  # orchestrator/moderator/implementer. The OTHER models are reached via adapters.
+  #   claude = Claude Code drives; Codex/Gemini via their adapters (legacy default).
+  #   codex  = Codex drives; Claude reached via the claude.sh adapter (cross-model review).
+  #   auto   = resolve at runtime (precedence below).
+  # Resolution precedence (highest first) — implemented by:
+  #   tl-telar-external-tools.sh resolve-host [--host <h>]
+  #     1. --host <h> CLI flag
+  #     2. $TL_TELAR_HOST env var (name below)
+  #     3. runtime.host here (when not "auto")
+  #     4. runtime detection (TL_TELAR_HOST / CODEX_* / CLAUDECODE markers)
+  #     5. legacy fallback: "claude"
+  # The resolved host picks routing.profiles.<host>. A model whose home host ==
+  # the active host runs NATIVELY (never nests its own CLI); every other model
+  # runs via its adapter. That single rule is what makes the roster symmetric.
+  # BACKWARD COMPAT: a config with NO runtime + NO routing.profiles behaves exactly
+  # as before (Claude-primary) — resolve-role falls back to routing.roles.
+  host: auto
+  host_env: TL_TELAR_HOST
+
 adapters:
   codex:
     enabled: false                  # set true after installing codex CLI + setting OPENAI_API_KEY (or ChatGPT login)
@@ -49,6 +70,20 @@ adapters:
     pricing:                        # Kimi-for-Coding flat subscription → $0 marginal (declared)
       input_per_1m: 0.00
       output_per_1m: 0.00
+  claude:
+    # EXTERNAL Claude adapter — used ONLY when the active host is NOT claude
+    # (e.g. host=codex) and Claude is needed as a cross-model reviewer/implementer.
+    # Drives the local `claude` CLI headlessly (sibling of compat.sh) and returns a
+    # structured verdict. When host==claude this adapter is NEVER invoked — Claude
+    # runs natively in-harness. Adapter file: adapters/claude.sh.
+    enabled: false                  # set true on a Codex host that wants Claude cross-model review
+    model: "opus"                   # claude tier for external review (opus = best-calibrated reviewer)
+    reasoning_effort: "high"        # review depth; gate/critical retries may bump to "max"
+    timeout_seconds: 300
+    cli_cmd: "claude"               # override if `claude` is an alias not on PATH (or set COMPAT_CLI_CMD)
+    pricing:                        # USD per 1M tokens (Opus 4.8 list). Feeds the budget ledger.
+      input_per_1m: 5.00
+      output_per_1m: 25.00
 
 routing:
   # ---- Role → model mapping: the single source of truth for who plays which role ----
@@ -68,6 +103,30 @@ routing:
     reviewer:   { models: ["claude-opus-4-8", "gpt-5.6-sol"] }                     # Opus primary (best-calibrated) + GPT-5.6-sol (sharp second)
     tester:     { model: "claude-sonnet-5" }                                      # unit/E2E authoring (aligns with developer default)
 
+  # ---- Host profiles: the SYMMETRIC per-host roster (host-aware layer over roles) ----
+  # resolve-role --host <h> reads profiles.<h>.<role>. The PRIMARY roles (architect/
+  # moderator/developer/tester) are the ACTIVE host's OWN models, so neither host is ever
+  # permanently secondary: host=codex => Codex is architect+moderator+developer and Claude
+  # reviews; host=claude => the reverse. `reviewer` lists the two strongest INDEPENDENT
+  # voices — Claude Opus + GPT-5.6 Sol — at xhigh effort (Gemini stays in the registry but is
+  # NOT a default reviewer). Per-role `effort` overrides the registry default:
+  # architect=xhigh, moderator=high, developer=high (escalates sol/opus, up to max on
+  # gate/critical retries), reviewer=xhigh, tester=high.
+  # BACKWARD COMPAT: a config with NO profiles falls back to routing.roles (Claude-primary).
+  profiles:
+    claude:                                  # host=claude — Claude implements, GPT-5.6+Claude review
+      architect:  { model: "claude-fable-5",  effort: "xhigh", panel: ["gpt-5.6-sol"] }
+      moderator:  { model: "claude-fable-5",  effort: "high" }
+      developer:  { model: "claude-sonnet-5", effort: "high", escalation: ["claude-opus-4-8"], options: ["kimi-k3"] }
+      reviewer:   { models: ["gpt-5.6-sol", "claude-opus-4-8"], effort: "xhigh" }
+      tester:     { model: "claude-sonnet-5", effort: "high" }
+    codex:                                   # host=codex — Codex implements + MODERATES, Claude+GPT-5.6 review
+      architect:  { model: "gpt-5.6-sol",   effort: "xhigh", panel: ["claude-fable-5"] }
+      moderator:  { model: "gpt-5.6-sol",   effort: "high" }
+      developer:  { model: "gpt-5.6-terra", effort: "high", escalation: ["gpt-5.6-sol"] }
+      reviewer:   { models: ["claude-opus-4-8", "gpt-5.6-sol"], effort: "xhigh" }
+      tester:     { model: "gpt-5.6-terra", effort: "high" }
+
   # ---- Model registry: how each model actually runs ----
   #   exec: "claude"  → native Claude tier (orchestrator spawns a Task at `tier`+`effort`)
   #   exec: "adapter" → external, dispatched via the named `tool` (adapters.<tool>)
@@ -75,11 +134,20 @@ routing:
   # Onboard a new model = add ONE entry here (+ its adapters.<tool> block if external),
   # then reference it from a role above. No dispatcher/skill code changes.
   models_registry:
-    claude-fable-5:  { exec: "claude",  tier: "fable",  effort: "high" }
-    claude-opus-4-8: { exec: "claude",  tier: "opus",   effort: "high" }
-    claude-sonnet-5: { exec: "claude",  tier: "sonnet", effort: "high" }
-    gpt-5.6-sol:     { exec: "adapter", tool: "codex",  effort: "xhigh" }   # codex reasoning_effort; ladder tops at ultra
-    kimi-k3:         { exec: "adapter", tool: "kimi",   effort: "max" }     # Kimi CLI runs at config default_effort=max
+    # Each entry: `host` = the model's HOME agentic host. native = (host == active resolved host):
+    #   native + claude -> orchestrator spawns a Task at `tier`+effort (in-harness)
+    #   native + codex  -> Codex runs `model` in-harness (NO `codex exec` nesting — the anti-nest rule)
+    #   NOT native       -> dispatched via adapter `tool` with the model id + effort (claude.sh/codex.sh/…)
+    # `exec` is a LEGACY hint still read by the pre-profiles resolve path; the host-aware path
+    # derives native-vs-adapter purely from `host`, so onboarding a model = ONE line here.
+    claude-fable-5:  { exec: "claude",  tier: "fable",  effort: "high",   host: "claude", tool: "claude" }
+    claude-opus-4-8: { exec: "claude",  tier: "opus",   effort: "high",   host: "claude", tool: "claude" }
+    claude-sonnet-5: { exec: "claude",  tier: "sonnet", effort: "high",   host: "claude", tool: "claude" }
+    gpt-5.6-sol:     { exec: "adapter", tool: "codex",  effort: "xhigh",  host: "codex" }    # flagship (Opus-class)
+    gpt-5.6-terra:   { exec: "adapter", tool: "codex",  effort: "medium", host: "codex" }    # balanced workhorse (Sonnet-class) — developer default
+    gpt-5.6-luna:    { exec: "adapter", tool: "codex",  effort: "low",    host: "codex" }    # cheapest/fastest (Haiku-class)
+    gemini-pro:      { exec: "adapter", tool: "gemini", effort: "high",   host: "gemini" }   # cross-model reviewer voice
+    kimi-k3:         { exec: "adapter", tool: "kimi",   effort: "max",    host: "kimi" }     # opt-in $0 cost mode (Kimi CLI default_effort=max)
 
   # ---- Auto-routing / fallback (used by --tool auto and by fallback_by_health) ----
   default_implementer: "cheapest-available"  # or "round-robin" or "claude" or specific tool name
