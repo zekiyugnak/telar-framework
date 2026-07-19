@@ -6,6 +6,28 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+## [0.14.0] - 2026-07-19
+
+### Added
+
+- **Dual-host orchestration (Claude + Codex)** — the same project can now be driven natively by EITHER agentic host, with a **symmetric** role roster so neither vendor is permanently secondary (previously the roster hardcoded Claude as moderator/architect and Codex could only be a second-vote reviewer).
+  - **`runtime.host` + host resolution** — new `runtime: { host: auto|claude|codex, host_env: TL_TELAR_HOST }` block and a `resolve-host` subcommand in `scripts/tl-telar-external-tools.sh`. Precedence: `--host` > `$TL_TELAR_HOST` > `runtime.host` (≠ `auto`) > runtime detection (`CODEX_*` / `CLAUDECODE`) > legacy `claude`.
+  - **Symmetric `routing.profiles.{claude,codex}`** — primary roles (architect/moderator/developer/tester) resolve to the ACTIVE host's own models; `reviewer` lists the independent cross voices. Host-aware `resolve-role --host <h>` reads the active profile and falls back to `routing.roles` when no profiles exist. **Codex can now be moderator/architect/implementer**, with Claude + GPT-5.6 as reviewers.
+  - **The anti-nest rule** — `models_registry` entries carry a home `host`; a model whose home host equals the active host runs NATIVELY in-harness (Claude → Task at tier; Codex → in-harness), every other model runs via its adapter. A host never nests its own CLI.
+  - **External `claude.sh` adapter** — first-party sibling of `compat.sh` (no endpoint swap) that drives the native `claude` CLI so a **Codex host can call Claude for cross-model review**. Health reports `unavailable` on a Claude host (anti-nest backstop).
+  - **New model tiers** — `gpt-5.6-terra` (Sonnet-class; the Codex `developer` default) and `gpt-5.6-luna` (Haiku-class) added to the registry. (`gpt-5.6-codex` was never a real model — Codex is the harness, not a tier — and is gone.)
+  - **Orchestration mutex** — `scripts/tl-telar-orchestration-lock.sh` writes `.tl-telar/context/orchestration-lock.json`: atomic acquire, re-entrancy, stale-lock takeover, explicit takeover, heartbeat, and ownership-checked release — so two hosts never orchestrate the same plan at once.
+  - **Per-role effort** — profiles set reasoning effort per role (architect + reviewer = `xhigh`, moderator = `high`, developer + tester = `high`), overriding the registry default; the escalation ladder bumps effort before switching models.
+  - New offline tests: `external-tools-host.test.sh`, `external-tools-host-scenarios.test.sh`, `external-tools-codex-defaults.test.sh`, `orchestration-lock.test.sh` (host resolution + precedence, symmetric profiles, anti-nest, Codex-as-moderator scenarios, lock lifecycle).
+
+### Changed
+
+- Default reviewer roster is now **Claude Opus 4.8 + GPT-5.6 Sol at `xhigh`** (Gemini stays in the registry but is no longer a default reviewer).
+
+### Backward compatibility
+
+- Fully compatible: a config with no `runtime` + no `routing.profiles` keeps the previous Claude-primary behavior via the `routing.roles` fallback (verified by the existing `external-tools-routing.test.sh`, unchanged and green).
+
 ## [0.13.0] - 2026-07-18
 
 ### Added
