@@ -6,6 +6,22 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+## [0.16.0] - 2026-07-21
+
+### Added
+
+- **Full web-side agent/skill parity** — the web stack (Vite + React/TS, TanStack, Refine, Astro, shadcn/Radix + Tailwind v4) now has first-class UI/design ownership on par with the mobile roster, closing gaps surfaced while onboarding a real consumer app (`talent-portal`). Agent count 48 → 51, skill count 122 → 126.
+  - **`web-ui-ux-specialist`** (agent) — web UI/UX owner: responsive layout (grid/flex/container queries), shadcn/Radix composition, loading/empty/error state UX, react-hook-form + zod form UX, i18n/RTL-aware layouts. Previously web UI had no dedicated owner (mobile had `mobile-ui-ux-specialist`).
+  - **`web-design-system-architect`** (agent) — owns the web design system: Tailwind v4 `@theme` ↔ CSS-variable tokens, shadcn theming, and a single cross-platform token source (`src/shared/design-tokens`) that codegens both web CSS and Flutter Dart, plus whitelabel/per-vertical theming. Web counterpart to `mobile-design-system-architect`.
+  - **`web-screen-builder`** (agent) — builds full web routes/pages end to end from a spec across substrates (TanStack Router file route / Astro page / Next route), with data loading, shadcn composition, states, and tests. Web counterpart to `mobile-screen-builder`.
+  - **`refine-admin-patterns`** (skill) — the previously-missing Refine build coverage: `resources`-driven CRUD, Supabase `dataProvider`/`authProvider`/`accessControlProvider` under anon-key + RLS, `useTable` on TanStack Table + shadcn, and an `i18nProvider` bridged to react-intl. Telar had Refine only in the E2E path, no build home.
+  - **`web-design-system-tokens`**, **`web-component-scaffolding`**, **`web-prompt-to-screen`** (skills) — web equivalents of the mobile-only `design-system-persistence`, `component-scaffolding`, and `prompt-to-screen` skills (which, despite neutral names, were RN/Flutter-only in their bodies).
+
+### Changed
+
+- **`admin-panel-architect` broadened to "Vite + TanStack **or** Refine"** — added `refine`/`refinedev` tags, Refine-on-Supabase capabilities/useWhen, a TanStack-vs-Refine decision-framework, and a minimal Refine resource + Supabase dataProvider Core Pattern that cross-references `refine-admin-patterns`. Existing TanStack content unchanged (additive).
+- Regenerated `AGENTS.md` and the Codex plugin (`.codex/agents/*.toml`, `plugins/tl-telar/`) so both the Claude and Codex hosts see the 51-agent / 126-skill roster.
+
 ## [0.15.0] - 2026-07-19
 
 ### Fixed
