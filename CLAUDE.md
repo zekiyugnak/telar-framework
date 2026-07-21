@@ -1,4 +1,4 @@
-# Telar v0.15.0
+# Telar v0.16.0
 
 Agentic engineering framework for Claude Code, spanning cross-platform apps end to end: mobile (React Native, Flutter, native bridges), web (Astro, Next.js/Tailwind/shadcn, Vite/TanStack admin panels), Rust service layers, and desktop. Not mobile-only — the orchestration, reviewer roster, and rubrics are stack-aware across every domain. The per-WU reviewer roster is also **risk-tiered**: rigor is front-loaded into planning, so implementation review stays thin for low-risk work and escalates only where risk warrants it.
 
@@ -47,11 +47,12 @@ The recommended workflow for building features:
 
 ## Agent Discovery
 
-**48 agents** organized by domain:
+**51 agents** organized by domain:
 
 - **Platform experts**: `react-native-expert`, `flutter-expert`
 - **Web platform experts**: `astro-web-expert` (SEO/OG marketing sites), `nextjs-web-expert` (authenticated Next.js/Tailwind/shadcn consoles), `admin-panel-architect` (Vite + TanStack Router/Query/Table admin panels), `web-frontend-expert` (framework-agnostic React/TS SPA)
 - **Web specialists**: `web-security-architect` (appsec/authz/CSP/threat-modeling), `web-performance-optimizer` (Core Web Vitals/bundle/render), `web-accessibility-expert` (WCAG 2.2 AA)
+- **Web UI/Design**: `web-ui-ux-specialist` (responsive layout, shadcn/Radix composition, interaction/state UX), `web-design-system-architect` (Tailwind v4 `@theme`↔CSS-var tokens, cross-platform token source, whitelabel theming), `web-screen-builder` (builds full web routes/pages from a spec: TanStack Router / Astro / Next)
 - **Desktop**: `desktop-expert` (Electron & Tauri — secure IPC, packaging, auto-update)
 - **Service layer**: `rust-service-architect` (axum/tokio/sqlx backend services)
 - **Native bridges**: `ios-native-bridge`, `android-native-bridge`
@@ -70,12 +71,13 @@ The recommended workflow for building features:
 
 ## Skill Discovery
 
-**122 skills** including:
+**126 skills** including:
 
 - **Blueprints** (`skills/blueprints/`): auth-flow, crud-list, chat-feature, settings-screen, onboarding-flow
 - **Astro**: astro-seo-og, astro-content-performance
 - **Next.js/Tailwind/shadcn**: shadcn-component-patterns, tailwind-v4-design-tokens, nextjs-auth-app-router
-- **Admin panel (Vite + TanStack)**: tanstack-router-patterns, tanstack-query-patterns, tanstack-table-patterns, supabase-rls-client-patterns, supabase-tus-resumable-upload, command-palette-cmdk, tremor-dashboard-charts, i18n-rtl-formatjs-lingui
+- **Admin panel (Vite + TanStack / Refine)**: tanstack-router-patterns, tanstack-query-patterns, tanstack-table-patterns, refine-admin-patterns, supabase-rls-client-patterns, supabase-tus-resumable-upload, command-palette-cmdk, tremor-dashboard-charts, i18n-rtl-formatjs-lingui
+- **Web UI/Design system**: web-design-system-tokens, web-component-scaffolding, web-prompt-to-screen
 - **Web E2E**: supabase-e2e-harness, web-e2e-locators, web-e2e-catalog, web-e2e-review
 - **Rust service**: rust-axum-routing, rust-sqlx-patterns, rust-service-architecture, rust-testing-pyramid, rust-deployment
 - **Web (framework-agnostic)**: web-state-management, web-animations, web-testing
