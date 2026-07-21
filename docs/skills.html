@@ -57,6 +57,7 @@
     <a href="#astro">Astro</a>
     <a href="#nextweb">Next.js Web</a>
     <a href="#adminpanel">Admin Panel</a>
+    <a href="#webui">Web UI</a>
     <a href="#webe2e">Web E2E</a>
     <a href="#rustsvc">Rust Service</a>
   </nav>
@@ -1301,9 +1302,22 @@
 
   <!-- ADMIN PANEL -->
   <section class="group">
-    <h2 id="adminpanel">Admin Panel (Vite + TanStack) <span class="gc">8</span></h2>
+    <h2 id="adminpanel">Admin Panel (Vite + TanStack / Refine) <span class="gc">9</span></h2>
     <p class="gdesc">Vite + React 19 + TanStack + Supabase (anon key + RLS only) stack for internal operator panels.</p>
     <div class="cards">
+      <article class="card" data-search="refine-admin-patterns refine refinedev admin-panel supabase data-provider auth-provider access-control rls react web">
+        <div class="card-head"><h3>refine-admin-patterns</h3></div>
+        <p class="desc">Reuses Refine's resource/provider CRUD leverage instead of hand-wiring screens — and keeps RLS, not the client-side access-control provider, as the real security boundary.</p>
+        <div class="chips"><span class="chip">refine</span><span class="chip">supabase</span><span class="chip">rls</span></div>
+        <button class="card-toggle" aria-expanded="false">Details</button>
+        <div class="card-detail" hidden><h4>Capabilities</h4><ul>
+          <li>Derive list/create/edit/show routes from a Refine <code>resources</code> array instead of hand-wiring each CRUD screen</li>
+          <li>Wire a Supabase <code>dataProvider</code> (anon key + RLS) with server-side pagination, sorting, and filtering</li>
+          <li>Wire a Supabase-Auth <code>authProvider</code> (check/login/logout/getIdentity/onError) as Refine's single session source</li>
+          <li>Map <code>accessControlProvider</code> to Postgres roles as UI-hiding only, with RLS as the real boundary</li>
+          <li>Render <code>useTable</code> via TanStack Table + shadcn/Radix; bridge <code>i18nProvider</code> onto an existing react-intl catalog</li>
+        </ul><a class="src" href="https://github.com/zekiyugnak/telar-framework/blob/main/skills/refine-admin-patterns.md">Source ↗</a></div>
+      </article>
       <article class="card" data-search="tanstack-router-patterns tanstack-router react routing type-safety code-splitting admin-panel">
         <div class="card-head"><h3>tanstack-router-patterns</h3></div>
         <p class="desc">Eliminates a class of route/query waterfalls and unguarded-route bugs via end-to-end type safety.</p>
@@ -1439,6 +1453,53 @@
     </div>
   </section>
 
+  <!-- WEB UI & DESIGN SYSTEM -->
+  <section class="group">
+    <h2 id="webui">Web UI &amp; Design System <span class="gc">3</span></h2>
+    <p class="gdesc">Web parity of the mobile design-system/scaffolding skills — Tailwind v4 tokens, typed component packages, and route specs.</p>
+    <div class="cards">
+      <article class="card" data-search="web-design-system-tokens design-system tokens tailwind css-variables theming dark-mode oklch flutter web">
+        <div class="card-head"><h3>web-design-system-tokens</h3></div>
+        <p class="desc">One MASTER token source generates Tailwind v4 @theme + shadcn CSS variables for every web surface AND Flutter Dart — surfaces can't drift and a rebrand is a one-line edit.</p>
+        <div class="chips"><span class="chip">tailwind-v4</span><span class="chip">tokens</span><span class="chip">dark-mode</span></div>
+        <button class="card-toggle" aria-expanded="false">Details</button>
+        <div class="card-detail" hidden><h4>Capabilities</h4><ul>
+          <li>Global MASTER token source authored once as JSON, brand- and platform-neutral</li>
+          <li>Tailwind v4 @theme block wired to :root/.dark CSS custom properties (shadcn two-layer model)</li>
+          <li>Semantic token layering (primitive → semantic → component) with a strict downward reference rule</li>
+          <li>Per-surface and per-vertical overrides via a deterministic cascade precedence chain</li>
+          <li>Single-source codegen emitting web CSS and Flutter Dart together, behind a build-time contrast gate</li>
+        </ul><a class="src" href="https://github.com/zekiyugnak/telar-framework/blob/main/skills/web-design-system-tokens.md">Source ↗</a></div>
+      </article>
+      <article class="card" data-search="web-component-scaffolding components scaffolding web react tsx shadcn cva tailwind accessibility testing vitest">
+        <div class="card-head"><h3>web-component-scaffolding</h3></div>
+        <p class="desc">Generates fully typed, accessible, token-styled, tested React/TSX component packages from a spec in seconds — the web parity of component-scaffolding.</p>
+        <div class="chips"><span class="chip">react</span><span class="chip">cva</span><span class="chip">vitest</span></div>
+        <button class="card-toggle" aria-expanded="false">Details</button>
+        <div class="card-detail" hidden><h4>Capabilities</h4><ul>
+          <li>Convert a component spec into a typed React/TSX component package</li>
+          <li>Generate a companion hook, Vitest + @testing-library test, and optional Storybook story</li>
+          <li>Apply cn() + class-variance-authority for deterministic variant styling</li>
+          <li>Enforce Tailwind semantic tokens, no inline styles, and forwardRef where composed</li>
+          <li>Generate correct a11y roles/labels and wire jest-axe into the test</li>
+        </ul><a class="src" href="https://github.com/zekiyugnak/telar-framework/blob/main/skills/web-component-scaffolding.md">Source ↗</a></div>
+      </article>
+      <article class="card" data-search="web-prompt-to-screen screen-spec route-spec requirements layout tanstack-router astro nextjs i18n rtl a11y figma web">
+        <div class="card-head"><h3>web-prompt-to-screen</h3></div>
+        <p class="desc">Converts vague feature requests or Figma frames into precise, buildable web route specs — path, layout, component tree, data deps, states, i18n, and a11y.</p>
+        <div class="chips"><span class="chip">route-spec</span><span class="chip">tanstack-router</span><span class="chip">figma</span></div>
+        <button class="card-toggle" aria-expanded="false">Details</button>
+        <div class="card-detail" hidden><h4>Capabilities</h4><ul>
+          <li>Transform rough web feature descriptions into structured route specs (Mod A)</li>
+          <li>Read Figma designs via Figma MCP and convert to a web route spec (Mod B); hybrid mode (Mod C)</li>
+          <li>Define route path, substrate, layout hierarchy, and component tree</li>
+          <li>Specify data dependencies (TanStack Query / Supabase), state ownership, and all four states</li>
+          <li>Enumerate i18n message keys and accessibility notes for the route</li>
+        </ul><a class="src" href="https://github.com/zekiyugnak/telar-framework/blob/main/skills/web-prompt-to-screen.md">Source ↗</a></div>
+      </article>
+    </div>
+  </section>
+
   <!-- WEB E2E -->
   <section class="group">
     <h2 id="webe2e">Web E2E <span class="gc">4</span></h2>
@@ -1566,7 +1627,7 @@
 </main>
 
 <footer><div class="wrap fl">
-  <span>Telar v0.15.0 — MIT © 2026 Zeki Yugnak</span>
+  <span>Telar v0.16.0 — MIT © 2026 Zeki Yugnak</span>
   <span><a href="https://github.com/zekiyugnak/telar-framework/tree/main/skills">All skills on GitHub</a> · <a href="index.html">Docs home</a></span>
 </div></footer>
 

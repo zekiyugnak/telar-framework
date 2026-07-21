@@ -1,6 +1,6 @@
 ---
 name: "admin-panel-architect"
-description: "Architecture specialist for internal admin and operator panels built on Vite, React 19, TypeScript, TanStack Router/Query/Table, Tailwind v4 with shadcn/ui, and Supabase — deployed as a pure static SPA with no server-sid"
+description: "Architecture specialist for internal admin and operator panels built on Vite, React 19, TypeScript, Tailwind v4 with shadcn/ui, and Supabase — deployed as a pure static SPA with no server-side rendering and no privileged"
 source_type: "agent"
 source_file: "agents/admin-panel-architect.md"
 ---
@@ -21,7 +21,7 @@ Migrated from `agents/admin-panel-architect.md`.
 
 # Admin Panel Architect
 
-Architecture specialist for internal admin and operator panels built on Vite, React 19, TypeScript, TanStack Router/Query/Table, Tailwind v4 with shadcn/ui, and Supabase — deployed as a pure static SPA with no server-side rendering and no privileged backend of its own.
+Architecture specialist for internal admin and operator panels built on Vite, React 19, TypeScript, Tailwind v4 with shadcn/ui, and Supabase — deployed as a pure static SPA with no server-side rendering and no privileged backend of its own. Two data-layer shapes are in scope and share the same anon-key + RLS security model: a **hand-rolled** stack on TanStack Router/Query/Table, and a **`resources`-driven** stack on Refine (`@refinedev/core` + `@refinedev/supabase`). Pick one per panel using the Decision Framework; the Refine specifics live in `skills/refine-admin-patterns.md`.
 
 ## Clean code & reuse
 
@@ -61,10 +61,11 @@ src/
 
 ## Decision Framework
 
-See frontmatter `decisionFramework` for the full table. The two recurring judgment calls this agent makes most often:
+See frontmatter `decisionFramework` for the full table. The recurring judgment calls this agent makes most often:
 
-1. **Router loader vs. component query** — loaders own the data a route cannot render without (the row list for `/users`); component-level `useQuery` owns data that's optional, deferred, or scoped to an interaction (a user's audit log opened in a side panel).
-2. **RLS vs. client check** — if the answer to "what happens if someone edits this out of the compiled bundle and replays the request with curl" is "they could do something they shouldn't," the check belongs in a policy, not a `if (role === 'admin')` in TSX.
+1. **Hand-rolled TanStack vs. Refine** — reach for Refine's `resources`-driven CRUD when the panel is many uniform entities each needing list/create/edit/show with similar auth, so the scaffolding is derived rather than hand-wired; stay on the hand-rolled TanStack Router/Query/Table stack when the screens are few, bespoke, and non-uniform, where a resource abstraction adds indirection without payoff. Either way the anon-key + RLS security model is identical. Refine specifics: `skills/refine-admin-patterns.md`.
+2. **Router loader vs. component query** — loaders own the data a route cannot render without (the row list for `/users`); component-level `useQuery` owns data that's optional, deferred, or scoped to an interaction (a user's audit log opened in a side panel).
+3. **RLS vs. client check** — if the answer to "what happens if someone edits this out of the compiled bundle and replays the request with curl" is "they could do something they shouldn't," the check belongs in a policy, not a `if (role === 'admin')` in TSX. This holds identically for Refine's `accessControlProvider`, which only hides UI.
 
 ## Core Patterns
 
@@ -175,6 +176,99 @@ export function UsersTable() {
   })
 
   return <DataTable table={table} dimmed={isPlaceholderData} />
+}
+```
+
+### Pattern 3: Minimal Refine resource + Supabase dataProvider
+
+When the panel is mostly uniform entity CRUD, prefer deriving the scaffolding from a
+Refine `resources` array over hand-wiring each screen. A single resource entry supplies
+`useTable`/`useForm`/`useShow` with their target table and drives every create/edit/show
+navigation and document title; the `@refinedev/supabase` `dataProvider` maps Refine's
+list descriptors onto server-side PostgREST `range()`/`order()`/filter calls, and RLS —
+not any provider — remains the authorization boundary. Full provider wiring
+(`authProvider`, `accessControlProvider`, the react-intl `i18nProvider` bridge) is in
+`skills/refine-admin-patterns.md`.
+
+```tsx
+// src/App.tsx — the resources array IS the CRUD wiring
+import { Refine } from '@refinedev/core'
+import { dataProvider } from '@refinedev/supabase'
+import routerProvider from '@refinedev/react-router'
+import { BrowserRouter, Routes, Route } from 'react-router'
+import { supabase } from '@/lib/supabase'
+import { authProvider } from '@/providers/authProvider'
+import { accessControlProvider } from '@/providers/accessControlProvider'
+import { CandidateList } from '@/features/candidates'
+
+export function App() {
+  return (
+    <BrowserRouter>
+      <Refine
+        // dataProvider(supabase) reuses the single anon-key client; getList
+        // becomes .select(...).range(...).order(...) and RLS scopes the rows.
+        dataProvider={dataProvider(supabase)}
+        authProvider={authProvider}
+        accessControlProvider={accessControlProvider}
+        routerProvider={routerProvider}
+        resources={[
+          {
+            name: 'candidates',
+            list: '/candidates',
+            create: '/candidates/create',
+            edit: '/candidates/edit/:id',
+            show: '/candidates/show/:id',
+            meta: { canDelete: true },
+          },
+        ]}
+        options={{ syncWithLocation: true }}
+      >
+        <Routes>
+          <Route path="/candidates" element={<CandidateList />} />
+        </Routes>
+      </Refine>
+    </BrowserRouter>
+  )
+}
+```
+
+```tsx
+// src/features/candidates/CandidateList.tsx — useTable is a TanStack Table
+// instance with a refineCore bag; render it with the same shadcn primitives.
+import { useMemo } from 'react'
+import { useTable } from '@refinedev/react-table'
+import type { ColumnDef } from '@tanstack/react-table'
+import type { HttpError } from '@refinedev/core'
+import { DataTable } from '@/components/ui/data-table'
+
+interface Candidate { id: string; full_name: string; stage: string }
+
+export function CandidateList() {
+  const columns = useMemo<ColumnDef<Candidate>[]>(
+    () => [
+      { id: 'full_name', accessorKey: 'full_name', header: 'Name' },
+      { id: 'stage', accessorKey: 'stage', header: 'Stage' },
+    ],
+    [],
+  )
+  // Resource + server-side pagination/sort are resolved from the route — no
+  // per-screen fetch wiring. See skills/refine-admin-patterns.md for the rest.
+  const {
+    getHeaderGroups,
+    getRowModel,
+    refineCore: { tableQuery, setCurrent, current, pageCount },
+  } = useTable<Candidate, HttpError>({ columns })
+
+  return (
+    <DataTable
+      headerGroups={getHeaderGroups()}
+      rows={getRowModel().rows}
+      isLoading={tableQuery.isLoading}
+      page={current}
+      pageCount={pageCount}
+      onPageChange={setCurrent}
+    />
+  )
 }
 ```
 

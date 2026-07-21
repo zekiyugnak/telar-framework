@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Agents — Telar</title>
-<meta name="description" content="The 48 specialized agents in Telar, grouped by domain.">
+<meta name="description" content="The 51 specialized agents in Telar, grouped by domain.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;650;800;850&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="assets/telar.css">
@@ -31,7 +31,7 @@
   <div class="page-title">
     <span class="eyebrow">Reference</span>
     <h1>Agents</h1>
-    <p>48 specialized subagents, each an expert in one domain. Expand a card for its capabilities, when to use it, and a link to its source.</p>
+    <p>51 specialized subagents, each an expert in one domain. Expand a card for its capabilities, when to use it, and a link to its source.</p>
   </div>
 
   <div class="filter-bar">
@@ -928,7 +928,7 @@
 
   <!-- WEB & SERVICE -->
   <section class="group">
-    <h2 id="web">Web &amp; Service Layer <span class="gc">5</span></h2>
+    <h2 id="web">Web &amp; Service Layer <span class="gc">8</span></h2>
     <p class="gdesc">A companion web stack (Astro, Next.js, Vite/TanStack) and a Rust backend service layer alongside the mobile agents.</p>
     <div class="cards">
 
@@ -1151,6 +1151,72 @@
         </div>
       </article>
 
+      <article class="card" data-search="web-ui-ux-specialist ui ux responsive shadcn radix tailwind forms i18n rtl a11y states web">
+        <div class="card-head"><span class="card-icon">🧩</span><h3>web-ui-ux-specialist</h3></div>
+        <p class="desc">Responsive, accessible, localizable web UI on Vite + React 19 with shadcn/Radix and Tailwind v4.</p>
+        <div class="chips"><span class="chip">responsive</span><span class="chip">shadcn</span><span class="chip">ux</span></div>
+        <button class="card-toggle" aria-expanded="false">Details</button>
+        <div class="card-detail" hidden>
+          <h4>Capabilities</h4><ul>
+            <li>Responsive layout with flexbox, CSS grid, and container queries</li>
+            <li>shadcn/ui + Radix primitive composition for accessible interaction patterns</li>
+            <li>Loading / empty / error / success state design for every async surface</li>
+            <li>Form UX with react-hook-form + zod (inline validation, focus management, aria wiring)</li>
+            <li>i18n and RTL-aware layouts using CSS logical properties and react-intl</li>
+          </ul>
+          <h4>When to use</h4><ul>
+            <li>Designing web UI that must be responsive across mobile, tablet, and desktop breakpoints</li>
+            <li>Composing shadcn/Radix primitives into accessible dropdowns, dialogs, and forms</li>
+            <li>Implementing form UX with react-hook-form + zod, or making a layout RTL-ready</li>
+          </ul>
+          <a class="src" href="https://github.com/zekiyugnak/telar-framework/blob/main/agents/web-ui-ux-specialist.md">Source ↗</a>
+        </div>
+      </article>
+
+      <article class="card" data-search="web-design-system-architect design-system tokens tailwind shadcn css-variables theming whitelabel cross-platform web">
+        <div class="card-head"><span class="card-icon">🎨</span><h3>web-design-system-architect</h3></div>
+        <p class="desc">Owns the web design system — one cross-platform token source feeding web CSS/Tailwind vars and Flutter Dart.</p>
+        <div class="chips"><span class="chip">tokens</span><span class="chip">tailwind</span><span class="chip">theming</span></div>
+        <button class="card-toggle" aria-expanded="false">Details</button>
+        <div class="card-detail" hidden>
+          <h4>Capabilities</h4><ul>
+            <li>Own the web design system — Tailwind v4 @theme tokens wired to CSS custom properties</li>
+            <li>A single cross-platform token source that generates web CSS/Tailwind vars AND Flutter Dart tokens</li>
+            <li>Token consistency across the marketing (Astro), client (Vite/TanStack), and admin surfaces</li>
+            <li>Whitelabel/multi-vertical theming with a deterministic override precedence chain</li>
+            <li>Semantic token layering (primitive → semantic → component) and light/dark scheme swaps</li>
+          </ul>
+          <h4>When to use</h4><ul>
+            <li>Setting up or restructuring the web design system for a Tailwind v4 + shadcn/Radix codebase</li>
+            <li>A single token set must feed multiple web surfaces without drifting, or adding whitelabel theming</li>
+            <li>Auditing surfaces for hardcoded colors, drifted duplicate palettes, or contrast-failing token pairs</li>
+          </ul>
+          <a class="src" href="https://github.com/zekiyugnak/telar-framework/blob/main/agents/web-design-system-architect.md">Source ↗</a>
+        </div>
+      </article>
+
+      <article class="card" data-search="web-screen-builder screen-builder web tanstack-router astro nextjs data-loading states verification requirements figma">
+        <div class="card-head"><span class="card-icon">🏗️</span><h3>web-screen-builder</h3></div>
+        <p class="desc">Builds web routes end to end — routing, data wiring, shadcn composition, state coverage, and browser verification.</p>
+        <div class="chips"><span class="chip">routing</span><span class="chip">tanstack</span><span class="chip">astro</span></div>
+        <button class="card-toggle" aria-expanded="false">Details</button>
+        <div class="card-detail" hidden>
+          <h4>Capabilities</h4><ul>
+            <li>Turn a route/page spec into a complete, wired web route end to end</li>
+            <li>Choose the correct routing substrate (TanStack Router file route, Astro page, or Next route)</li>
+            <li>Wire data loading via a route loader + TanStack Query, or an Astro/Next server fetch</li>
+            <li>Compose shadcn/Radix primitives with loading / empty / error / success states</li>
+            <li>Scaffold companion components and Vitest/@testing-library tests, then verify in the browser</li>
+          </ul>
+          <h4>When to use</h4><ul>
+            <li>Building a new web page or route from a specification</li>
+            <li>Standing up a data-backed screen with loader + query + full state coverage</li>
+            <li>Deciding whether a screen is a TanStack SPA route, an Astro page, or a Next route</li>
+          </ul>
+          <a class="src" href="https://github.com/zekiyugnak/telar-framework/blob/main/agents/web-screen-builder.md">Source ↗</a>
+        </div>
+      </article>
+
     </div>
   </section>
 
@@ -1228,7 +1294,7 @@
 </main>
 
 <footer><div class="wrap fl">
-  <span>Telar v0.15.0 — MIT © 2026 Zeki Yugnak</span>
+  <span>Telar v0.16.0 — MIT © 2026 Zeki Yugnak</span>
   <span><a href="https://github.com/zekiyugnak/telar-framework/tree/main/agents">All agents on GitHub</a> · <a href="index.html">Docs home</a></span>
 </div></footer>
 
