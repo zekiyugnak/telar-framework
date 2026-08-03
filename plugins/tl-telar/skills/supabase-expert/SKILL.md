@@ -141,11 +141,13 @@ START: What is the data ownership model?
 CREATE OR REPLACE FUNCTION is_admin()
 RETURNS boolean AS $$
   SELECT EXISTS (
-    SELECT 1 FROM user_roles
+    SELECT 1 FROM public.user_roles
     WHERE user_id = auth.uid()
     AND role = 'admin'
   );
-$$ LANGUAGE sql SECURITY DEFINER;
+$$ LANGUAGE sql SECURITY DEFINER
+-- SET search_path = '' prevents search-path hijacking of a SECURITY DEFINER fn; every object below must be schema-qualified
+SET search_path = '';
 ```
 
 ## Authentication
