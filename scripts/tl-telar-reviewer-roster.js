@@ -41,7 +41,12 @@ const DOMAIN_RULES = [
   { domain: 'backend-data', re: /(^|\/)migrations?\/|\.sql$|(^|\/)supabase\/|(^|\/)db\//i },
   { domain: 'desktop',      re: /(^|\/)(electron|src-tauri)\/|(^|\/)(main|preload)\.(ts|js)$|electron-builder|forge\.config|tauri\.conf\.json/i },
   { domain: 'mobile',       re: /(^|\/)screens\/|(^|\/)lib\/(widgets|ui)\/|\.dart$|(^|\/)(ios|android)\/|react-native|(^|\/)mobile\//i },
-  { domain: 'web',          re: /\.astro$|\.vue$|(^|\/)admin\/|(^|\/)apps\/web\/|(^|\/)src\/app\/|(^|\/)web\//i },
+  // `web` also covers the Vite + TanStack Router/Query/Table + Refine admin stack,
+  // whose files live under src/routes/ (file-based routes) and src/resources/, with
+  // Refine providers named data/accessControl/routerProvider — none of which match
+  // /admin/ or /src/app/. Without these markers such files fall through to the
+  // default domain and a web/admin panel silently gets a mobile Security rubric.
+  { domain: 'web',          re: /\.astro$|\.vue$|(^|\/)admin\/|(^|\/)apps\/web\/|(^|\/)src\/app\/|(^|\/)web\/|(^|\/)src\/(routes|resources)\/|(data|accessControl|router)Provider|routeTree\.gen|(^|\/)vite\.config/i },
 ];
 
 const UI_RE   = /\.(tsx|jsx|dart|astro|vue|svelte)$|(^|\/)(components|screens|widgets|pages)\//i;
@@ -79,7 +84,11 @@ const RUBRICS = {
   },
   'backend-data': {
     security: 'backend-data-security-adversarial-rubric.md',
-    securityKey: 'backend-data-security',
+    // Backend/data (SQL, RPC, migrations) has real query-performance risk (N+1,
+    // missing indexes, unbounded scans, RLS predicate cost) that the UI perf lenses
+    // never see. This rubric gives it a dedicated critical-tier Performance reviewer.
+    perf: 'backend-data-performance-adversarial-rubric.md',
+    securityKey: 'backend-data-security', perfKey: 'backend-data-perf',
   },
   rust: {
     security: 'rust-safety-adversarial-rubric.md',
@@ -259,6 +268,22 @@ function resolveRoster(paths, defaultDomain, opts = {}) {
           reason: `perf-sensitive:${d}`,
         });
       }
+    }
+  }
+
+  // Backend/data performance — CRITICAL-only. A backend-data WU (RPC / SQL / migrations)
+  // is inherently query-performance-relevant, so — unlike UI perf — it is NOT gated on a
+  // PERF_RE path marker; the domain being in scope is enough.
+  if (riskTier === 'critical' && domains.includes('backend-data')) {
+    const r = RUBRICS['backend-data'];
+    if (r && r.perf) {
+      reviewers.push({
+        role: 'Performance',
+        reviewer_key: r.perfKey,
+        rubric: `${RUBRIC_DIR}/${r.perf}`,
+        model: reviewerModel,
+        reason: 'perf-sensitive:backend-data',
+      });
     }
   }
 

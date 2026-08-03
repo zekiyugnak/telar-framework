@@ -6,6 +6,23 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+## [0.17.0] - 2026-08-03
+
+### Added
+
+- **Backend/RPC performance review (new adversarial dimension)** — `backend-data-performance-adversarial-rubric.md` (DP1–DP11: N+1 / per-row amplification, missing indexes, sequential scans, unbounded result sets, hot-path over-fetch, function-volatility mislabels, expensive per-row RLS predicates, missing `EXPLAIN (ANALYZE, BUFFERS)` evidence, `count(*)` on large tables, un-indexed JSONB/array search, chatty round-trips). The reviewer roster now spawns it for any `backend-data` (SQL / RPC / migrations) Work Unit at the **critical** tier — a query-performance dimension the mobile/web perf lenses never covered.
+- **Web-stack detection in `project-detect.sh`** — additive `domain` field (`mobile | web | desktop | unknown`) detecting Vite / TanStack / Refine / Next / Astro, so a web/admin project's reviewer `--default-domain` derives as `web` instead of defaulting to mobile. Fully backward-compatible (no existing field changed or removed).
+
+### Fixed
+
+- **Stack-aware security-review routing for web/admin** — the adversarial reviewer roster mis-routed Vite + TanStack + Refine admin files (`src/routes/`, `src/resources/`, Refine `data`/`accessControl`/`routerProvider`) to the **mobile** Security reviewer: they matched neither the mobile nor the web classifier and fell through to a mis-detected mobile default-domain. The `web` DOMAIN_RULES now self-identify the admin stack, so those files get `web-security` regardless of default-domain.
+- **`SECURITY DEFINER` example modeled a search-path-hijack anti-pattern** — the `is_admin()` helper in `supabase-expert` now pins `SET search_path = ''` and schema-qualifies `public.user_roles` (fixes the Supabase-linter `function_search_path_mutable` footgun).
+
+### Changed
+
+- De-hardcoded "Mobile Security" in the `adversarial-code-review` guidance; `--default-domain` is now tied to `project-detect`'s `domain` field (a web/admin project MUST be `web`).
+- Regenerated the Codex plugin (`plugins/tl-telar/`, `.codex/agents/*.toml`) and GitHub Pages docs to v0.17.0.
+
 ## [0.16.0] - 2026-07-21
 
 ### Added
