@@ -1,6 +1,6 @@
 ---
 name: "orchestration-adversarial-code-review"
-description: "`--default-domain` comes from the project-detect framework signal (orchestrator Step 5b / project-context); it only decides how UI files with no strong path marker are classified. `--model` is the Claude reviewer tier re"
+description: "`--default-domain` comes from the `domain` field emitted by `scripts/project-detect.sh` (a Vite/TanStack/Refine/Next/Astro project reports `domain: web`; expo/bare/flutter → `mobile`) — captured in project-context at orc"
 source_type: "orchestration"
 source_file: "skills/orchestration/adversarial-code-review.md"
 ---
@@ -48,7 +48,7 @@ For a given Work Unit (with declared `fileScope`, `dod`, and `diff`):
    node scripts/tl-telar-reviewer-roster.js --default-domain <mobile|web> --risk-tier <trivial|standard|critical> --model "${REVIEWER_TIER:-opus}" <every path in fileScope>
    ```
 
-   `--default-domain` comes from the project-detect framework signal (orchestrator Step 5b / project-context); it only decides how UI files with no strong path marker are classified. `--model` is the Claude reviewer tier resolved from `routing.roles.reviewer` (default `opus` when unset or when external-tools.yaml is absent) — this is Review 1's model; Review 2's cross-model reviewer is chosen separately from the matrix. `--risk-tier` is the WU's `risk_tier` field (default `standard` if absent) and it sizes the roster. The resolver returns JSON `{ risk_tier, domains, reviewers: [{ role, reviewer_key, rubric, model, reason }] }`. Spawn EXACTLY that set — it is stack-aware (a web/admin or backend WU never gets a mobile rubric) AND risk-scaled:
+   `--default-domain` comes from the `domain` field emitted by `scripts/project-detect.sh` (a Vite/TanStack/Refine/Next/Astro project reports `domain: web`; expo/bare/flutter → `mobile`) — captured in project-context at orchestrator Step 5b. **For a web/admin project it MUST be `web`.** It only decides how UI files with no strong path marker are classified (the roster's DOMAIN_RULES already self-identify admin-stack files as web). `--model` is the Claude reviewer tier resolved from `routing.roles.reviewer` (default `opus` when unset or when external-tools.yaml is absent) — this is Review 1's model; Review 2's cross-model reviewer is chosen separately from the matrix. `--risk-tier` is the WU's `risk_tier` field (default `standard` if absent) and it sizes the roster. The resolver returns JSON `{ risk_tier, domains, reviewers: [{ role, reviewer_key, rubric, model, reason }] }`. Spawn EXACTLY that set — it is stack-aware (a web/admin or backend WU never gets a mobile rubric) AND risk-scaled:
    - **`trivial`** → **Code** only. (+ a **Security** reviewer if the fileScope trips the sensitive-path floor — see below.)
    - **`standard`** (the default) → **Code** + **Maintainability** + **Security** (only when the sensitive-path floor fires OR the domain is high-stakes backend/rust/desktop) + **BackendCorrectness** (backend/service in scope). UI **a11y / perf / FrontendUX are NOT spawned as LLM reviewers** — their mechanical criteria are covered by the Katman-1 CI lenses (`a11y_command` / `perf_command` / lint in `.tl-telar-thresholds.json`). This is the fast default.
    - **`critical`** → the FULL roster: Code + Maintainability + Security **per in-scope domain** + BackendCorrectness + **FrontendUX** + **Accessibility** (per UI domain) + **Performance** (per perf-sensitive UI domain). Plus the qualitative escalations in the section below.
@@ -182,7 +182,7 @@ Two additions that improve traceability without touching the spawn invariant:
 
 **This does NOT replace the main-model review above — it ADDS a second, independent one.** When `.tl-telar/external-tools.yaml` → `cross_model_review.enabled: true`, every orchestrated WU gets TWO reviews and BOTH must PASS:
 
-- **Review 1 — main model (always runs):** the fresh Claude reviewer roster determined above (Code Quality + Mobile Security + any conditional roles). Existing sub-spec 2 behavior; runs whether or not cross-model is enabled.
+- **Review 1 — main model (always runs):** the fresh Claude reviewer roster determined above (Code Quality + the **domain-correct** Security reviewer — `web-security` for a web/admin WU, `mobile-security` for a mobile one, `backend-data-security`/`rust-safety`/`desktop-security` per stack — plus any conditional roles). The roster comes from `tl-telar-reviewer-roster.js`; **never assume a mobile Security reviewer** (a web/admin panel whose files live under `src/routes/`, `src/resources/`, or Refine providers must get `web-security`, and its project default-domain must be `web`). Existing sub-spec 2 behavior; runs whether or not cross-model is enabled.
 - **Review 2 — cross-model (only when enabled):** ONE additional review of the WU diff by a model different from both the developer AND Claude, dispatched through the external-tools adapter. A genuinely independent second opinion.
 
 Overall verdict = PASS **iff Review 1 PASSES AND Review 2 PASSES**. Any FAIL from either → overall FAIL → loop back to Phase 1. When `enabled: false`, only Review 1 runs (unchanged from sub-spec 2).
@@ -197,7 +197,7 @@ Overall verdict = PASS **iff Review 1 PASSES AND Review 2 PASSES**. Any FAIL fro
 
 ### Recording both reviews
 
-Record both in `.tl-telar/context/execution-state.md` under the WU, e.g. `Reviews: R1 claude (Code-Quality PASS, Mobile-Security PASS); R2 codex (PASS)`, so "did the second model actually review?" is auditable from state — not merely inferable from the budget ledger.
+Record both in `.tl-telar/context/execution-state.md` under the WU, e.g. `Reviews: R1 claude (Code-Quality PASS, Web-Security PASS); R2 codex (PASS)` — the Security label reflects the WU's **resolved domain** (`Web-Security`, `Mobile-Security`, `Backend-Data-Security`, …), so a mobile label on a web WU is itself a routing red flag — so "did the second model actually review?" is auditable from state — not merely inferable from the budget ledger.
 
 ### Required-mode enforcement (`enabled: true` ⇒ the SECOND review is REQUIRED)
 

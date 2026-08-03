@@ -24,6 +24,37 @@ const triv = (paths, dd) => resolveRoster(paths, dd, { riskTier: 'trivial' });
   assert.ok(!k.some((x) => x.startsWith('mobile')), 'web WU must not get any mobile reviewer');
 }
 
+// REGRESSION (talent-portal): a Vite + TanStack + Refine admin panel keeps its
+// files under src/routes/ (file-based routes), src/resources/, and Refine
+// providers (dataProvider / accessControlProvider) — NONE of which match admin/
+// or src/app/. They must self-identify as `web` from the path alone, so a project
+// whose default-domain is (mis)detected as `mobile` STILL gets web-security and
+// never a mobile rubric. Guards scripts/tl-telar-reviewer-roster.js DOMAIN_RULES.
+{
+  const adminPaths = [
+    'src/routes/candidates.tsx',
+    'src/resources/candidates/list.tsx',
+    'src/providers/dataProvider.ts',
+    'src/providers/accessControlProvider.ts',
+  ];
+  // default-domain is deliberately 'mobile' here: the regex, not the default, must win.
+  const k = keys(crit(adminPaths, 'mobile'));
+  assert.ok(k.includes('web-security'), 'Refine/TanStack admin files must get web-security');
+  assert.ok(
+    !k.some((x) => x.startsWith('mobile')),
+    'Refine/TanStack admin WU must never get a mobile reviewer, even when default-domain=mobile',
+  );
+}
+
+// REGRESSION: the sensitive-path FLOOR fires on accessControlProvider (authz), and
+// its forced Security reviewer must follow the WEB domain — not mobile — even at the
+// light standard tier and even when default-domain=mobile.
+{
+  const k = keys(std(['src/providers/accessControlProvider.ts'], 'mobile'));
+  assert.ok(k.includes('web-security'), 'floor Security reviewer must be web-security for a web provider path');
+  assert.ok(!k.some((x) => x.startsWith('mobile')), 'floor Security must not resolve to mobile for a web path');
+}
+
 // Mobile screen WU (critical): mobile security + frontend-ux + mobile a11y; NEVER a web rubric.
 {
   const k = keys(crit(['screens/Home.tsx'], 'mobile'));
@@ -42,6 +73,29 @@ const triv = (paths, dd) => resolveRoster(paths, dd, { riskTier: 'trivial' });
 // Perf-sensitive web path (critical) activates the web performance reviewer.
 {
   assert.ok(keys(crit(['admin/UsersTable.tsx'], 'web')).includes('web-perf'), 'a *Table* path should trigger web-perf at critical');
+}
+
+// Backend/data (RPC / SQL / migrations) gets a dedicated Performance reviewer at
+// CRITICAL — the query-perf dimension (N+1, indexes, unbounded scans, RLS cost) that
+// the UI perf lenses never cover. It is NOT gated on a *Table*-style path marker, and
+// like UI perf it stays OUT of the light standard tier.
+{
+  const migration = ['supabase/migrations/0007_candidate_search_rpc.sql'];
+  const kc = keys(crit(migration, null));
+  assert.ok(kc.includes('backend-data-security'), 'backend WU still gets backend-data-security');
+  assert.ok(kc.includes('backend-correctness'), 'backend WU still gets backend-correctness');
+  assert.ok(kc.includes('backend-data-perf'), 'critical backend-data WU must get the backend-data performance reviewer');
+  assert.ok(!keys(std(migration, null)).includes('backend-data-perf'), 'standard backend-data WU must NOT spawn the perf reviewer');
+}
+
+// GUARD (no false positive from the web-stack markers): a mobile project's own context
+// provider (src/providers/AuthProvider.tsx) must NOT be captured by the Refine provider
+// markers (data/accessControl/routerProvider) — `authProvider` is deliberately excluded —
+// so it still routes mobile under a mobile default-domain.
+{
+  const k = keys(crit(['src/providers/AuthProvider.tsx'], 'mobile'));
+  assert.ok(!k.some((x) => x.startsWith('web')), 'mobile AuthProvider must not be misrouted to web');
+  assert.ok(k.includes('mobile-security'), 'mobile AuthProvider (sensitive: auth) should get mobile-security');
 }
 
 // Desktop (Electron/Tauri) WU (critical): desktop-security lens.

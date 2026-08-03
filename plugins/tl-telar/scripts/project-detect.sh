@@ -1,6 +1,10 @@
 #!/bin/bash
-# project-detect.sh — Detect mobile project type, framework, and dependencies
-# Outputs JSON: { platform, framework, version, navigation, stateManagement, backend, typescript }
+# project-detect.sh — Detect project type (mobile / web / desktop), framework, and dependencies
+# Telar is multi-domain (mobile, web, backend, desktop); this script detects the stack cheaply from
+# package.json / pubspec.yaml so callers (e.g. the orchestrator's --default-domain signal) can route
+# reviewers correctly.
+# Outputs JSON: { platform, framework, version, navigation, stateManagement, backend, typescript, domain }
+#   domain ∈ { "mobile" | "web" | "desktop" | "backend" | "unknown" } — additive signal (see below).
 
 set -euo pipefail
 
@@ -11,6 +15,7 @@ NAVIGATION=""
 STATE_MGMT=""
 BACKEND=""
 TYPESCRIPT=false
+DOMAIN="unknown"
 
 # Detect React Native / Expo
 if [ -f "package.json" ]; then
@@ -25,6 +30,38 @@ if [ -f "package.json" ]; then
     PLATFORM="react-native"
     FRAMEWORK="bare"
     VERSION=$(echo "$PKG" | python3 -c "import json,sys; print(json.load(sys.stdin).get('dependencies',{}).get('react-native',''))" 2>/dev/null || echo "")
+  fi
+
+  # Domain derivation for JS/TS projects.
+  # Mobile (Expo / bare RN) takes priority — never reclassify a React Native project.
+  if [ "$PLATFORM" = "react-native" ]; then
+    DOMAIN="mobile"
+  # Desktop next (Electron / Tauri) — more specific than web, and Tauri apps also use Vite.
+  elif echo "$PKG" | grep -q '"electron"' || echo "$PKG" | grep -q '"@tauri-apps/'; then
+    DOMAIN="desktop"
+    [ "$PLATFORM" = "unknown" ] && PLATFORM="desktop"
+    if [ "$FRAMEWORK" = "unknown" ]; then
+      if echo "$PKG" | grep -q '"@tauri-apps/'; then FRAMEWORK="tauri"; else FRAMEWORK="electron"; fi
+    fi
+  else
+    # Web-stack markers, most specific first: refine > tanstack > next > astro > vite.
+    WEB_HINT=""
+    if echo "$PKG" | grep -q '"@refinedev/'; then
+      WEB_HINT="refine"
+    elif echo "$PKG" | grep -q '"@tanstack/react-router"' || echo "$PKG" | grep -q '"@tanstack/react-query"' || echo "$PKG" | grep -q '"@tanstack/react-table"'; then
+      WEB_HINT="tanstack"
+    elif echo "$PKG" | grep -q '"next"'; then
+      WEB_HINT="next"
+    elif echo "$PKG" | grep -q '"astro"'; then
+      WEB_HINT="astro"
+    elif echo "$PKG" | grep -q '"vite"'; then
+      WEB_HINT="vite"
+    fi
+    if [ -n "$WEB_HINT" ]; then
+      DOMAIN="web"
+      [ "$PLATFORM" = "unknown" ] && PLATFORM="web"
+      [ "$FRAMEWORK" = "unknown" ] && FRAMEWORK="$WEB_HINT"
+    fi
   fi
 
   # TypeScript
@@ -67,6 +104,7 @@ elif [ -f "pubspec.yaml" ]; then
   PLATFORM="flutter"
   FRAMEWORK="flutter"
   TYPESCRIPT=false
+  DOMAIN="mobile"
 
   PUBSPEC=$(cat pubspec.yaml)
 
@@ -110,6 +148,7 @@ cat << EOF
   "navigation": "$NAVIGATION",
   "stateManagement": "$STATE_MGMT",
   "backend": "$BACKEND",
-  "typescript": $TYPESCRIPT
+  "typescript": $TYPESCRIPT,
+  "domain": "$DOMAIN"
 }
 EOF
