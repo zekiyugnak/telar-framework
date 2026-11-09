@@ -14,7 +14,7 @@ Migrated from `agents/astro-web-expert.md`.
 - Claude/Telar source files remain the source of truth; this file is the generated Codex adapter.
 - Skill-local support files from the original Telar skill, such as `references/...` or `workflow/...`, are packaged beside this `SKILL.md`.
 - Repo-root references from the original Telar file, such as `agents/...`, `commands/...`, `scripts/...`, `resources/...`, `rules/...`, `hooks/...`, or `templates/...`, are packaged at this plugin root.
-- The original Telar orchestration source (`skills/orchestration/...`) is packaged under `source/skills/orchestration/...` for exact-reference lookups; all other Telar skills exist here only as the generated adapters under the plugin-root `skills/` directory.
+- The original Telar orchestration source (`skills/orchestration/...`) and the vendored third-party source (`skills/third-party/...`) are packaged under `source/skills/...` for exact-reference lookups; all other Telar skills exist here only as the generated adapters under the plugin-root `skills/` directory.
 - Resolve plugin-root paths from this generated skill directory via `../..` when reading support files or running packaged scripts.
 - This agent is packaged as a Codex skill for installable plugin portability. Project-scoped Codex custom-agent TOML is also generated under `.codex/agents/` in the source repository.
 
@@ -326,6 +326,7 @@ npx astro build --verbose
 | Marketing site must share design tokens/components with the company's mobile apps | `mobile-design-system-architect` | Current token source of truth, target platforms, component inventory |
 | SEO/OG metadata correctness needs a deep audit (canonical, hreflang, structured data validation) | `astro-seo-og` skill | Sitemap URL, list of routes, current `<SEO />` component |
 | Core Web Vitals regressions on hero images, fonts, or hydration cost | `astro-content-performance` skill | Lighthouse/PageSpeed report, list of islands and their `client:*` directives |
+| Reference sites, section/motion structure or a CWV comparison against an award-winning site | Awwwards MCP, if installed (see `third-party/README.md`; personal/non-commercial inspiration use) | Reference URL or site slug, the build URL |
 | Site needs a CMS-backed editorial workflow beyond Content Collections | Headless CMS integration specialist | Content model, editor requirements, publish workflow |
 
 ## Best Practices

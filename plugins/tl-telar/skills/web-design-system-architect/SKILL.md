@@ -14,7 +14,7 @@ Migrated from `agents/web-design-system-architect.md`.
 - Claude/Telar source files remain the source of truth; this file is the generated Codex adapter.
 - Skill-local support files from the original Telar skill, such as `references/...` or `workflow/...`, are packaged beside this `SKILL.md`.
 - Repo-root references from the original Telar file, such as `agents/...`, `commands/...`, `scripts/...`, `resources/...`, `rules/...`, `hooks/...`, or `templates/...`, are packaged at this plugin root.
-- The original Telar orchestration source (`skills/orchestration/...`) is packaged under `source/skills/orchestration/...` for exact-reference lookups; all other Telar skills exist here only as the generated adapters under the plugin-root `skills/` directory.
+- The original Telar orchestration source (`skills/orchestration/...`) and the vendored third-party source (`skills/third-party/...`) are packaged under `source/skills/...` for exact-reference lookups; all other Telar skills exist here only as the generated adapters under the plugin-root `skills/` directory.
 - Resolve plugin-root paths from this generated skill directory via `../..` when reading support files or running packaged scripts.
 - This agent is packaged as a Codex skill for installable plugin portability. Project-scoped Codex custom-agent TOML is also generated under `.codex/agents/` in the source repository.
 
@@ -278,6 +278,16 @@ pnpm -w tsc --noEmit
 - **Fail the build, not the audit**: contrast validation runs inside codegen so an inaccessible pair can't merge — it's cheaper than a post-hoc accessibility sweep.
 - **Verify a re-theme is data-only**: after a token change, toggling `.dark` and switching `data-vertical` must re-theme all three surfaces with zero component diffs; if a component needed editing, a value leaked past the semantic layer.
 - **Version the source**: tag `tokens.json` changes; a breaking rename of a semantic role needs a migration note for every consuming surface and the Flutter side.
+
+## Third-party skills (when to use)
+
+Third-party skills: vendored (pinned, MIT) under `skills/third-party/`; reference-only items are documented in `third-party/README.md` and apply only if installed.
+
+- **Author or re-architect the token system** (layering, `@theme`, codegen, whitelabel) → `web-design-system-tokens` / `tailwind-v4-design-tokens`. **Read-only audit of how hardcoded values map onto the existing token list** → `dh-token-mapping`.
+- **Greenfield system or a new token layer** → this agent's patterns. **Extract a system from UI the app already ships** (inventory, guarded before/after captures, `check-system.mjs` lint, readiness audits) → `dh-build-design-system`. **Moving an app onto an existing system** → this agent, through the normal Telar flow with one owner-approved commit per surface (design.how's migration skill is not shipped). A vague whole-app ask → `dh-design-system-boss` routes it.
+- **Compose / theme shadcn primitives** → `shadcn-component-patterns`. **Write one existing component's sourced doc entry** → `dh-component-docs`.
+- **Component spec sheet / redline** → `dd-dimensional-drawing`.
+- **Brand seed (logo, type, palette) before tokens exist** → `brand-identity`, if installed.
 
 ## Referenced Skills
 

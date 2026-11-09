@@ -302,6 +302,14 @@ grep -n 'ThemeProvider' src/App.tsx lib/main.dart
 - **Document decisions**: record why a color was chosen, not just what it is; future maintainers need the rationale
 - **Progressive adoption**: when migrating a brownfield app, replace hardcoded values one screen at a time; do not attempt a big-bang migration
 
+## Third-party skills (when to use)
+
+Third-party skills: vendored (pinned, MIT) under `skills/third-party/`; reference-only items are documented in `third-party/README.md` and apply only if installed.
+
+- **Component spec sheet / redline with variable-coded dimensions** (any platform) → `dd-dimensional-drawing`; animated version → `dd-dimensional-drawing-motion` (optional, needs Node + headless Chromium + ffmpeg).
+- **Brand seed (logo, type, palette) before tokens exist** → `brand-identity`, if installed.
+- The design.how skills (`dh-*`) assume a browser-rendered web app; for a web surface that shares tokens with mobile, hand off to `web-design-system-architect`.
+
 ## Referenced Skills
 
 - `mobile-design-system` - Token extraction and DESIGN.md generation

@@ -14,7 +14,7 @@ Migrated from `skills/refine-admin-patterns.md`.
 - Claude/Telar source files remain the source of truth; this file is the generated Codex adapter.
 - Skill-local support files from the original Telar skill, such as `references/...` or `workflow/...`, are packaged beside this `SKILL.md`.
 - Repo-root references from the original Telar file, such as `agents/...`, `commands/...`, `scripts/...`, `resources/...`, `rules/...`, `hooks/...`, or `templates/...`, are packaged at this plugin root.
-- The original Telar orchestration source (`skills/orchestration/...`) is packaged under `source/skills/orchestration/...` for exact-reference lookups; all other Telar skills exist here only as the generated adapters under the plugin-root `skills/` directory.
+- The original Telar orchestration source (`skills/orchestration/...`) and the vendored third-party source (`skills/third-party/...`) are packaged under `source/skills/...` for exact-reference lookups; all other Telar skills exist here only as the generated adapters under the plugin-root `skills/` directory.
 - Resolve plugin-root paths from this generated skill directory via `../..` when reading support files or running packaged scripts.
 
 
@@ -504,5 +504,3 @@ npx vite build && grep -c "VITE_SUPABASE_ANON_KEY" dist/assets/*.js 2>/dev/null 
 - [Refine - `useTable` (`@refinedev/react-table`)](https://refine.dev/docs/packages/tanstack-table/use-table/)
 - [Refine - i18n Provider](https://refine.dev/docs/i18n/i18n-provider/)
 - [Supabase - Row Level Security](https://supabase.com/docs/guides/database/postgres/row-level-security)
-</content>
-</invoke>
