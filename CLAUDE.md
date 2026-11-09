@@ -71,7 +71,7 @@ The recommended workflow for building features:
 
 ## Skill Discovery
 
-**126 skills** including:
+**133 skills** including:
 
 - **Blueprints** (`skills/blueprints/`): auth-flow, crud-list, chat-feature, settings-screen, onboarding-flow
 - **Astro**: astro-seo-og, astro-content-performance
@@ -97,6 +97,7 @@ The recommended workflow for building features:
 - **Design**: design-system-persistence, component-scaffolding, prompt-to-screen, mobile-design-system
 - **Platform**: rn-navigation, flutter-navigation, rn-state-management, flutter-state-management, ...
 - **Meta**: create-skill (for adding new skills to this plugin)
+- **Third-party** (`skills/third-party/`, vendored pinned MIT copies; provenance in `third-party/SOURCES.md`, guide in `third-party/README.md`): `dd-dimensional-drawing`, `dd-dimensional-drawing-motion` (optional; Node + headless Chromium + ffmpeg) from dimensional-drawing; `dh-design-system-boss`, `dh-build-design-system`, `dh-token-mapping`, `dh-component-docs`, `dh-ui-review` from design.how (its migration skill is not shipped). Reference-only (not shipped): brand-identity, Awwwards MCP, oil-ui (warning)
 
 ## Active Rules (always applied)
 

@@ -83,7 +83,9 @@ jobs:
           AGENTS=$(find agents -maxdepth 1 -name '*.md' -not -name '_*' | wc -l | tr -d ' ')
           # Skills: exclude references/ subdirs (supplementary material, not skills —
           # same rule as scripts/validate-skills.js, which is the canonical counter).
-          SKILLS=$(find skills -name '*.md' -not -name '_*' -not -path '*/references/*' | wc -l | tr -d ' ')
+          # Vendored third-party skills (skills/third-party/<repo>/<skill>/) count by
+          # SKILL.md only; their upstream support docs (playbooks/, adapters/) sit beside it.
+          SKILLS=$(find skills -name '*.md' -not -name '_*' -not -path '*/references/*' \( -not -path 'skills/third-party/*' -o -name 'SKILL.md' \) | wc -l | tr -d ' ')
           COMMANDS=$(find commands -maxdepth 1 -name '*.md' | wc -l | tr -d ' ')
           # Hooks: exclude *.deprecated.sh markers (kept on disk for discoverability,
           # not registered in settings.json).
@@ -110,8 +112,9 @@ jobs:
           jq --arg v "$SEMVER" '(.plugins[] | select(.name == "tl-telar")).version = $v' \
             .claude-plugin/marketplace.json > tmp.json && mv tmp.json .claude-plugin/marketplace.json
 
-          # README badge: rewrites the whole "> **vX.Y.Z** — N agents, ..." line.
-          sed -i "s|^> \*\*v[0-9]\+\.[0-9]\+\.[0-9]\+\*\* — .*|> **v${SEMVER}** — ${SUMMARY}|" README.md
+          # README badge: rewrites the whole "> By <author> · vX.Y.Z — N agents, ..." line
+          # (README line 4), keeping the author part as is.
+          sed -i "s|^> By \(.*\) · v[0-9]\+\.[0-9]\+\.[0-9]\+ — .*|> By \1 · v${SEMVER} — ${SUMMARY}|" README.md
 
           # CLAUDE.md header line.
           sed -i "s|^# Telar v[0-9]\+\.[0-9]\+\.[0-9]\+|# Telar v${SEMVER}|" CLAUDE.md

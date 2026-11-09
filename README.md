@@ -1,7 +1,7 @@
 # Telar
 
 > **The agentic engineering framework** — plan, build, review, and ship, with agents.
-> By Zeki Yugnak · v0.17.0 — 51 agents, 126 skills, 24 commands, 4 hooks, 7 rules, 30 scripts
+> By Zeki Yugnak · v0.17.0 — 51 agents, 133 skills, 24 commands, 4 hooks, 7 rules, 30 scripts
 
 Telar is a multi-agent engineering framework for Claude Code and Codex that takes a feature from idea to production — orchestrated planning, adversarial review gates, a persistent knowledge base, cross-model verification, and a new OKF domain-knowledge layer. It spans cross-platform apps end to end: **mobile** (**React Native** & **Flutter**) with deep native integration, **web** (**Astro**, **Next.js**/Tailwind/shadcn, **Vite**/TanStack admin panels), **Rust** service layers, and **desktop** — with stack-aware orchestration, reviewers, and rubrics across every domain.
 
@@ -18,13 +18,14 @@ The full reference — every agent, skill, command, and rule, plus the orchestra
 | | |
 |---|---|
 | [Getting Started](https://zekiyugnak.github.io/telar-framework/getting-started.html) | Install and run your first command |
-| [Agents](https://zekiyugnak.github.io/telar-framework/agents.html) | 46 specialized subagents |
-| [Skills](https://zekiyugnak.github.io/telar-framework/skills.html) | 116 reference modules |
-| [Commands](https://zekiyugnak.github.io/telar-framework/commands.html) | 23 slash-command workflows |
+| [Agents](https://zekiyugnak.github.io/telar-framework/agents.html) | 51 specialized subagents |
+| [Skills](https://zekiyugnak.github.io/telar-framework/skills.html) | 133 reference modules (incl. 7 vendored third-party) |
+| [Commands](https://zekiyugnak.github.io/telar-framework/commands.html) | 24 slash-command workflows |
 | [Rules](https://zekiyugnak.github.io/telar-framework/rules.html) | 7 always-on standards |
 | [Orchestration](https://zekiyugnak.github.io/telar-framework/orchestration.html) | The opt-in pipeline, in depth |
 | [Examples](https://zekiyugnak.github.io/telar-framework/examples.html) | End-to-end command flows |
 | [Configuration](https://zekiyugnak.github.io/telar-framework/configuration.html) | All config keys — `.tl-telar-thresholds.json` and `external-tools.yaml` (incl. `cc_features`) |
+| [Third-party](third-party/README.md) | Vendored design skills, reference-only tools (brand-identity, Awwwards MCP) and the oil-ui warning; provenance in [`SOURCES.md`](third-party/SOURCES.md) |
 
 ## Installation
 
@@ -84,12 +85,13 @@ Codex plugin installation is separate from the optional `adapters.codex` entry i
 | End-to-end orchestrated build | `/tl-telar:orchestrate <task>` |
 | Release to stores | `/tl-telar:release-app` |
 
-See the [command reference](https://zekiyugnak.github.io/telar-framework/commands.html) for all 23 workflows.
+See the [command reference](https://zekiyugnak.github.io/telar-framework/commands.html) for all 24 workflows.
 
 ## Highlights
 
-- **47 specialized agents** — mobile & native platform experts, native bridges, architecture, security, testing, release, orchestration; a full web stack (Astro/Next.js/Vite-TanStack plus a framework-agnostic React expert and web security/performance/accessibility specialists); Rust services; and desktop (Electron/Tauri).
-- **126 skills** — reusable reference modules, decision frameworks, and ready-to-use feature blueprints for React Native, Flutter, the web stack, and Rust services.
+- **51 specialized agents** — mobile & native platform experts, native bridges, architecture, security, testing, release, orchestration; a full web stack (Astro/Next.js/Vite-TanStack plus a framework-agnostic React expert and web security/performance/accessibility specialists); Rust services; and desktop (Electron/Tauri).
+- **133 skills** — reusable reference modules, decision frameworks, and ready-to-use feature blueprints for React Native, Flutter, the web stack, and Rust services, plus 7 vendored third-party design skills.
+- **🆕 Third-party design skills (new)** — pinned, MIT-licensed copies of [dimensional-drawing](https://github.com/enesozturk/dimensional-drawing) (component spec sheets / redlines, optional motion film) and [design.how](https://github.com/arla6ka/design.how) (extract, audit, document and review a design system in a shipped web app), plus install notes for brand-identity, Awwwards MCP and a warning on oil-ui. See [`third-party/README.md`](third-party/README.md) and the provenance manifest [`third-party/SOURCES.md`](third-party/SOURCES.md).
 - **Two-stage review gates** — requirement compliance and code quality, with adversarial and collaborative reviewers.
 - **🆕 Risk-tiered review (new)** — rigor is front-loaded into the plan (mandatory `data_contracts`/`edge_cases`/`test_plan` per Work Unit, enforced by the plan gate), so implementation review stays fast. The per-WU adversarial roster scales with each WU's `risk_tier` — `trivial`→Code-only, `standard`→Code+Maintainability (UI a11y/perf handled by CI lenses), `critical`→full roster + up-front design gate + human checkpoint. A sensitive-path Security floor (auth/token/payment/migration/…) is never droppable by tier, retries re-review incrementally (sticky-pass), and cross-model review stays always-on when configured.
 - **Orchestrated mode (opt-in)** — design + plan review gates, a 4-phase IMPLEMENT/VALIDATE/REVIEW/COMMIT loop, and blocking quality gates. Independent Work Units run in parallel — a pure readiness scheduler dispatches concurrent WUs whose dependencies are met and file scopes are disjoint (bounded by `execution.max_parallel_wus`). The orchestrator honors your git policy and never auto-commits.
@@ -112,14 +114,15 @@ See the [command reference](https://zekiyugnak.github.io/telar-framework/command
 
 | Directory | Contents |
 |-----------|----------|
-| `agents/` | 47 agent definitions |
-| `skills/` | 117 skill modules (incl. `blueprints/` and `orchestration/`) |
-| `commands/` | 23 slash commands |
+| `agents/` | 51 agent definitions |
+| `skills/` | 133 skill modules (incl. `blueprints/`, `orchestration/` and vendored `third-party/`) |
+| `commands/` | 24 slash commands |
 | `rules/` | 7 always-on rules |
 | `hooks/` | Session and pre-build hooks |
 | `scripts/` | Automation and validation utilities |
 | `resources/` | Decision trees, platform guides, checklists, rubrics |
 | `docs/` | The documentation site (this is also published via GitHub Pages) |
+| `third-party/` | Third-party guide (`README.md`) and provenance manifest (`SOURCES.md`) |
 
 ## Contributing
 
@@ -127,4 +130,4 @@ To extend the plugin: add agents in `agents/`, skills in `skills/`, and commands
 
 ## License
 
-MIT © 2026 Zeki Yugnak. See [`LICENSE`](LICENSE) and [`THIRD_PARTY_NOTICES.md`](THIRD_PARTY_NOTICES.md).
+MIT © 2026 Zeki Yugnak. See [`LICENSE`](LICENSE) and [`THIRD_PARTY_NOTICES.md`](THIRD_PARTY_NOTICES.md); third-party provenance is in [`third-party/SOURCES.md`](third-party/SOURCES.md).

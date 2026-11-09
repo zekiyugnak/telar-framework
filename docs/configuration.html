@@ -183,6 +183,9 @@
     </table>
     <p><strong>Capability probe signals.</strong> <code>dynamic_workflows</code> → the <code>Workflow</code> tool is present in the top-level session. <code>worktree_isolation</code> → <code>isolation: worktree</code> support is <em>positively confirmed</em>; because older Claude Code silently ignores that frontmatter, an unconfirmed probe keeps the disjoint constraint even when <code>enabled: true</code> — trusting the probe, never the flag.</p>
 
+    <h2 id="third-party">Third-party skills &amp; MCP servers</h2>
+    <p>The vendored third-party skills (<code>skills/third-party/</code>: <code>dd-*</code> from dimensional-drawing, <code>dh-*</code> from design.how) need <strong>no configuration</strong>, and Telar registers <strong>no MCP server</strong>: there is no <code>.mcp.json</code> or <code>mcpServers</code> entry. The optional Awwwards MCP is installed by you, pinned (<code>claude mcp add awwwards -- npx -y awwwards-mcp@1.18.0</code>, Node &gt;= 22.13), for personal, non-commercial inspiration use. brand-identity installs from its own marketplace. oil-ui is not shipped or routed to; installing it is at your own risk. See <a href="https://github.com/zekiyugnak/telar-framework/blob/main/third-party/README.md">third-party/README.md</a> and the provenance manifest <a href="https://github.com/zekiyugnak/telar-framework/blob/main/third-party/SOURCES.md">third-party/SOURCES.md</a>.</p>
+
     <h2 id="hardcoded">Values you can't configure</h2>
     <p>Fixed in source, not tunable via either file:</p>
     <table class="t">

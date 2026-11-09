@@ -60,6 +60,7 @@
     <a href="#webui">Web UI</a>
     <a href="#webe2e">Web E2E</a>
     <a href="#rustsvc">Rust Service</a>
+    <a href="#thirdparty">Third-party</a>
   </nav>
 
   <!-- REACT NATIVE -->
@@ -904,7 +905,7 @@
 
   <!-- WORKFLOW -->
   <section class="group">
-    <h2 id="workflow">Workflow &amp; Meta <span class="gc">11</span></h2>
+    <h2 id="workflow">Workflow &amp; Meta <span class="gc">12</span></h2>
     <div class="cards">
       <article class="card" data-search="requirements-gather requirements discovery figma document-driven gap-analysis product">
         <div class="card-head"><h3>requirements-gather</h3></div>
@@ -1031,6 +1032,18 @@
           <li>Complexity tiers from simple to full agent+skill+command</li>
           <li>Validate with validate-skills.js; promote learned patterns</li>
         </ul><a class="src" href="https://github.com/zekiyugnak/telar-framework/blob/main/skills/create-skill.md">Source ↗</a></div>
+      </article>
+      <article class="card" data-search="clean-code dry solid refactoring reuse code-smells maintainability wrong-abstraction">
+        <div class="card-head"><h3>clean-code</h3></div>
+        <p class="desc">Shared authoring contract against duplication, bloat and the wrong abstraction, enforced by the Maintainability reviewer.</p>
+        <div class="chips"><span class="chip">dry</span><span class="chip">solid</span><span class="chip">maintainability</span></div>
+        <button class="card-toggle" aria-expanded="false">Details</button>
+        <div class="card-detail" hidden><h4>Capabilities</h4><ul>
+          <li>Reuse before creating; never re-implement an existing unit</li>
+          <li>Apply DRY correctly: unify only code that changes together for the same reason (Metz test)</li>
+          <li>Prefer a little duplication over a premature shared abstraction</li>
+          <li>Mechanical Clean Code, SOLID and Fowler code smells without dogmatic over-application</li>
+        </ul><a class="src" href="https://github.com/zekiyugnak/telar-framework/blob/main/skills/clean-code.md">Source ↗</a></div>
       </article>
     </div>
   </section>
@@ -1302,7 +1315,7 @@
 
   <!-- ADMIN PANEL -->
   <section class="group">
-    <h2 id="adminpanel">Admin Panel (Vite + TanStack / Refine) <span class="gc">9</span></h2>
+    <h2 id="adminpanel">Admin Panel (Vite + TanStack / Refine) <span class="gc">12</span></h2>
     <p class="gdesc">Vite + React 19 + TanStack + Supabase (anon key + RLS only) stack for internal operator panels.</p>
     <div class="cards">
       <article class="card" data-search="refine-admin-patterns refine refinedev admin-panel supabase data-provider auth-provider access-control rls react web">
@@ -1619,6 +1632,93 @@
           <li>Liveness/readiness health check endpoints for orchestrators</li>
           <li>SIGTERM handling and draining in-flight requests before exit</li>
         </ul><a class="src" href="https://github.com/zekiyugnak/telar-framework/blob/main/skills/rust-deployment.md">Source ↗</a></div>
+      </article>
+    </div>
+  </section>
+
+  <!-- THIRD-PARTY -->
+  <section class="group">
+    <h2 id="thirdparty">Third-party (vendored) <span class="gc">7</span></h2>
+    <p class="desc">Pinned MIT copies; upstream text kept as is apart from Telar frontmatter, adapter notes and one declared path edit. design.how's migration skill is not shipped. Provenance: <a href="https://github.com/zekiyugnak/telar-framework/blob/main/third-party/SOURCES.md">third-party/SOURCES.md</a>. Reference-only tools (brand-identity, Awwwards MCP, oil-ui warning): <a href="https://github.com/zekiyugnak/telar-framework/blob/main/third-party/README.md">third-party/README.md</a>.</p>
+    <div class="cards">
+      <article class="card" data-search="dd-dimensional-drawing third-party spec-sheet redline svg">
+        <div class="card-head"><h3>dd-dimensional-drawing</h3></div>
+        <p class="desc">Apple-style monochrome spec sheet / redline of a component: one HTML sheet, variable-coded dimensions, no invented values.</p>
+        <div class="chips"><span class="chip">spec-sheet</span><span class="chip">redline</span><span class="chip">svg</span></div>
+        <button class="card-toggle" aria-expanded="false">Details</button>
+        <div class="card-detail" hidden><h4>Capabilities</h4><ul>
+          <li>Dimensional drawing of a UI component or physical product as one self-contained HTML file</li>
+          <li>Variable-coded spacing / size / radius / shadow tables with formulas and [TBD] for unknowns</li>
+          <li>Reusable inline-SVG drawing kit (dims, callouts, radius details, exploded axonometric)</li>
+          <li>Vendored from enesozturk/dimensional-drawing @ 5c45743 (MIT)</li>
+        </ul><a class="src" href="https://github.com/zekiyugnak/telar-framework/blob/main/skills/third-party/dimensional-drawing/dimensional-drawing/SKILL.md">Source ↗</a></div>
+      </article>
+      <article class="card" data-search="dd-dimensional-drawing-motion third-party motion video optional">
+        <div class="card-head"><h3>dd-dimensional-drawing-motion</h3></div>
+        <p class="desc">Optional: turns a finished sheet into a ~10 s motion film. Headless path needs Node, Playwright/Chromium and ffmpeg.</p>
+        <div class="chips"><span class="chip">motion</span><span class="chip">video</span><span class="chip">optional</span></div>
+        <button class="card-toggle" aria-expanded="false">Details</button>
+        <div class="card-detail" hidden><h4>Capabilities</h4><ul>
+          <li>Lines draw in, camera pulls back, layers lift into an exploded view</li>
+          <li>Pure-function-of-time scene: claude.ai Motion or headless Playwright + ffmpeg render</li>
+          <li>Vendored from enesozturk/dimensional-drawing @ 5c45743 (MIT)</li>
+        </ul><a class="src" href="https://github.com/zekiyugnak/telar-framework/blob/main/skills/third-party/dimensional-drawing/dimensional-drawing-motion/SKILL.md">Source ↗</a></div>
+      </article>
+      <article class="card" data-search="dh-design-system-boss third-party design-system router">
+        <div class="card-head"><h3>dh-design-system-boss</h3></div>
+        <p class="desc">Routes a vague whole-app design-system ask to one playbook or sibling skill.</p>
+        <div class="chips"><span class="chip">design-system</span><span class="chip">router</span></div>
+        <button class="card-toggle" aria-expanded="false">Details</button>
+        <div class="card-detail" hidden><h4>Capabilities</h4><ul>
+          <li>Matches build / migrate / review / component playbooks</li>
+          <li>Records defaults instead of blocking on questions</li>
+          <li>Vendored from arla6ka/design.how @ 419fa5a (MIT)</li>
+        </ul><a class="src" href="https://github.com/zekiyugnak/telar-framework/blob/main/skills/third-party/design.how/design-system-boss/SKILL.md">Source ↗</a></div>
+      </article>
+      <article class="card" data-search="dh-build-design-system third-party tokens lint visual-regression">
+        <div class="card-head"><h3>dh-build-design-system</h3></div>
+        <p class="desc">Extracts a design system from UI the app already ships, with guarded captures, pixel diffs and a design-system lint.</p>
+        <div class="chips"><span class="chip">tokens</span><span class="chip">lint</span><span class="chip">visual-regression</span></div>
+        <button class="card-toggle" aria-expanded="false">Details</button>
+        <div class="card-detail" hidden><h4>Capabilities</h4><ul>
+          <li>Inventory, baselines, tokens, canonical components, checks, pilot, readiness audits</li>
+          <li>capture.mjs behind capture-guard.mjs (blocks writes), pixdiff.mjs, oklch.mjs</li>
+          <li>check-system.mjs: raw values, arbitrary values, token parity, behaviour traps</li>
+          <li>Vendored from arla6ka/design.how @ 419fa5a (MIT)</li>
+        </ul><a class="src" href="https://github.com/zekiyugnak/telar-framework/blob/main/skills/third-party/design.how/build-design-system/SKILL.md">Source ↗</a></div>
+      </article>
+      <article class="card" data-search="dh-token-mapping third-party design-tokens audit read-only">
+        <div class="card-head"><h3>dh-token-mapping</h3></div>
+        <p class="desc">Read-only report of how hardcoded values map onto the existing token list, purpose before value.</p>
+        <div class="chips"><span class="chip">design-tokens</span><span class="chip">audit</span><span class="chip">read-only</span></div>
+        <button class="card-toggle" aria-expanded="false">Details</button>
+        <div class="card-detail" hidden><h4>Capabilities</h4><ul>
+          <li>Exact / Semantic / Ambiguous / Gap per row and mode</li>
+          <li>delta E OK and px tolerances, computed not eyeballed</li>
+          <li>Vendored from arla6ka/design.how @ 419fa5a (MIT)</li>
+        </ul><a class="src" href="https://github.com/zekiyugnak/telar-framework/blob/main/skills/third-party/design.how/token-mapping/SKILL.md">Source ↗</a></div>
+      </article>
+      <article class="card" data-search="dh-component-docs third-party documentation components">
+        <div class="card-head"><h3>dh-component-docs</h3></div>
+        <p class="desc">One existing component&#x27;s documentation entry, sourced from code, stories and real call sites.</p>
+        <div class="chips"><span class="chip">documentation</span><span class="chip">components</span></div>
+        <button class="card-toggle" aria-expanded="false">Details</button>
+        <div class="card-detail" hidden><h4>Capabilities</h4><ul>
+          <li>Fixed nine-heading entry; gaps marked, never filled</li>
+          <li>Usage rules each with evidence and a breaking snippet</li>
+          <li>Vendored from arla6ka/design.how @ 419fa5a (MIT)</li>
+        </ul><a class="src" href="https://github.com/zekiyugnak/telar-framework/blob/main/skills/third-party/design.how/component-docs/SKILL.md">Source ↗</a></div>
+      </article>
+      <article class="card" data-search="dh-ui-review third-party ux-review accessibility">
+        <div class="card-head"><h3>dh-ui-review</h3></div>
+        <p class="desc">Ranked, render-first critique of a screen or flow with a ship verdict.</p>
+        <div class="chips"><span class="chip">ux-review</span><span class="chip">accessibility</span></div>
+        <button class="card-toggle" aria-expanded="false">Details</button>
+        <div class="card-detail" hidden><h4>Capabilities</h4><ul>
+          <li>13 criteria, blocking / should-fix / note</li>
+          <li>Measured probes: keyboard path, focus return, press latency</li>
+          <li>Vendored from arla6ka/design.how @ 419fa5a (MIT)</li>
+        </ul><a class="src" href="https://github.com/zekiyugnak/telar-framework/blob/main/skills/third-party/design.how/ui-review/SKILL.md">Source ↗</a></div>
       </article>
     </div>
   </section>
