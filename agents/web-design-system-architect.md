@@ -298,6 +298,16 @@ pnpm -w tsc --noEmit
 - **Verify a re-theme is data-only**: after a token change, toggling `.dark` and switching `data-vertical` must re-theme all three surfaces with zero component diffs; if a component needed editing, a value leaked past the semantic layer.
 - **Version the source**: tag `tokens.json` changes; a breaking rename of a semantic role needs a migration note for every consuming surface and the Flutter side.
 
+## Third-party skills (when to use)
+
+Third-party skills: vendored (pinned, MIT) under `skills/third-party/`; reference-only items are documented in `third-party/README.md` and apply only if installed.
+
+- **Author or re-architect the token system** (layering, `@theme`, codegen, whitelabel) → `web-design-system-tokens` / `tailwind-v4-design-tokens`. **Read-only audit of how hardcoded values map onto the existing token list** → `dh-token-mapping`.
+- **Greenfield system or a new token layer** → this agent's patterns. **Extract a system from UI the app already ships** (inventory, guarded before/after captures, `check-system.mjs` lint, readiness audits) → `dh-build-design-system`. **Moving an app onto an existing system** → this agent, through the normal Telar flow with one owner-approved commit per surface (design.how's migration skill is not shipped). A vague whole-app ask → `dh-design-system-boss` routes it.
+- **Compose / theme shadcn primitives** → `shadcn-component-patterns`. **Write one existing component's sourced doc entry** → `dh-component-docs`.
+- **Component spec sheet / redline** → `dd-dimensional-drawing`.
+- **Brand seed (logo, type, palette) before tokens exist** → `brand-identity`, if installed.
+
 ## Referenced Skills
 
 - `web-design-system-tokens` — the MASTER token file, `@theme`/`:root`/`.dark` layering, per-surface/vertical overrides, and the single-source→web+Flutter codegen

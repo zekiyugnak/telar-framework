@@ -426,6 +426,22 @@ Bu yüzden varsayılanlar `true`'dur: her yol eski Claude Code'da zarifçe eski 
 
 ---
 
+## Üçüncü taraf skill'ler ve MCP sunucuları
+
+Telar, vendored üçüncü taraf skill'ler için (`skills/third-party/`: `dd-*` dimensional-drawing, `dh-*` design.how) **hiçbir config gerektirmez** ve **hiçbir MCP sunucusu kaydetmez**: repoda `.mcp.json` veya `mcpServers` girdisi yoktur.
+
+| Öğe | Mod | Kurulum |
+|-----|-----|---------|
+| `dd-dimensional-drawing-motion` (headless yol) | vendored, opsiyonel | Node 18+, Playwright + headless Chromium, `PATH`'te ffmpeg. Hepsini kullanıcı kurar |
+| `dh-build-design-system` capture/pixdiff script'leri | vendored | Node + Playwright + Chromium (`find-chromium.mjs` yalnızca bulur ve tavsiye basar) |
+| Awwwards MCP | reference-only, opsiyonel | `claude mcp add awwwards -- npx -y awwwards-mcp@1.18.0` (Node >= 22.13). Kişisel/ticari olmayan ilham kullanımı içindir. Self-update için `AWWWARDS_AUTO_UPDATE`'i ayarlamayın |
+| brand-identity | reference-only | Kendi plugin marketplace'i üzerinden kurulur |
+| oil-ui | reference-only, **uyarı** | Telar dağıtmaz ve yönlendirmez. Kurmak kullanıcının kendi riskindedir |
+
+Ayrıntılar, uyarılar ve pinlenmiş SHA'lar için [`third-party/README.md`](../third-party/README.md) ve [`third-party/SOURCES.md`](../third-party/SOURCES.md) dosyalarına bakın. design.how'un migration skill'i (`migrate-design-system` ve prompt'suz commit atan `land.mjs`) dağıtılmaz. Telar'da bir uygulamayı design system'e taşımak, `web-design-system-architect` ile normal Telar akışından ve her surface için owner onaylı ayrı bir commit ile yapılır. Telar'ın git politikası geçerlidir.
+
+---
+
 ## Hardcode (config ile değiştirilemeyen) değerler
 
 Bunlar kaynak kodda sabit olup `.tl-telar-thresholds.json` veya `external-tools.yaml` ile ayarlanamaz:

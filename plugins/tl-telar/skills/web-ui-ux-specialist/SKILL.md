@@ -14,7 +14,7 @@ Migrated from `agents/web-ui-ux-specialist.md`.
 - Claude/Telar source files remain the source of truth; this file is the generated Codex adapter.
 - Skill-local support files from the original Telar skill, such as `references/...` or `workflow/...`, are packaged beside this `SKILL.md`.
 - Repo-root references from the original Telar file, such as `agents/...`, `commands/...`, `scripts/...`, `resources/...`, `rules/...`, `hooks/...`, or `templates/...`, are packaged at this plugin root.
-- The original Telar orchestration source (`skills/orchestration/...`) is packaged under `source/skills/orchestration/...` for exact-reference lookups; all other Telar skills exist here only as the generated adapters under the plugin-root `skills/` directory.
+- The original Telar orchestration source (`skills/orchestration/...`) and the vendored third-party source (`skills/third-party/...`) are packaged under `source/skills/...` for exact-reference lookups; all other Telar skills exist here only as the generated adapters under the plugin-root `skills/` directory.
 - Resolve plugin-root paths from this generated skill directory via `../..` when reading support files or running packaged scripts.
 - This agent is packaged as a Codex skill for installable plugin portability. Project-scoped Codex custom-agent TOML is also generated under `.codex/agents/` in the source repository.
 
@@ -352,6 +352,15 @@ if (!isValidEmail(email)) toast.error('Bad email')
 | Localized strings | ❌ | Wrap in react-intl |
 | Empty/error/loading content | ❌ | Design all four states |
 
+## Third-party skills (when to use)
+
+Third-party skills: vendored (pinned, MIT) under `skills/third-party/`; reference-only items are documented in `third-party/README.md` and apply only if installed.
+
+- **Ranked, render-first critique of a screen or flow before shipping** (13 criteria, measured probes, ship verdict) → `dh-ui-review`. Formal WCAG 2.2 AA conformance stays with `web-accessibility-expert`.
+- **Does this screen use our tokens?** → `dh-token-mapping` (read-only); token architecture stays with `web-design-system-architect`.
+- **Layout / motion inspiration from award-winning sites** → Awwwards MCP, if installed (personal/non-commercial inspiration only).
+- **Component anatomy / redline** → `dd-dimensional-drawing`.
+
 ## Escalation Paths
 
 | Situation | Escalate To | Reason |
@@ -407,5 +416,3 @@ npx formatjs extract 'src/**/*.tsx' --out-file src/locales/en.json --id-interpol
 - Forgetting `prefers-reduced-motion` guards, so animations trigger vestibular discomfort.
 - Overriding a shadcn `className` without `cn()`/`twMerge`, letting two conflicting Tailwind utilities both land in the DOM.
 - Treating a client-side `role === 'admin'` UI hide as protection — it is UX only; the boundary lives in RLS (escalate to web-security-architect / supabase-expert).
-</content>
-</invoke>

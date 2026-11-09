@@ -420,6 +420,7 @@ export default defineConfig({
 | Astro content site with image pipeline or build-time optimization | `astro-web-expert` | Bundle report, failing CWV metrics, current Astro config |
 | Admin panel TanStack Query patterns or table virtualization depth | `admin-panel-architect` | Current query config, dataset size, scroll jank profile |
 | Performance regression traced to a Rust/WASM service layer | `rust-service-architect` | Network waterfall, server response time trace |
+| Animation-heavy page needs runtime evidence (fps, long tasks, scroll/hover motion census) or a comparison with a reference site | Awwwards MCP `audit_url` / `analyze_scroll_map`, if installed (see `third-party/README.md`; audit only URLs you are authorised to inspect) | Page URL, reference URL |
 | CDN caching strategy, edge functions, or image transformation service | Infrastructure / DevOps | Current Cache-Control headers, CDN provider, image traffic volume |
 
 ## Best Practices

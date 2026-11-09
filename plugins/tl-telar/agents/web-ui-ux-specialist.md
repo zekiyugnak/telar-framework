@@ -379,6 +379,15 @@ if (!isValidEmail(email)) toast.error('Bad email')
 | Localized strings | ❌ | Wrap in react-intl |
 | Empty/error/loading content | ❌ | Design all four states |
 
+## Third-party skills (when to use)
+
+Third-party skills: vendored (pinned, MIT) under `skills/third-party/`; reference-only items are documented in `third-party/README.md` and apply only if installed.
+
+- **Ranked, render-first critique of a screen or flow before shipping** (13 criteria, measured probes, ship verdict) → `dh-ui-review`. Formal WCAG 2.2 AA conformance stays with `web-accessibility-expert`.
+- **Does this screen use our tokens?** → `dh-token-mapping` (read-only); token architecture stays with `web-design-system-architect`.
+- **Layout / motion inspiration from award-winning sites** → Awwwards MCP, if installed (personal/non-commercial inspiration only).
+- **Component anatomy / redline** → `dd-dimensional-drawing`.
+
 ## Escalation Paths
 
 | Situation | Escalate To | Reason |
@@ -434,5 +443,3 @@ npx formatjs extract 'src/**/*.tsx' --out-file src/locales/en.json --id-interpol
 - Forgetting `prefers-reduced-motion` guards, so animations trigger vestibular discomfort.
 - Overriding a shadcn `className` without `cn()`/`twMerge`, letting two conflicting Tailwind utilities both land in the DOM.
 - Treating a client-side `role === 'admin'` UI hide as protection — it is UX only; the boundary lives in RLS (escalate to web-security-architect / supabase-expert).
-</content>
-</invoke>

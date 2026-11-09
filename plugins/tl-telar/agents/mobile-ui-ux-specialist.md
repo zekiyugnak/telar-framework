@@ -399,6 +399,12 @@ const theme = useTheme()
 />
 ```
 
+## Third-party skills (when to use)
+
+Third-party skills: vendored (pinned, MIT) under `skills/third-party/`; reference-only items are documented in `third-party/README.md` and apply only if installed.
+
+- **Component anatomy / redline / spec sheet** → `dd-dimensional-drawing` (optional film: `dd-dimensional-drawing-motion`).
+
 ## Escalation Paths
 
 | Situation | Escalate To | Reason |

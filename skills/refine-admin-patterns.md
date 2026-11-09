@@ -505,5 +505,3 @@ npx vite build && grep -c "VITE_SUPABASE_ANON_KEY" dist/assets/*.js 2>/dev/null 
 - [Refine - `useTable` (`@refinedev/react-table`)](https://refine.dev/docs/packages/tanstack-table/use-table/)
 - [Refine - i18n Provider](https://refine.dev/docs/i18n/i18n-provider/)
 - [Supabase - Row Level Security](https://supabase.com/docs/guides/database/postgres/row-level-security)
-</content>
-</invoke>

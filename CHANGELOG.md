@@ -6,6 +6,40 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+## [0.18.0] - 2026-11-09
+
+### Added
+
+- **Vendored third-party design skills** (`skills/third-party/`, pinned MIT copies). Upstream text is kept as is apart from Telar adapter frontmatter, adapter notes on three `SKILL.md` files and one declared path edit (the `cd` line in `dd-dimensional-drawing-motion/adapters/headless/README.md`). Skill count 126 → 133.
+  - From [dimensional-drawing](https://github.com/enesozturk/dimensional-drawing) @ `5c45743`: `dd-dimensional-drawing` (monochrome component spec sheet / redline with variable-coded dimensions) and `dd-dimensional-drawing-motion` (optional ~10 s film; the headless path needs Node, Playwright/Chromium and ffmpeg).
+  - From [design.how](https://github.com/arla6ka/design.how) @ `419fa5a`: `dh-design-system-boss`, `dh-build-design-system`, `dh-token-mapping`, `dh-component-docs`, `dh-ui-review`.
+  - All ids are namespaced (`dd-`, `dh-`). `ui-review`, `component-docs` and `token-mapping` are generic names, and `design-system` is already a Telar command.
+- **`third-party/SOURCES.md`**: one provenance manifest for all third-party material (metaswarm, karpathy-guidelines and the five new items), with mode, pinned SHA, pin date, license, local paths, local modifications, vendored-file review notes and a `git ls-remote` + diff update procedure. It also records the metaswarm sync review against upstream v0.14.0 (no port needed).
+- **`third-party/README.md`**: a user guide covering the vendored skills, a "Telar skill vs design.how skill" division table, and reference-only install notes for brand-identity (plugin marketplace) and the Awwwards MCP (pinned `claude mcp add awwwards -- npx -y awwwards-mcp@1.18.0`, Node >= 22.13, optional, personal/non-commercial use; no `.mcp.json` is added). It also carries an explicit oil-ui warning: a load-time update check against ui.oiloil.org, token reads, self-update, a paid-tier upsell, and partly non-commercial media sources. Telar does not ship oil-ui.
+- Short "Third-party skills (when to use)" routing notes in `web-design-system-architect`, `web-ui-ux-specialist`, `web-screen-builder`, `mobile-design-system-architect` and `mobile-ui-ux-specialist`. "If installed" Awwwards MCP rows were added to the escalation tables of `astro-web-expert`, `web-performance-optimizer` and `web-accessibility-expert`.
+- `THIRD_PARTY_NOTICES.md` §4 (dimensional-drawing), §5 (design.how) and §6 (reference-only acknowledgement). The existing metaswarm section is unchanged.
+- New "Üçüncü taraf skill'ler ve MCP sunucuları" section in `docs/configuration.md` (and a matching "Third-party skills & MCP servers" section in `docs/configuration.html`): no config needed, no MCP server registered, and the opt-in install requirements.
+- "Third-party" group (7 cards) in `docs/skills.html`, a Third-party row in the README docs table, and a Third-party bullet in CLAUDE.md Skill Discovery.
+
+### Security
+
+- **design.how's migration skill is not shipped** (owner decision). Telar does not vendor `migrate-design-system` or its `land.mjs`, which creates a git commit with no prompt (once per surface) and can run an arbitrary `sh -c` command from `--bodies-check` / `LAND_BODIES_CHECK`. Both conflict with Telar's ask-before-commit rule. Adapter notes in `dh-design-system-boss` and `dh-build-design-system` redirect migration asks to the normal Telar flow (`web-design-system-architect`, one owner-approved commit per surface). Every vendored file was read in full first; the findings are in `third-party/SOURCES.md`.
+
+### Changed
+
+- `validate-skills.js` and the Codex generator's live summary count only `SKILL.md` under `skills/third-party/` (upstream support docs sit beside it). `generate-codex-plugin.js` now packages `skills/third-party/<repo>/<skill>/SKILL.md` as Codex skills and copies the third-party source tree under `source/skills/third-party/`, so the upstream sibling paths resolve.
+- `.github/workflows/release-on-merge.yml`: the release bot's skill counter now counts `skills/third-party/` by `SKILL.md` only, matching `validate-skills.js` and the generator. The old expression would have counted 139 (the upstream `playbooks/` and `adapters/` docs) and written that into README and `plugin.json`.
+
+### Fixed
+
+- `.claude-plugin/plugin.json`: script count 29 → 30 (the real count, matching README).
+- README counts: header 126 → 133 skills; docs table 46 → 51 agents and 116 → 133 skills; Highlights 47 → 51 agents and 126 → 133 skills; Repository layout 47 → 51 agents, 117 → 133 skills and 23 → 24 commands; command-count mentions 23 → 24 (also in `docs/getting-started.html`).
+- Removed stray `</content>` / `</invoke>` artifact lines at the end of `agents/web-screen-builder.md` and `agents/web-ui-ux-specialist.md`.
+- `docs/skills.html`: added the missing `clean-code` card, so the card count equals the skill count (133). The Admin Panel group badge was also corrected from 9 to 12 to match its cards.
+- Removed stray `</content>` / `</invoke>` artifact lines at the end of `skills/refine-admin-patterns.md`, `skills/web-component-scaffolding.md` and `skills/web-prompt-to-screen.md`.
+- `.github/workflows/release-on-merge.yml`: the README version `sed` matched a stale `> **vX.Y.Z** —` format, so README line 4 (`> By Zeki Yugnak · vX.Y.Z — …`) was never updated on release. It now matches the current line and keeps the author part.
+- Regenerated `AGENTS.md`, the Codex plugin (`plugins/tl-telar/`, `.codex/agents/*.toml`) and the GitHub Pages docs to v0.18.0.
+
 ## [0.17.0] - 2026-08-03
 
 ### Added

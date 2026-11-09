@@ -279,4 +279,3 @@ Colocating component, hook, test, and story enforces separation of concerns at t
 - jest-axe: https://github.com/nickcolley/jest-axe
 - React `forwardRef`: https://react.dev/reference/react/forwardRef
 - WCAG 2.2 Target Size (Minimum): https://www.w3.org/WAI/WCAG22/Understanding/target-size-minimum.html
-</content>

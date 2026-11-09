@@ -14,7 +14,7 @@ Migrated from `skills/web-prompt-to-screen.md`.
 - Claude/Telar source files remain the source of truth; this file is the generated Codex adapter.
 - Skill-local support files from the original Telar skill, such as `references/...` or `workflow/...`, are packaged beside this `SKILL.md`.
 - Repo-root references from the original Telar file, such as `agents/...`, `commands/...`, `scripts/...`, `resources/...`, `rules/...`, `hooks/...`, or `templates/...`, are packaged at this plugin root.
-- The original Telar orchestration source (`skills/orchestration/...`) is packaged under `source/skills/orchestration/...` for exact-reference lookups; all other Telar skills exist here only as the generated adapters under the plugin-root `skills/` directory.
+- The original Telar orchestration source (`skills/orchestration/...`) and the vendored third-party source (`skills/third-party/...`) are packaged under `source/skills/...` for exact-reference lookups; all other Telar skills exist here only as the generated adapters under the plugin-root `skills/` directory.
 - Resolve plugin-root paths from this generated skill directory via `../..` when reading support files or running packaged scripts.
 
 
@@ -242,4 +242,3 @@ const substrate = {
 - Astro routing: https://docs.astro.build/en/core-concepts/routing/
 - Next.js App Router: https://nextjs.org/docs/app/building-your-application/routing
 - WCAG 2.2: https://www.w3.org/TR/WCAG22/
-</content>

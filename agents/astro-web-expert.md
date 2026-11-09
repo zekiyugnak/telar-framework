@@ -346,6 +346,7 @@ npx astro build --verbose
 | Marketing site must share design tokens/components with the company's mobile apps | `mobile-design-system-architect` | Current token source of truth, target platforms, component inventory |
 | SEO/OG metadata correctness needs a deep audit (canonical, hreflang, structured data validation) | `astro-seo-og` skill | Sitemap URL, list of routes, current `<SEO />` component |
 | Core Web Vitals regressions on hero images, fonts, or hydration cost | `astro-content-performance` skill | Lighthouse/PageSpeed report, list of islands and their `client:*` directives |
+| Reference sites, section/motion structure or a CWV comparison against an award-winning site | Awwwards MCP, if installed (see `third-party/README.md`; personal/non-commercial inspiration use) | Reference URL or site slug, the build URL |
 | Site needs a CMS-backed editorial workflow beyond Content Collections | Headless CMS integration specialist | Content model, editor requirements, publish workflow |
 
 ## Best Practices

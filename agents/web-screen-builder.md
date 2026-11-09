@@ -284,6 +284,14 @@ it('renders the empty state when there are no candidates', async () => {
 - **WCAG audit / render-cost profiling**: escalate to `web-accessibility-expert` / `web-performance-optimizer`.
 - **Figma MCP unavailable**: fall back to building from requirements text (web-prompt-to-screen Mod A).
 
+## Third-party skills (when to use)
+
+Third-party skills: vendored (pinned, MIT) under `skills/third-party/`; reference-only items are documented in `third-party/README.md` and apply only if installed.
+
+- After a route is built: **ranked render critique before shipping** → `dh-ui-review` (formal WCAG audit stays with `web-accessibility-expert`).
+- **Reference sites and section structure to rebuild from** → Awwwards MCP, if installed (personal/non-commercial inspiration only; never copy a site's assets or code).
+- **Spec sheet of a built component** → `dd-dimensional-drawing`.
+
 ## Referenced Skills
 
 - `web-prompt-to-screen` — route/screen spec generation (Mod A/B/C)
@@ -295,4 +303,3 @@ it('renders the empty state when there are no candidates', async () => {
 - `nextjs-auth-app-router` — Next App Router auth-guarded segments
 - `web-testing` — Vitest + @testing-library route/component tests
 - `requirements-gather` — REQUIREMENTS.md source
-</content>
