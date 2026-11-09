@@ -1,4 +1,4 @@
-# Telar v0.17.0
+# Telar v0.18.0
 
 Agentic engineering framework for Claude Code, spanning cross-platform apps end to end: mobile (React Native, Flutter, native bridges), web (Astro, Next.js/Tailwind/shadcn, Vite/TanStack admin panels), Rust service layers, and desktop. Not mobile-only — the orchestration, reviewer roster, and rubrics are stack-aware across every domain. The per-WU reviewer roster is also **risk-tiered**: rigor is front-loaded into planning, so implementation review stays thin for low-risk work and escalates only where risk warrants it.
 
@@ -71,7 +71,7 @@ The recommended workflow for building features:
 
 ## Skill Discovery
 
-**126 skills** including:
+**133 skills** including:
 
 - **Blueprints** (`skills/blueprints/`): auth-flow, crud-list, chat-feature, settings-screen, onboarding-flow
 - **Astro**: astro-seo-og, astro-content-performance
@@ -97,6 +97,7 @@ The recommended workflow for building features:
 - **Design**: design-system-persistence, component-scaffolding, prompt-to-screen, mobile-design-system
 - **Platform**: rn-navigation, flutter-navigation, rn-state-management, flutter-state-management, ...
 - **Meta**: create-skill (for adding new skills to this plugin)
+- **Third-party** (`skills/third-party/`, vendored pinned MIT copies; provenance in `third-party/SOURCES.md`, guide in `third-party/README.md`): `dd-dimensional-drawing`, `dd-dimensional-drawing-motion` (optional; Node + headless Chromium + ffmpeg) from dimensional-drawing; `dh-design-system-boss`, `dh-build-design-system`, `dh-token-mapping`, `dh-component-docs`, `dh-ui-review` from design.how (its migration skill is not shipped). Reference-only (not shipped): brand-identity, Awwwards MCP, oil-ui (warning)
 
 ## Active Rules (always applied)
 

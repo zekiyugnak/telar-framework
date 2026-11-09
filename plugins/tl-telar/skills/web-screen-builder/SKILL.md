@@ -14,7 +14,7 @@ Migrated from `agents/web-screen-builder.md`.
 - Claude/Telar source files remain the source of truth; this file is the generated Codex adapter.
 - Skill-local support files from the original Telar skill, such as `references/...` or `workflow/...`, are packaged beside this `SKILL.md`.
 - Repo-root references from the original Telar file, such as `agents/...`, `commands/...`, `scripts/...`, `resources/...`, `rules/...`, `hooks/...`, or `templates/...`, are packaged at this plugin root.
-- The original Telar orchestration source (`skills/orchestration/...`) is packaged under `source/skills/orchestration/...` for exact-reference lookups; all other Telar skills exist here only as the generated adapters under the plugin-root `skills/` directory.
+- The original Telar orchestration source (`skills/orchestration/...`) and the vendored third-party source (`skills/third-party/...`) are packaged under `source/skills/...` for exact-reference lookups; all other Telar skills exist here only as the generated adapters under the plugin-root `skills/` directory.
 - Resolve plugin-root paths from this generated skill directory via `../..` when reading support files or running packaged scripts.
 - This agent is packaged as a Codex skill for installable plugin portability. Project-scoped Codex custom-agent TOML is also generated under `.codex/agents/` in the source repository.
 
@@ -276,6 +276,14 @@ it('renders the empty state when there are no candidates', async () => {
 - **WCAG audit / render-cost profiling**: escalate to `web-accessibility-expert` / `web-performance-optimizer`.
 - **Figma MCP unavailable**: fall back to building from requirements text (web-prompt-to-screen Mod A).
 
+## Third-party skills (when to use)
+
+Third-party skills: vendored (pinned, MIT) under `skills/third-party/`; reference-only items are documented in `third-party/README.md` and apply only if installed.
+
+- After a route is built: **ranked render critique before shipping** → `dh-ui-review` (formal WCAG audit stays with `web-accessibility-expert`).
+- **Reference sites and section structure to rebuild from** → Awwwards MCP, if installed (personal/non-commercial inspiration only; never copy a site's assets or code).
+- **Spec sheet of a built component** → `dd-dimensional-drawing`.
+
 ## Referenced Skills
 
 - `web-prompt-to-screen` — route/screen spec generation (Mod A/B/C)
@@ -287,4 +295,3 @@ it('renders the empty state when there are no candidates', async () => {
 - `nextjs-auth-app-router` — Next App Router auth-guarded segments
 - `web-testing` — Vitest + @testing-library route/component tests
 - `requirements-gather` — REQUIREMENTS.md source
-</content>

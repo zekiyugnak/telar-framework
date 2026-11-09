@@ -172,6 +172,12 @@ function validateSkill(filePath) {
   filesChecked++;
 }
 
+const THIRD_PARTY_DIR = path.join(SKILLS_DIR, 'third-party') + path.sep;
+
+function isThirdParty(filePath) {
+  return filePath.startsWith(THIRD_PARTY_DIR);
+}
+
 function getSkillFiles(dir) {
   const files = [];
   const entries = fs.readdirSync(dir, { withFileTypes: true });
@@ -186,6 +192,10 @@ function getSkillFiles(dir) {
       // Recurse into other subdirectories (e.g., learn-pattern/, orchestration/)
       files.push(...getSkillFiles(fullPath));
     } else if (entry.name.endsWith('.md') && !entry.name.startsWith('_')) {
+      // Vendored third-party skills (skills/third-party/<repo>/<skill>/) keep
+      // their upstream support docs (playbooks/, adapters/ ...) beside SKILL.md;
+      // only the SKILL.md itself is a skill there.
+      if (isThirdParty(fullPath) && entry.name !== 'SKILL.md') continue;
       files.push(fullPath);
     }
   }

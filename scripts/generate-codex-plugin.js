@@ -236,6 +236,23 @@ function collectSkillSources() {
     }
   }
 
+  // Vendored third-party skills: skills/third-party/<repo>/<skill>/SKILL.md.
+  // Their ids already carry a namespace prefix (dd-, dh-), so no namePrefix.
+  const thirdPartyDir = path.join(ROOT, 'skills', 'third-party');
+  if (fs.existsSync(thirdPartyDir)) {
+    for (const repo of fs.readdirSync(thirdPartyDir, { withFileTypes: true }).sort((a, b) => a.name.localeCompare(b.name))) {
+      if (!repo.isDirectory()) continue;
+      const repoDir = path.join(thirdPartyDir, repo.name);
+      for (const entry of fs.readdirSync(repoDir, { withFileTypes: true }).sort((a, b) => a.name.localeCompare(b.name))) {
+        if (!entry.isDirectory()) continue;
+        const skillFile = path.join(repoDir, entry.name, 'SKILL.md');
+        if (fs.existsSync(skillFile)) {
+          sources.push({ file: skillFile, sourceType: 'third-party', fallbackName: entry.name, thirdPartyRepo: repo.name });
+        }
+      }
+    }
+  }
+
   return sources;
 }
 
@@ -280,6 +297,13 @@ function copySupportDirectories() {
   const sourceOrchestration = path.join(ROOT, 'skills', 'orchestration');
   if (fs.existsSync(sourceOrchestration)) {
     fs.cpSync(sourceOrchestration, path.join(CODEX_PLUGIN_ROOT, 'source', 'skills', 'orchestration'), { recursive: true });
+  }
+
+  // Vendored third-party skills reference sibling skills by upstream path
+  // (e.g. `build-design-system/scripts/capture.mjs`), so keep their source tree.
+  const sourceThirdParty = path.join(ROOT, 'skills', 'third-party');
+  if (fs.existsSync(sourceThirdParty)) {
+    fs.cpSync(sourceThirdParty, path.join(CODEX_PLUGIN_ROOT, 'source', 'skills', 'third-party'), { recursive: true });
   }
 }
 
@@ -336,7 +360,7 @@ function codexCompatibilityNotes(source, skillName) {
     '- Claude/Telar source files remain the source of truth; this file is the generated Codex adapter.',
     '- Skill-local support files from the original Telar skill, such as `references/...` or `workflow/...`, are packaged beside this `SKILL.md`.',
     '- Repo-root references from the original Telar file, such as `agents/...`, `commands/...`, `scripts/...`, `resources/...`, `rules/...`, `hooks/...`, or `templates/...`, are packaged at this plugin root.',
-    '- The original Telar orchestration source (`skills/orchestration/...`) is packaged under `source/skills/orchestration/...` for exact-reference lookups; all other Telar skills exist here only as the generated adapters under the plugin-root `skills/` directory.',
+    '- The original Telar orchestration source (`skills/orchestration/...`) and the vendored third-party source (`skills/third-party/...`) are packaged under `source/skills/...` for exact-reference lookups; all other Telar skills exist here only as the generated adapters under the plugin-root `skills/` directory.',
     '- Resolve plugin-root paths from this generated skill directory via `../..` when reading support files or running packaged scripts.',
   ];
 
@@ -355,6 +379,13 @@ function codexCompatibilityNotes(source, skillName) {
       '- Treat Claude `Workflow` tool references as unavailable in Codex unless an explicit equivalent tool is present. Use the documented prose fallback path by default.',
       '- Treat `TL_TELAR_ORCHESTRATED=1` as a workflow mode marker in Codex. Do not require a literal Claude slash command to set it.',
       '- Do not pass scheduler `--isolate` merely because Codex is running. Use `--isolate` only after a concrete Codex worktree isolation and merge-back mechanism has been verified for the run; otherwise keep disjoint file-scope serialization.'
+    );
+  }
+
+  if (source.sourceType === 'third-party') {
+    notes.push(
+      `- This is a vendored third-party skill (pinned copy, MIT) from \`${source.thirdPartyRepo}\`. Provenance, pinned SHA and local modifications are in \`third-party/SOURCES.md\` of the Telar repository; the license sits at \`../../source/skills/third-party/${source.thirdPartyRepo}/LICENSE\`.`,
+      `- The body names sibling skills by their upstream names and paths (for example \`build-design-system/scripts/capture.mjs\`). Resolve those under \`../../source/skills/third-party/${source.thirdPartyRepo}/\`; the generated sibling skills carry a \`dd-\` / \`dh-\` prefix.`
     );
   }
 
@@ -432,7 +463,9 @@ function liveSummary() {
   const skills = walk('skills', (rel, name) => (
     name.endsWith('.md') &&
     !name.startsWith('_') &&
-    !rel.includes('/references/')
+    !rel.includes('/references/') &&
+    // Vendored third-party skills: only SKILL.md counts (support docs sit beside it).
+    (!rel.startsWith('skills/third-party/') || name === 'SKILL.md')
   ));
   const commands = countFiles('commands', (name) => name.endsWith('.md'));
   const hooks = countFiles('hooks', (name) => name.endsWith('.sh') && !name.endsWith('.deprecated.sh'));
