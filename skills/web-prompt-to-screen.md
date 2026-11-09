@@ -243,4 +243,3 @@ const substrate = {
 - Astro routing: https://docs.astro.build/en/core-concepts/routing/
 - Next.js App Router: https://nextjs.org/docs/app/building-your-application/routing
 - WCAG 2.2: https://www.w3.org/TR/WCAG22/
-</content>

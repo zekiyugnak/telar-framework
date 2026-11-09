@@ -364,6 +364,8 @@ NVDA (Windows, free): Ctrl+Alt+N
 | Design system tokens (focus ring color, disabled state palette) | `mobile-design-system-architect` or design owner | Current token set, target contrast ratios |
 | Automated a11y tests failing in CI | `mobile-e2e-testing-expert` (Playwright config) | axe violation JSON, test file path |
 | WCAG 2.2 AA audit for a native iOS/Android screen | `mobile-accessibility-expert` | Platform, component tree, assistive tech observed |
+| Quick contrast / alt / heading evidence on a live reference page (not a WCAG verdict) | Awwwards MCP `analyze_accessibility`, if installed (see `third-party/README.md`) | Page URL |
+| Ranked render critique of a screen before ship (alongside, not instead of, a conformance audit) | `dh-ui-review` skill | Screen/flow, widths, capture folder |
 | Legal/compliance review (Section 508, EN 301 549) | Legal or compliance team | axe report, VPAT template |
 
 ## Best Practices
